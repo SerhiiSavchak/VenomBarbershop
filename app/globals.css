@@ -1,0 +1,138 @@
+@import "tailwindcss";
+
+:root {
+  --background: #000000;
+  --background-secondary: #050505;
+  --background-tertiary: #0a0a0a;
+  --background-card: #111111;
+  --foreground: #ffffff;
+  --foreground-muted: #888888;
+  
+  --accent-red: #D1121B;
+  --accent-red-bright: #E50914;
+  --accent-cyan: #38E8FF;
+  --accent-cyan-bright: #00D9FF;
+  
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-background-tertiary: var(--background-tertiary);
+  --color-background-card: var(--background-card);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-accent-red: var(--accent-red);
+  --color-accent-red-bright: var(--accent-red-bright);
+  --color-accent-cyan: var(--accent-cyan);
+  --color-accent-cyan-bright: var(--accent-cyan-bright);
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-oswald);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-red) var(--background-card);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Liquid glow effect */
+.liquid-glow {
+  filter: blur(20px);
+  opacity: 0.4;
+}
+
+/* Red glow effect */
+.red-glow {
+  box-shadow: 0 0 40px rgba(209, 18, 27, 0.3), 0 0 80px rgba(209, 18, 27, 0.1);
+}
+
+/* Cyan reflection effect */
+.cyan-reflection {
+  background: linear-gradient(135deg, transparent 40%, rgba(56, 232, 255, 0.1) 50%, transparent 60%);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--foreground) 0%, var(--foreground-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section divider gradient */
+.section-divider {
+  background: linear-gradient(90deg, transparent 0%, var(--background-card) 20%, var(--background-card) 80%, transparent 100%);
+  height: 1px;
+}
+
+/* Animated gradient border */
+@keyframes borderGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.animated-border {
+  position: relative;
+}
+
+.animated-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-red), transparent, var(--accent-cyan));
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* Breathing animation for liquid elements */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.02); opacity: 0.8; }
+}
+
+.liquid-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+/* Subtle float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(56, 232, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
