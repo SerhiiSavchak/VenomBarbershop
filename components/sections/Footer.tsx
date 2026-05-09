@@ -1,119 +1,67 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Instagram, Facebook, Twitter } from "lucide-react";
 
-const footerLinks = {
-  services: [
-    { label: "Haircut", href: "#services" },
-    { label: "Beard Trim", href: "#services" },
-    { label: "Shave", href: "#services" },
-    { label: "VIP Package", href: "#services" },
-  ],
-  company: [
-    { label: "About Us", href: "#space" },
-    { label: "Our Team", href: "#masters" },
-    { label: "Gallery", href: "#gallery" },
-    { label: "Reviews", href: "#reviews" },
-  ],
-  support: [
-    { label: "Contact", href: "#contact" },
-    { label: "Book Online", href: "#" },
-    { label: "FAQ", href: "#" },
-    { label: "Careers", href: "#" },
-  ],
-};
+const footerLinks = [
+  { label: "Services", href: "#services" },
+  { label: "About", href: "#space" },
+  { label: "Team", href: "#masters" },
+  { label: "Gallery", href: "#gallery" },
+  { label: "Reviews", href: "#reviews" },
+  { label: "Contact", href: "#contact" },
+];
 
 export function Footer() {
   return (
-    <footer className="relative bg-background-secondary border-t border-foreground/5">
-      <div className="container mx-auto px-4 md:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-12">
-          {/* Brand column */}
-          <div className="lg:col-span-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-2 mb-6"
-            >
-              <div className="relative">
-                <div className="w-10 h-10 bg-accent-red rounded-full flex items-center justify-center">
-                  <span className="font-display text-xl font-bold text-foreground">V</span>
-                </div>
-              </div>
-              <span className="font-display text-xl font-bold tracking-wider">VENOM</span>
-            </motion.div>
-            <p className="text-foreground-muted text-sm leading-relaxed max-w-sm mb-6">
-              Premium barbershop experience where craftsmanship meets cinematic atmosphere. 
-              Every cut is a masterpiece.
-            </p>
-            {/* Social links */}
-            <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 bg-background-card rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
-                <Instagram className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
-              </a>
-              <a href="#" className="w-10 h-10 bg-background-card rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
-                <Facebook className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
-              </a>
-              <a href="#" className="w-10 h-10 bg-background-card rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
-                <Twitter className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
-              </a>
+    <footer className="relative bg-[#050505] border-t border-white/5">
+      <div className="container mx-auto px-4 md:px-8 py-10 md:py-12">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-accent-red rounded-full flex items-center justify-center">
+              <span className="font-display text-lg font-bold text-white">V</span>
             </div>
+            <span className="font-display text-lg font-bold tracking-wider">VENOM</span>
           </div>
 
-          {/* Links columns */}
-          <div>
-            <h4 className="font-display font-semibold uppercase tracking-wider text-sm mb-4">Services</h4>
-            <ul className="space-y-3">
-              {footerLinks.services.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-foreground-muted text-sm hover:text-accent-red transition-colors">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Nav Links - horizontal */}
+          <nav className="flex flex-wrap justify-center gap-6">
+            {footerLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-xs text-foreground-muted hover:text-white uppercase tracking-wider transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
 
-          <div>
-            <h4 className="font-display font-semibold uppercase tracking-wider text-sm mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-foreground-muted text-sm hover:text-accent-red transition-colors">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-display font-semibold uppercase tracking-wider text-sm mb-4">Support</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.label}>
-                  <a href={link.href} className="text-foreground-muted text-sm hover:text-accent-red transition-colors">
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Social */}
+          <div className="flex gap-3">
+            <a href="#" className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
+              <Instagram className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
+            </a>
+            <a href="#" className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
+              <Facebook className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
+            </a>
+            <a href="#" className="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-accent-red/20 transition-colors group">
+              <Twitter className="w-4 h-4 text-foreground-muted group-hover:text-accent-red transition-colors" />
+            </a>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-8 border-t border-foreground/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-foreground-muted text-xs">
+        {/* Bottom */}
+        <div className="mt-8 pt-6 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-foreground-muted text-[10px] uppercase tracking-wider">
             &copy; {new Date().getFullYear()} VENOM Barbershop. All rights reserved.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-foreground-muted text-xs hover:text-foreground transition-colors">
-              Privacy Policy
+            <a href="#" className="text-foreground-muted text-[10px] uppercase tracking-wider hover:text-white transition-colors">
+              Privacy
             </a>
-            <a href="#" className="text-foreground-muted text-xs hover:text-foreground transition-colors">
-              Terms of Service
+            <a href="#" className="text-foreground-muted text-[10px] uppercase tracking-wider hover:text-white transition-colors">
+              Terms
             </a>
           </div>
         </div>

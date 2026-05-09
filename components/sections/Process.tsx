@@ -1,117 +1,115 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { RevealSection, LiquidSectionDivider } from "@/components/liquid/LiquidElements";
+import { RevealSection, LiquidStain, RedGlow } from "@/components/liquid/LiquidElements";
 import Image from "next/image";
 
 const steps = [
-  {
-    number: "01",
-    title: "Consultation",
-    description: "We discuss your style goals, face shape, and lifestyle to create the perfect look.",
-    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80",
-  },
-  {
-    number: "02",
-    title: "Shape",
-    description: "Expert cutting techniques to sculpt the foundation of your new style.",
-    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80",
-  },
-  {
-    number: "03",
-    title: "Details",
-    description: "Precision finishing, texturing, and refinement for flawless results.",
-    image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80",
-  },
-  {
-    number: "04",
-    title: "Final Look",
-    description: "Professional styling and product recommendations to maintain your look.",
-    image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=400&q=80",
-  },
+  { number: "01", title: "Consultation", desc: "Discuss your goals" },
+  { number: "02", title: "Shape", desc: "Expert cutting" },
+  { number: "03", title: "Details", desc: "Precision finishing" },
+  { number: "04", title: "Final Look", desc: "Professional styling" },
 ];
 
 export function Process() {
   return (
-    <section id="process" className="relative bg-background-secondary overflow-hidden">
-      {/* Liquid divider top */}
-      <LiquidSectionDivider />
+    <section id="process" className="relative py-20 md:py-28 bg-[#050505] overflow-hidden">
+      {/* Background liquid stain */}
+      <LiquidStain position="center" className="opacity-30" />
+      <RedGlow intensity="low" position="center" />
 
-      <div className="py-24 md:py-32">
-        {/* Background gradient */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-accent-red/5 rounded-full blur-[250px]" />
-        </div>
+      <div className="container mx-auto px-4 md:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+          
+          {/* Left: Large image collage */}
+          <RevealSection>
+            <div className="relative">
+              {/* Main large image */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="relative aspect-[3/4] max-w-md mx-auto lg:mx-0"
+              >
+                <Image
+                  src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=700&q=80"
+                  alt="Barber at work"
+                  fill
+                  className="object-cover grayscale-[20%]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/30" />
+                <div className="absolute inset-0 bg-accent-red/10 mix-blend-overlay" />
+                
+                {/* Overlay text */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <span className="text-[10px] text-accent-red font-bold uppercase tracking-[0.15em]">The Craft</span>
+                  <h3 className="font-display text-2xl font-bold mt-1">Precision in Every Cut</h3>
+                </div>
 
-        <div className="container mx-auto px-4 md:px-8 relative z-10">
-          <RevealSection className="text-center mb-16">
-            <span className="inline-block px-4 py-2 bg-accent-red text-white text-xs font-bold uppercase tracking-widest mb-6">
-              How We Work
-            </span>
-            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black mb-6">
-              THE PROCESS
-            </h2>
-            <p className="text-foreground-muted text-lg max-w-2xl mx-auto">
-              Every visit is a journey from consultation to perfection
-            </p>
+                {/* Cyan edge */}
+                <div className="absolute top-0 right-0 w-0.5 h-20 bg-gradient-to-b from-accent-cyan/60 to-transparent" />
+              </motion.div>
+
+              {/* Small floating image */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="absolute -bottom-8 -right-4 md:right-8 w-32 h-40 md:w-40 md:h-52 border-2 border-black"
+              >
+                <Image
+                  src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=300&q=80"
+                  alt="Detail work"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </motion.div>
+            </div>
           </RevealSection>
 
-          {/* Process steps - Editorial layout */}
-          <div className="space-y-16 md:space-y-24">
-            {steps.map((step, index) => (
-              <motion.div
-                key={step.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                className={`grid md:grid-cols-2 gap-8 md:gap-16 items-center ${
-                  index % 2 === 1 ? "md:direction-rtl" : ""
-                }`}
-              >
-                {/* Image side */}
-                <div className={`relative ${index % 2 === 1 ? "md:order-2" : ""}`}>
-                  <div className="relative aspect-[4/3] rounded-lg overflow-hidden group">
-                    <Image
-                      src={step.image}
-                      alt={step.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {/* Red ambient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-                    <div className={`absolute inset-0 bg-gradient-to-${index % 2 === 0 ? 'r' : 'l'} from-accent-red/20 to-transparent`} />
+          {/* Right: Steps list */}
+          <div className="lg:pl-8">
+            <RevealSection>
+              <span className="text-accent-red text-xs font-bold uppercase tracking-[0.2em] mb-3 block">Process</span>
+              <h2 className="font-display text-4xl md:text-5xl font-black tracking-tight mb-10">
+                THE JOURNEY
+              </h2>
+            </RevealSection>
+
+            <div className="space-y-6">
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.number}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="relative group"
+                >
+                  <div className="flex items-start gap-6 p-4 bg-black/30 border border-white/5 rounded hover:border-accent-red/30 transition-colors">
+                    {/* Number */}
+                    <div className="relative">
+                      <span className="font-display text-4xl md:text-5xl font-black text-white/10 group-hover:text-accent-red/30 transition-colors">
+                        {step.number}
+                      </span>
+                      {/* Red dot indicator */}
+                      <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-accent-red rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
                     
-                    {/* Step number overlay */}
-                    <div className="absolute top-4 left-4">
-                      <span className="font-display text-6xl md:text-7xl font-black text-white/10">{step.number}</span>
+                    {/* Content */}
+                    <div className="pt-2">
+                      <h3 className="font-display text-xl font-bold mb-1">{step.title}</h3>
+                      <p className="text-foreground-muted text-sm">{step.desc}</p>
                     </div>
                   </div>
-                  
-                  {/* Cyan accent */}
-                  <div className={`absolute -bottom-2 ${index % 2 === 0 ? '-right-2' : '-left-2'} w-24 h-1 bg-gradient-to-r from-accent-cyan/50 to-transparent`} />
-                </div>
-
-                {/* Content side */}
-                <div className={`${index % 2 === 1 ? "md:order-1 md:text-right" : ""}`}>
-                  <span className="font-display text-8xl md:text-9xl font-black text-accent-red/10 block leading-none mb-4">
-                    {step.number}
-                  </span>
-                  <h3 className="font-display text-3xl md:text-4xl font-bold mb-4 -mt-12 relative z-10">
-                    {step.title}
-                  </h3>
-                  <p className="text-foreground-muted text-lg leading-relaxed max-w-md">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Liquid divider bottom */}
-      <LiquidSectionDivider inverted />
     </section>
   );
 }
