@@ -136,3 +136,27 @@ body {
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
 }
+
+/* Text stroke effect for hero headlines */
+.text-stroke-red {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--accent-red);
+  text-stroke: 2px var(--accent-red);
+}
+
+@media (min-width: 768px) {
+  .text-stroke-red {
+    -webkit-text-stroke: 3px var(--accent-red);
+    text-stroke: 3px var(--accent-red);
+  }
+}
+
+/* Hide scrollbar for mobile carousels */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

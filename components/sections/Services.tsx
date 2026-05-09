@@ -2,52 +2,52 @@
 
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { RevealSection, AnimatedCard } from "@/components/liquid/LiquidElements";
+import { RevealSection, AnimatedCard, LiquidCorner } from "@/components/liquid/LiquidElements";
 import { Button } from "@/components/ui/Button";
-import { Scissors, Wind, Sparkles, CircleDot, Crown, Star } from "lucide-react";
+import Image from "next/image";
 
 const services = [
   {
-    icon: Scissors,
     name: "Haircut",
     price: "$35",
     duration: "45 min",
-    description: "Precision cut tailored to your style and face shape",
+    description: "Precision cut tailored to your style",
+    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80",
   },
   {
-    icon: Wind,
     name: "Beard Trim",
     price: "$25",
     duration: "30 min",
     description: "Expert beard shaping and maintenance",
+    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80",
   },
   {
-    icon: Sparkles,
     name: "Haircut + Beard",
     price: "$55",
     duration: "75 min",
-    description: "Complete grooming package for the modern gentleman",
+    description: "Complete grooming package",
+    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80",
   },
   {
-    icon: CircleDot,
     name: "Classic Shave",
     price: "$30",
     duration: "30 min",
-    description: "Traditional hot towel straight razor experience",
+    description: "Hot towel straight razor experience",
+    image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=400&q=80",
   },
   {
-    icon: Star,
     name: "Styling",
     price: "$20",
     duration: "20 min",
-    description: "Professional styling and product consultation",
+    description: "Professional styling consultation",
+    image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=400&q=80",
   },
   {
-    icon: Crown,
-    name: "VIP Cut",
+    name: "VIP Experience",
     price: "$75",
     duration: "90 min",
-    description: "Premium experience with hot towel, massage, and styling",
+    description: "Premium treatment with massage",
+    image: "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=400&q=80",
   },
 ];
 
@@ -58,17 +58,17 @@ export function Services() {
     <section id="services" className="relative py-24 md:py-32 bg-background-secondary overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-0 w-96 h-96 bg-accent-red/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent-cyan/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-0 w-[500px] h-[500px] bg-accent-red/5 rounded-full blur-[200px]" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-accent-cyan/5 rounded-full blur-[150px]" />
       </div>
 
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         {/* Section header */}
         <RevealSection className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs font-semibold uppercase tracking-widest mb-6">
+          <span className="inline-block px-4 py-2 bg-accent-red text-white text-xs font-bold uppercase tracking-widest mb-6">
             What We Offer
           </span>
-          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-black mb-6">
             OUR SERVICES
           </h2>
           <p className="text-foreground-muted text-lg max-w-2xl mx-auto">
@@ -80,34 +80,45 @@ export function Services() {
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, index) => (
             <AnimatedCard key={service.name} delay={index * 0.1}>
-              <div className="glass rounded-lg p-6 h-full group cursor-pointer transition-all duration-300 hover:border-accent-red/30">
-                {/* Icon */}
-                <div className="w-12 h-12 bg-accent-red/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-accent-red/20 transition-colors">
-                  <service.icon className="w-6 h-6 text-accent-red" />
+              <div className="relative glass rounded-lg overflow-hidden h-full group cursor-pointer">
+                {/* Liquid corners */}
+                <LiquidCorner position="top-right" size="md" />
+                <LiquidCorner position="bottom-left" size="sm" />
+                
+                {/* Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <Image
+                    src={service.image}
+                    alt={service.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background-card via-background-card/50 to-transparent" />
+                  
+                  {/* Price badge */}
+                  <div className="absolute top-4 right-4 bg-accent-red px-3 py-1.5 rounded">
+                    <span className="font-display text-lg font-bold text-white">{service.price}</span>
+                  </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-display text-xl font-semibold">{service.name}</h3>
-                  <span className="font-display text-2xl font-bold text-accent-red">{service.price}</span>
-                </div>
-                
-                <p className="text-foreground-muted text-sm mb-4 leading-relaxed">
-                  {service.description}
-                </p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-foreground/10">
-                  <span className="text-xs text-foreground-muted uppercase tracking-wider">
-                    {service.duration}
-                  </span>
-                  <span className="text-xs text-accent-red opacity-0 group-hover:opacity-100 transition-opacity">
-                    Book Now →
-                  </span>
+                <div className="p-6">
+                  <h3 className="font-display text-xl font-bold mb-2">{service.name}</h3>
+                  <p className="text-foreground-muted text-sm mb-4">{service.description}</p>
+                  
+                  <div className="flex items-center justify-between pt-4 border-t border-foreground/10">
+                    <span className="text-xs text-foreground-muted uppercase tracking-wider">
+                      {service.duration}
+                    </span>
+                    <span className="text-xs text-accent-red opacity-0 group-hover:opacity-100 transition-opacity font-semibold">
+                      Book Now →
+                    </span>
+                  </div>
                 </div>
 
-                {/* Corner accent */}
-                <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden rounded-tr-lg">
-                  <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-accent-cyan/10 to-transparent transform translate-x-4 -translate-y-4 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
+                {/* Hover glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-t from-accent-red/10 to-transparent" />
                 </div>
               </div>
             </AnimatedCard>
@@ -118,7 +129,7 @@ export function Services() {
         <div className="md:hidden">
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+            className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {services.map((service) => (
@@ -127,26 +138,28 @@ export function Services() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="flex-shrink-0 w-[280px] snap-center"
+                className="flex-shrink-0 w-[300px] snap-center"
               >
-                <div className="glass rounded-lg p-5 h-full">
-                  <div className="w-10 h-10 bg-accent-red/10 rounded-lg flex items-center justify-center mb-4">
-                    <service.icon className="w-5 h-5 text-accent-red" />
+                <div className="relative glass rounded-lg overflow-hidden h-full">
+                  <div className="relative h-40 overflow-hidden">
+                    <Image
+                      src={service.image}
+                      alt={service.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background-card to-transparent" />
+                    <div className="absolute top-3 right-3 bg-accent-red px-2.5 py-1 rounded">
+                      <span className="font-display text-base font-bold text-white">{service.price}</span>
+                    </div>
                   </div>
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-display text-lg font-semibold">{service.name}</h3>
-                    <span className="font-display text-xl font-bold text-accent-red">{service.price}</span>
+                  <div className="p-5">
+                    <h3 className="font-display text-lg font-bold mb-1">{service.name}</h3>
+                    <p className="text-foreground-muted text-sm mb-3">{service.description}</p>
+                    <span className="text-xs text-foreground-muted">{service.duration}</span>
                   </div>
-                  <p className="text-foreground-muted text-sm mb-3">{service.description}</p>
-                  <span className="text-xs text-foreground-muted">{service.duration}</span>
                 </div>
               </motion.div>
-            ))}
-          </div>
-          {/* Scroll indicator */}
-          <div className="flex justify-center gap-1 mt-4">
-            {services.map((_, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full bg-foreground/20" />
             ))}
           </div>
         </div>
