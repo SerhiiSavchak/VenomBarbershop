@@ -8,18 +8,41 @@ import { Gallery } from "@/components/sections/Gallery";
 import { Reviews } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { LiquidDivider } from "@/components/liquid/LiquidElements";
 
 export default function Home() {
   return (
     <main className="relative bg-black">
       <Header />
+      
+      {/* Row 1: Hero full width */}
       <Hero />
+      
+      <LiquidDivider />
+      
+      {/* Row 2: Services full width */}
       <Services />
-      <Space />
-      <Process />
-      <Masters />
-      <Gallery />
-      <Reviews />
+      
+      <LiquidDivider />
+      
+      {/* Row 3: Space + Process side by side */}
+      <div className="grid lg:grid-cols-2">
+        <Space />
+        <Process />
+      </div>
+      
+      <LiquidDivider />
+      
+      {/* Row 4: Masters + Gallery + Reviews three columns */}
+      <div className="grid lg:grid-cols-3">
+        <Masters />
+        <Gallery />
+        <Reviews />
+      </div>
+      
+      <LiquidDivider />
+      
+      {/* Row 5: Contact + Footer */}
       <Contact />
       <Footer />
     </main>
