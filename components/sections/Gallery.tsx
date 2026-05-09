@@ -16,30 +16,30 @@ const galleryImages = [
 
 export function Gallery() {
   return (
-    <div id="gallery" className="relative min-h-[400px] bg-[#050505] p-5 md:p-6 overflow-hidden border-r border-white/5">
-      {/* Red ambient glow */}
-      <div className="absolute top-1/3 left-0 w-32 h-32 bg-accent-red/10 rounded-full blur-[60px]" />
-
+    <section id="gallery" className="relative min-h-[400px] bg-[#050505] p-4 md:p-6 overflow-hidden border-r border-white/5">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-display text-xl md:text-2xl font-bold">OUR GALLERY</h2>
-        <a href="#" className="text-[10px] text-accent-red hover:text-accent-red-bright uppercase tracking-wider transition-colors">
-          View All →
+        <h2 className="font-display text-lg md:text-xl font-black tracking-tight text-white">
+          OUR GALLERY
+        </h2>
+        <a href="#" className="text-[10px] text-accent-red hover:text-accent-red-bright uppercase tracking-wider transition-colors inline-flex items-center gap-1">
+          <span>View All</span>
+          <span>→</span>
         </a>
       </div>
 
-      {/* Dense 4x2 grid */}
-      <div className="grid grid-cols-4 gap-1.5">
+      {/* Dense 4x2 grid exactly like reference */}
+      <div className="grid grid-cols-4 gap-1 md:gap-1.5">
         {galleryImages.map((img, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.05 }}
-            className="group cursor-pointer relative"
+            transition={{ delay: index * 0.03 }}
+            className="group cursor-pointer"
           >
-            <div className="relative aspect-square overflow-hidden rounded-sm">
+            <div className="relative aspect-square overflow-hidden">
               <Image
                 src={img}
                 alt={`Gallery ${index + 1}`}
@@ -47,19 +47,11 @@ export function Gallery() {
                 className="object-cover grayscale-[30%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
-              <div className="absolute inset-0 bg-accent-red/10 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay" />
+              <div className="absolute inset-0 bg-accent-red/15 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay" />
             </div>
           </motion.div>
         ))}
       </div>
-
-      {/* Liquid frame at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none">
-        <svg viewBox="0 0 400 48" preserveAspectRatio="none" className="w-full h-full">
-          <path d="M0,48 L0,24 Q50,12 100,20 Q150,28 200,16 Q250,4 300,14 Q350,24 400,8 L400,48 Z" fill="#000" />
-          <path d="M25,28 Q75,18 125,24 Q175,30 225,18 Q275,6 325,16 Q375,26 400,12" stroke="#38E8FF" strokeWidth="0.5" strokeOpacity="0.3" fill="none" />
-        </svg>
-      </div>
-    </div>
+    </section>
   );
 }
