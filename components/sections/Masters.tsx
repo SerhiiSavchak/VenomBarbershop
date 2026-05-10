@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { SymbioteAccent } from "@/components/symbiote/SymbioteLayer";
+import { useI18n } from "@/components/providers/I18nProvider";
+import { cinematicEase, viewportReveal } from "@/lib/motion";
 
 const InstagramIcon = () => (
   <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -10,64 +11,59 @@ const InstagramIcon = () => (
   </svg>
 );
 
-const masters = [
-  {
-    name: "Marcus Stone",
-    role: "Senior Barber",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=88",
-  },
-  {
-    name: "David Chen",
-    role: "Style Director",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&q=88",
-  },
-  {
-    name: "James Williams",
-    role: "Beard Specialist",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=900&q=88",
-  },
-  {
-    name: "Alex Rivera",
-    role: "Color Expert",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&q=88",
-  },
+const masterImages = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=88",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&q=88",
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=900&q=88",
+  "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&q=88",
 ];
 
+const gridVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 36 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.75, ease: cinematicEase } },
+};
+
 export function Masters() {
+  const { t } = useI18n();
+  const masters = t.masters.items.map((m, i) => ({
+    ...m,
+    image: masterImages[i] ?? masterImages[0],
+  }));
+
   return (
     <section id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(209,18,27,0.14)_0%,transparent_55%)]" />
 
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
-        <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.75 }}
-          >
-            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-accent-red">Masters</span>
-            <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-6xl">
-              Faces of
-              <span className="mt-1 block text-stroke-red">Discipline</span>
-            </h2>
-          </motion.div>
-          <p className="max-w-sm text-sm text-foreground-muted md:text-right">
-            Monochrome discipline — hover for heat. No headshots. Portraits built like stills.
-          </p>
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={viewportReveal}
+          transition={{ duration: 0.75 }}
+          className="mb-14"
+        >
+          <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.masters.eyebrow}</span>
+          <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-6xl">{t.masters.title}</h2>
+        </motion.div>
 
-        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-6 md:overflow-visible lg:grid-cols-4">
-          {masters.map((master, index) => (
+        <motion.div
+          className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-6 md:overflow-visible lg:grid-cols-4"
+          initial="hidden"
+          whileInView="show"
+          viewport={viewportReveal}
+          variants={gridVariants}
+        >
+          {masters.map((master) => (
             <motion.article
               key={master.name}
-              initial={{ opacity: 0, y: 36 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08, duration: 0.75, ease: [0.22, 1, 0.36, 1] as const }}
+              variants={cardVariants}
               className="group relative w-[min(82vw,340px)] shrink-0 snap-center overflow-hidden border border-white/[0.08] bg-[#060606] md:w-auto"
             >
-              <SymbioteAccent band={index % 2 === 0 ? "mid" : "bottom"} position="bottom-left" className="opacity-60" />
               <div className="relative aspect-[3/4] overflow-hidden">
                 <Image
                   src={master.image}
@@ -80,28 +76,28 @@ export function Masters() {
                 <div className="absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-accent-red/25" />
                 <div className="absolute inset-x-0 bottom-0 translate-y-2 p-6 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                   <p className="font-display text-2xl font-bold uppercase leading-none text-white">{master.name}</p>
-                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-accent-red">{master.role}</p>
+                  <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#E50914]">{master.role}</p>
                 </div>
               </div>
               <div className="flex items-center justify-between border-t border-white/[0.06] p-4 md:hidden">
                 <div>
                   <p className="font-display text-sm font-bold uppercase text-white">{master.name}</p>
-                  <p className="text-[9px] uppercase tracking-[0.2em] text-accent-red">{master.role}</p>
+                  <p className="text-[9px] uppercase tracking-[0.2em] text-[#E50914]">{master.role}</p>
                 </div>
-                <a href="#" className="text-white/40 transition-colors hover:text-white" aria-label="Instagram">
+                <a href="#" className="text-white/40 transition-colors hover:text-white" aria-label={t.masters.instagramAria}>
                   <InstagramIcon />
                 </a>
               </div>
               <a
                 href="#"
                 className="absolute right-4 top-4 hidden text-white/35 transition-colors hover:text-white md:block"
-                aria-label="Instagram"
+                aria-label={t.masters.instagramAria}
               >
                 <InstagramIcon />
               </a>
             </motion.article>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

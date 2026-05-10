@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Montserrat, Geist } from "next/font/google";
+import { I18nProvider } from "@/components/providers/I18nProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,10 +21,10 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "OBSIDIAN | Sharp Looks. Bold Ink.",
+  title: "VENOM | Барбершоп у Львові",
   description:
-    "Premium cinematic barbershop. Precision cuts, editorial atmosphere, and a luxury grooming ritual.",
-  keywords: ["barbershop", "haircut", "beard trim", "grooming", "premium", "luxury"],
+    "Стрижка, борода та догляд у темній преміальній атмосфері. Онлайн-запис і зручний сервіс.",
+  keywords: ["barbershop", "haircut", "beard trim", "grooming", "premium", "luxury", "VENOM"],
 };
 
 export const viewport = {
@@ -39,11 +40,12 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="uk"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${montserrat.variable} ${bebasNeue.variable} bg-background`}
     >
       <body className="min-h-screen bg-background font-[family-name:var(--font-montserrat)] text-foreground antialiased">
-        {children}
+        <I18nProvider>{children}</I18nProvider>
       </body>
     </html>
   );

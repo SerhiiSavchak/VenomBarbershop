@@ -10,7 +10,6 @@ import { Gallery } from "@/components/sections/Gallery";
 import { Reviews } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
-import { SymbioteSectionBreak } from "@/components/symbiote/SymbioteLayer";
 
 export default function Home() {
   return (
@@ -18,25 +17,12 @@ export default function Home() {
       <Header />
       <Hero />
 
-      <SymbioteSectionBreak />
       <Services />
-
-      <SymbioteSectionBreak flip />
       <Space />
-
-      <SymbioteSectionBreak />
       <Process />
-
-      <SymbioteSectionBreak flip />
       <Masters />
-
-      <SymbioteSectionBreak />
       <Gallery />
-
-      <SymbioteSectionBreak flip />
       <Reviews />
-
-      <SymbioteSectionBreak />
       <Contact />
 
       <Footer />

@@ -45,12 +45,6 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Liquid glow effect */
-.liquid-glow {
-  filter: blur(20px);
-  opacity: 0.4;
-}
-
 /* Red glow effect */
 .red-glow {
   box-shadow: 0 0 40px rgba(209, 18, 27, 0.3), 0 0 80px rgba(209, 18, 27, 0.1);
@@ -104,16 +98,6 @@ body {
   animation: borderGlow 3s ease-in-out infinite;
 }
 
-/* Breathing animation for liquid elements */
-@keyframes breathe {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.02); opacity: 0.8; }
-}
-
-.liquid-breathe {
-  animation: breathe 4s ease-in-out infinite;
-}
-
 /* Subtle float animation */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -136,27 +120,6 @@ body {
   animation: shimmer 3s linear infinite;
 }
 
-/* Text stroke effect for hero headlines — poster outline */
-.text-stroke-red {
-  color: transparent;
-  -webkit-text-stroke: 2px var(--accent-red);
-  text-stroke: 2px var(--accent-red);
-}
-
-@media (min-width: 768px) {
-  .text-stroke-red {
-    -webkit-text-stroke: 3px var(--accent-red);
-    text-stroke: 3px var(--accent-red);
-  }
-}
-
-@media (min-width: 1024px) {
-  .text-stroke-red {
-    -webkit-text-stroke: 3.5px var(--accent-red);
-    text-stroke: 3.5px var(--accent-red);
-  }
-}
-
 /* Hide scrollbar for mobile carousels */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -167,65 +130,152 @@ body {
   scrollbar-width: none;
 }
 
-.liquid-section-wave-body {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 120% 90% at 50% 100%, #000 0%, transparent 72%),
-    linear-gradient(180deg, transparent 0%, #020202 50%, #000 100%);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
-  clip-path: ellipse(120% 85% at 50% 100%);
+/* Hero CTAs — premium shine + micro-motion */
+.hero-cta-group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 12px;
+  margin-top: 1.25rem;
 }
 
-.liquid-section-wave-spec {
+@media (min-width: 1024px) {
+  .hero-cta-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    width: auto;
+    gap: 14px;
+    margin-top: 32px;
+  }
+}
+
+.hero-cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  min-width: 0;
+  height: 56px;
+  padding: 0 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    background-color 0.35s ease,
+    color 0.35s ease;
+}
+
+@media (min-width: 1024px) {
+  .hero-cta {
+    width: auto;
+    height: 58px;
+    min-height: 58px;
+  }
+
+  .hero-cta--primary {
+    min-width: 230px;
+  }
+
+  .hero-cta--secondary {
+    min-width: 190px;
+  }
+}
+
+.hero-cta--primary {
+  color: #fff;
+  background: #e50914;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.hero-cta--primary::before {
+  content: "";
   position: absolute;
-  left: 18%;
-  right: 18%;
-  bottom: 0;
-  height: 28%;
-  background: radial-gradient(ellipse 70% 100% at 50% 100%, rgba(209, 18, 27, 0.12) 0%, transparent 72%);
-  filter: blur(18px);
-  mix-blend-mode: screen;
-  opacity: 0.35;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) skewX(-14deg);
+  transition: transform 600ms ease;
   pointer-events: none;
 }
 
-.liquid-card-corner-blob {
-  position: absolute;
-  inset: 0;
-  border-radius: 0 0 100% 0;
-  background: radial-gradient(ellipse 120% 120% at 0% 100%, #000 0%, transparent 72%),
-    linear-gradient(145deg, #080808 0%, #000 100%);
-  box-shadow: inset -6px 6px 24px rgba(209, 18, 27, 0.08);
-  clip-path: polygon(0 100%, 0 35%, 18% 22%, 45% 12%, 72% 8%, 100% 0, 100% 100%);
+.hero-cta--primary:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 32px rgba(229, 9, 20, 0.42);
 }
 
-.liquid-card-corner-gloss {
+.hero-cta--primary:hover::before {
+  transform: translateX(130%) skewX(-14deg);
+}
+
+.hero-cta--primary:active {
+  transform: scale(0.985);
+}
+
+.hero-cta--secondary {
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.hero-cta--secondary::before {
+  content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 90% 90% at 0% 100%, rgba(255, 255, 255, 0.08) 0%, transparent 58%);
-  filter: blur(8px);
-  mix-blend-mode: soft-light;
-  opacity: 0.65;
-  clip-path: polygon(0 100%, 0 40%, 25% 20%, 55% 10%, 100% 0, 100% 100%);
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) skewX(-14deg);
+  transition: transform 600ms ease;
   pointer-events: none;
 }
 
-.liquid-stain-red {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 70% 20%, rgba(209, 18, 27, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(209, 18, 27, 0.05) 0%, transparent 50%);
-  filter: blur(60px);
-  opacity: 0.65;
+.hero-cta--secondary:hover {
+  transform: translateY(-2px) scale(1.015);
+  border-color: #e50914;
+  box-shadow:
+    inset 0 0 28px rgba(229, 9, 20, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.liquid-stain-neutral {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(20, 20, 20, 0.5) 0%, transparent 60%);
-  filter: blur(80px);
-  opacity: 0.6;
+.hero-cta--secondary:hover::before {
+  transform: translateX(130%) skewX(-14deg);
+}
+
+.hero-cta--secondary:active {
+  transform: scale(0.985);
+}
+
+.hero-cta:focus-visible {
+  outline: 2px solid rgba(229, 9, 20, 0.55);
+  outline-offset: 3px;
+}
+
+.hero-cta-icon {
+  flex-shrink: 0;
+  transition: transform 0.35s ease;
+}
+
+.hero-cta:hover .hero-cta-icon {
+  transform: translateX(3px);
 }
 
 /* Hero headline — Bebas / poster stack (reference board) */
