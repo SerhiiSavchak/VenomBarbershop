@@ -1,14 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MapPin, Clock, Phone, Mail } from "lucide-react";
-import Image from "next/image";
+import { ExternalLink, MapPin, Clock, Phone, Mail } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, viewportReveal } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useLgUp } from "@/lib/useLgUp";
 
 export function Contact() {
   const { t } = useI18n();
   const c = t.contact;
+  const lg = useLgUp();
 
   const rows = [
     { icon: MapPin, label: c.addressLabel, text: c.address },
@@ -24,64 +25,77 @@ export function Contact() {
 
       <div className="relative z-[10] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         <motion.div
-          initial={{ opacity: 0, y: 48 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={lg ? { opacity: 0, y: 48, x: 0 } : { opacity: 0, y: 36, x: -18 }}
+          whileInView={revealLiftEnter}
           viewport={viewportReveal}
-          transition={{ duration: 0.95, ease: cinematicEase }}
-          className="max-w-5xl"
+          transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
+          className={`max-w-5xl ${sectionTitleInset}`}
         >
           <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.42em] text-[#E50914]">{c.eyebrow}</span>
           <h2 className="hero-display text-[clamp(3rem,10vw,6.5rem)] text-white">{c.title}</h2>
           <p className="mt-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">{c.lead}</p>
-          <div className="mt-12 flex flex-wrap gap-4">
-            <a
-              href={`mailto:${c.email}?subject=${encodeURIComponent(c.bookAppointment)}`}
-              className="red-glow inline-flex min-h-[56px] items-center justify-center bg-[#E50914] px-10 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:bg-accent-red-bright"
-            >
-              {c.bookAppointment}
-            </a>
+          <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-stretch lg:justify-end">
             <a
               href={c.phoneHref}
-              className="inline-flex min-h-[56px] items-center justify-center border border-white/40 px-10 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:border-[#E50914]/65 hover:bg-white/[0.06]"
+              className="site-cta-outline order-2 w-full sm:order-1 sm:w-auto"
             >
               {c.callNow}
+            </a>
+            <a
+              href={`mailto:${c.email}?subject=${encodeURIComponent(c.bookAppointment)}`}
+              className="red-glow site-cta-primary order-1 w-full sm:order-2 sm:w-auto"
+            >
+              {c.bookAppointment}
             </a>
           </div>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={lg ? { opacity: 0, y: 32, x: 0 } : { opacity: 0, y: 26, x: -14 }}
+          whileInView={revealLiftEnter}
           viewport={viewportReveal}
-          transition={{ duration: 0.85 }}
+          transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
           className="mt-24 grid gap-10 border-t border-white/[0.08] pt-16 lg:grid-cols-12 lg:items-start"
         >
-          <div className="space-y-8 lg:col-span-5">
+          <div className="space-y-10 lg:space-y-12 lg:col-span-5">
             {rows.map((row) => (
-              <div key={row.label} className="flex gap-4">
-                <row.icon className="mt-0.5 h-4 w-4 shrink-0 text-[#E50914]" strokeWidth={1.5} aria-hidden />
-                <div>
-                  <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-foreground-muted">{row.label}</p>
-                  <p className="mt-2 whitespace-pre-line text-sm text-white/85">{row.text}</p>
+              <div key={row.label} className="flex gap-4 sm:gap-5">
+                <row.icon className="mt-1 h-5 w-5 shrink-0 text-[#E50914] sm:h-5 sm:w-5" strokeWidth={1.5} aria-hidden />
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-foreground-muted sm:text-[11px]">{row.label}</p>
+                  <p className="mt-2.5 whitespace-pre-line text-base leading-relaxed text-white/90 sm:text-[17px] sm:leading-relaxed">
+                    {row.text}
+                  </p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="relative aspect-[16/10] overflow-hidden border border-white/[0.08] lg:col-span-7">
-            <Image
-              src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=88"
-              alt={c.mapImageAlt}
-              fill
-              className="object-cover brightness-[0.75] contrast-[1.1]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="flex items-center gap-3 rounded-full border border-white/15 bg-black/50 px-5 py-3 backdrop-blur-md">
-                <MapPin className="h-5 w-5 text-[#E50914]" aria-hidden />
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white">{c.mapPlaceholder}</span>
-              </div>
+          <div className="flex flex-col gap-4 lg:col-span-7">
+            <div className="relative aspect-[16/10] min-h-[220px] overflow-hidden border border-white/[0.08] bg-[#0a0a0a] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.03)]">
+              <iframe
+                title={c.mapIframeTitle}
+                src={c.googleMapsEmbedSrc}
+                className="absolute inset-0 h-full w-full border-0 grayscale-[0.15] contrast-[1.05] [color-scheme:light]"
+                loading="lazy"
+                allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent"
+                aria-hidden
+              />
             </div>
+            <a
+              href={c.googleMapsOpenUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-max items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-white/75 transition-colors hover:text-[#E50914]"
+            >
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-[#E50914]" aria-hidden />
+              <span>{c.openInGoogleMaps}</span>
+              <ExternalLink className="h-3 w-3 shrink-0 opacity-70" aria-hidden />
+            </a>
           </div>
         </motion.div>
       </div>

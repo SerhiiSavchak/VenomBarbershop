@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, viewportReveal } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useLgUp } from "@/lib/useLgUp";
 
 const galleryImages = [
   "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&q=88",
@@ -24,26 +25,37 @@ const masonryVariants = {
   show: { transition: { staggerChildren: 0.08 } },
 };
 
-const tileVariants = {
-  hidden: { opacity: 0, y: 32, scale: 0.98 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.75, ease: cinematicEase } },
-};
+function tileVariants(lg: boolean) {
+  return {
+    hidden: lg
+      ? { opacity: 0, y: 32, scale: 0.98, x: 0 }
+      : { opacity: 0, y: 22, x: -12, scale: 0.96 },
+    show: {
+      opacity: 1,
+      y: 0,
+      x: 0,
+      scale: 1,
+      transition: { duration: 0.76, ease: lg ? cinematicEase : mobilePopEase },
+    },
+  };
+}
 
 export function Gallery() {
   const { t } = useI18n();
+  const lg = useLgUp();
 
   return (
     <section id="gallery" className="relative bg-[#030303] py-24 md:py-32">
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={revealLiftInitial(lg)}
+          whileInView={revealLiftEnter}
           viewport={viewportReveal}
-          transition={{ duration: 0.7 }}
-          className="mb-12"
+          transition={{ duration: 0.88, ease: lg ? cinematicEase : mobilePopEase }}
+          className={`mb-12 ${sectionTitleInset}`}
         >
           <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.gallery.eyebrow}</span>
-          <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl">{t.gallery.title}</h2>
+          <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">{t.gallery.title}</h2>
         </motion.div>
 
         <motion.div
@@ -56,14 +68,14 @@ export function Gallery() {
           {galleryImages.map((src, index) => (
             <motion.div
               key={src}
-              variants={tileVariants}
+              variants={tileVariants(lg)}
               className={`group relative mb-3 break-inside-avoid overflow-hidden border border-white/[0.06] md:mb-4 ${heights[index % heights.length]}`}
             >
               <motion.div
-                initial={{ scale: 1.12 }}
-                whileInView={{ scale: 1 }}
+                initial={lg ? { scale: 1.12 } : { scale: 1.06, y: 14 }}
+                whileInView={{ scale: 1, y: 0 }}
                 viewport={viewportReveal}
-                transition={{ duration: 1.2, ease: cinematicEase }}
+                transition={{ duration: lg ? 1.2 : 0.95, ease: lg ? cinematicEase : mobilePopEase }}
                 className="relative h-full w-full"
               >
                 <Image

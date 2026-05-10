@@ -3,10 +3,12 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, viewportReveal } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useLgUp } from "@/lib/useLgUp";
 
 export function Space() {
   const { t } = useI18n();
+  const lg = useLgUp();
 
   return (
     <section id="space" className="relative overflow-hidden bg-black">
@@ -15,28 +17,28 @@ export function Space() {
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 py-24 md:px-10 md:py-32 lg:px-14">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-6">
           <motion.div
-            initial={{ opacity: 0, y: 36 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={revealLiftInitial(lg)}
+            whileInView={revealLiftEnter}
             viewport={viewportReveal}
-            transition={{ duration: 0.85, ease: cinematicEase }}
-            className="lg:col-span-5"
+            transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
+            className={`lg:col-span-5 ${sectionTitleInset}`}
           >
             <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.38em] text-[#E50914]">{t.space.eyebrow}</span>
             <h2 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-[4.25rem]">{t.space.title}</h2>
             <p className="mt-8 max-w-md text-sm leading-relaxed text-white/68 md:text-base">{t.space.body}</p>
             <a
               href="#contact"
-              className="mt-10 inline-flex border border-white/30 px-8 py-3 text-[10px] font-semibold uppercase tracking-[0.28em] text-white transition-colors hover:border-white/55 hover:bg-white/[0.05]"
+              className="site-cta-outline mt-10"
             >
               {t.space.cta}
             </a>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, scale: 1.06 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, scale: 1.07, y: 20 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0 }}
             viewport={viewportReveal}
-            transition={{ duration: 1.1, ease: cinematicEase }}
+            transition={{ duration: 1.1, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative lg:col-span-7"
           >
             <div className="grid gap-3 sm:grid-cols-5 sm:gap-4">

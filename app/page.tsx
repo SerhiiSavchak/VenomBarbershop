@@ -22,10 +22,10 @@ export default function Home() {
       <Process />
       <Services />
       <Space />
+      <Masters />
       <Gallery />
       <Reviews />
       <Contact />
-      <Masters />
 
       <Footer />
     </main>

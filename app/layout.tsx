@@ -23,8 +23,8 @@ const bebasNeue = Bebas_Neue({
 export const metadata: Metadata = {
   title: "VENOM | Барбершоп у Львові",
   description:
-    "Стрижка, борода та догляд у темній преміальній атмосфері. Онлайн-запис і зручний сервіс.",
-  keywords: ["barbershop", "haircut", "beard trim", "grooming", "premium", "luxury", "VENOM"],
+    "Стрижка, борода та догляд у Львові. Онлайн-запис, зручний сервіс і команда, яка чітко формує образ.",
+  keywords: ["barbershop", "haircut", "beard", "grooming", "VENOM", "Lviv", "Львів"],
 };
 
 export const viewport = {

@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, viewportReveal } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useLgUp } from "@/lib/useLgUp";
 
 export function Reviews() {
   const { t } = useI18n();
   const reviews = t.reviews.items;
+  const lg = useLgUp();
 
   return (
     <section id="reviews" className="relative overflow-hidden bg-black py-24 md:py-32">
@@ -16,11 +18,11 @@ export function Reviews() {
 
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={revealLiftInitial(lg)}
+          whileInView={revealLiftEnter}
           viewport={viewportReveal}
-          transition={{ duration: 0.75 }}
-          className="mb-12"
+          transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase }}
+          className={`mb-12 ${sectionTitleInset}`}
         >
           <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.reviews.eyebrow}</span>
           <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl">{t.reviews.title}</h2>
@@ -28,10 +30,10 @@ export function Reviews() {
 
         <div className="relative">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={lg ? { opacity: 0, y: 40, x: 0 } : { opacity: 0, y: 28, x: -16 }}
+            whileInView={revealLiftEnter}
             viewport={viewportReveal}
-            transition={{ duration: 0.85, ease: cinematicEase }}
+            transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative overflow-hidden border border-white/[0.08] bg-[#070707]"
           >
             <div className="grid md:grid-cols-12">
@@ -64,10 +66,10 @@ export function Reviews() {
             {reviews.slice(1).map((review, index) => (
               <motion.div
                 key={review.name}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={lg ? { opacity: 0, y: 24, x: 0 } : { opacity: 0, y: 22, x: -12 }}
+                whileInView={revealLiftEnter}
                 viewport={viewportReveal}
-                transition={{ delay: 0.1 + index * 0.08, duration: 0.7 }}
+                transition={{ delay: 0.1 + index * 0.08, duration: 0.7, ease: lg ? cinematicEase : mobilePopEase }}
                 className="border border-white/[0.07] bg-[#060606] p-6 transition-colors hover:border-[#E50914]/35"
               >
                 <div className="mb-3 flex gap-1">

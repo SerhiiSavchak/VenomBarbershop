@@ -45,6 +45,17 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
+/* Майже непомітне виділення — без «синьої плями» браузера */
+::selection {
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
+::-moz-selection {
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+}
+
 /* Red glow effect */
 .red-glow {
   box-shadow: 0 0 40px rgba(209, 18, 27, 0.3), 0 0 80px rgba(209, 18, 27, 0.1);
@@ -130,23 +141,74 @@ body {
   scrollbar-width: none;
 }
 
+/* Соцмережі — червоний акцент, трохи більший розмір, виразний hover */
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  color: #e50914;
+  background: rgba(229, 9, 20, 0.12);
+  border: 1px solid rgba(229, 9, 20, 0.4);
+  transition:
+    transform 0.28s ease,
+    background-color 0.28s ease,
+    border-color 0.28s ease,
+    color 0.28s ease,
+    box-shadow 0.28s ease;
+}
+
+@media (min-width: 768px) {
+  .social-link {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.social-link:hover {
+  color: #fff;
+  background: rgba(229, 9, 20, 0.92);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 0 1px rgba(229, 9, 20, 0.5), 0 10px 36px -8px rgba(229, 9, 20, 0.55);
+  transform: translateY(-3px) scale(1.06);
+}
+
+.social-link:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.social-link:focus-visible {
+  outline: 2px solid rgba(229, 9, 20, 0.75);
+  outline-offset: 3px;
+}
+
 /* Hero CTAs — premium shine + micro-motion */
 .hero-cta-group {
   display: flex;
   flex-direction: column;
   width: 100%;
   gap: 12px;
-  margin-top: 1.25rem;
+  margin-top: 0;
 }
 
 @media (min-width: 1024px) {
   .hero-cta-group {
     flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 100%;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  .hero-cta-group .hero-cta {
+    flex: 1 1 0;
+    min-width: 0;
     width: auto;
-    gap: 14px;
-    margin-top: 32px;
   }
 }
 
@@ -159,11 +221,16 @@ body {
   overflow: hidden;
   width: 100%;
   min-width: 0;
-  height: 56px;
-  padding: 0 1.25rem;
+  min-height: 56px;
+  height: auto;
+  padding: 0.65rem 1rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
+  font-size: clamp(12px, 3.6vw, 15px);
+  line-height: 1.28;
+  text-align: center;
+  white-space: normal;
   transition:
     transform 0.35s ease,
     box-shadow 0.35s ease,
@@ -172,19 +239,25 @@ body {
     color 0.35s ease;
 }
 
+.hero-cta-text {
+  min-width: 0;
+  text-wrap: balance;
+}
+
 @media (min-width: 1024px) {
   .hero-cta {
-    width: auto;
-    height: 58px;
     min-height: 58px;
+    height: 58px;
+    padding: 0 1.25rem;
+    letter-spacing: 0.05em;
+    font-size: 13px;
+    line-height: 1.15;
+    white-space: nowrap;
   }
 
-  .hero-cta--primary {
-    min-width: 230px;
-  }
-
+  .hero-cta--primary,
   .hero-cta--secondary {
-    min-width: 190px;
+    min-width: 0;
   }
 }
 
@@ -278,16 +351,166 @@ body {
   transform: translateX(3px);
 }
 
-/* Hero headline — Bebas / poster stack (reference board) */
+/* Уніфіковані CTA по секціях — компактні, однакової висоти */
+.site-cta-primary,
+.site-cta-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  min-height: 48px;
+  min-width: 0;
+  padding: 0.65rem 1.15rem;
+  font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-align: center;
+  text-wrap: balance;
+  white-space: normal;
+  text-decoration: none;
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .site-cta-primary,
+  .site-cta-outline {
+    width: auto;
+    min-width: 168px;
+    min-height: 50px;
+    padding: 0.7rem 1.35rem;
+    letter-spacing: 0.17em;
+  }
+}
+
+.site-cta-primary {
+  color: #fff;
+  background: #e50914;
+  border: 1px solid transparent;
+  box-shadow: 0 8px 28px -14px rgba(229, 9, 20, 0.5);
+}
+
+.site-cta-primary:hover {
+  background: var(--accent-red-bright);
+  box-shadow: 0 12px 36px -12px rgba(229, 9, 20, 0.55);
+}
+
+.site-cta-outline {
+  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+}
+
+.site-cta-outline:hover {
+  border-color: rgba(229, 9, 20, 0.55);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.site-cta-primary:focus-visible,
+.site-cta-outline:focus-visible {
+  outline: 2px solid rgba(229, 9, 20, 0.55);
+  outline-offset: 3px;
+}
+
+.site-cta-primary.w-full,
+.site-cta-outline.w-full {
+  min-width: 0;
+}
+
+/* Компактна кнопка в картках послуг — без жорсткої min-width */
+.site-cta-primary.site-cta--compact,
+.site-cta-outline.site-cta--compact {
+  width: max-content;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.55rem 1rem;
+  letter-spacing: 0.14em;
+  font-size: 10px;
+  box-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .site-cta-primary.site-cta--compact,
+  .site-cta-outline.site-cta--compact {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    min-height: 46px;
+    padding: 0.6rem 1.1rem;
+  }
+}
+
+.site-cta-primary.site-cta--compact {
+  box-shadow: 0 6px 22px -12px rgba(229, 9, 20, 0.45);
+}
+
+@media (min-width: 640px) {
+  .site-cta-primary.site-cta--compact,
+  .site-cta-outline.site-cta--compact {
+    min-width: 0;
+    width: max-content;
+  }
+}
+
+/* Hero headline — Bebas / poster stack */
 .hero-display {
   font-family: var(--font-bebas), system-ui, sans-serif;
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  line-height: 0.88;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
+}
+
+@media (min-width: 1024px) {
+  .hero-display {
+    line-height: 0.9;
+  }
 }
 
 /* Body copy in hero — Montserrat (spec) */
 .hero-copy {
   font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Page loader — орбіти для трьох шарів кілець */
+@keyframes venom-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes venom-orbit-rev {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes venom-breathe {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes venom-sweep {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

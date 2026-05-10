@@ -16,6 +16,7 @@ import {
   type Lang,
   type Messages,
 } from "@/lib/i18n";
+import { PageLoader } from "@/components/PageLoader";
 
 type I18nContextValue = {
   lang: Lang;
@@ -62,7 +63,12 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
 
-  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
+  return (
+    <I18nContext.Provider value={value}>
+      <PageLoader />
+      {children}
+    </I18nContext.Provider>
+  );
 }
 
 export function useI18n(): I18nContextValue {

@@ -4,6 +4,11 @@ export const STORAGE_KEY = "venom-lang";
 
 export const defaultLang: Lang = "uk";
 
+/** Hero strip: animated numeric stats or fixed text (e.g. 24/7). */
+export type HeroStat =
+  | { mode: "count"; end: number; suffix: string; label: string }
+  | { mode: "text"; value: string; label: string };
+
 export type Messages = {
   meta: { title: string; description: string };
   brand: { wordmark: string };
@@ -13,6 +18,7 @@ export type Messages = {
   >;
   header: {
     bookNow: string;
+    bookNowShort: string;
     bookAppointment: string;
     openMenu: string;
     closeMenu: string;
@@ -41,7 +47,9 @@ export type Messages = {
     description: string;
     ctaPrimary: string;
     ctaSecondary: string;
-    stats: { value: string; label: string }[];
+    /** Коротший підпис для вузьких екранів (герой, другорядна CTA). */
+    ctaSecondaryShort: string;
+    stats: HeroStat[];
     primaryCtaAria: string;
     secondaryCtaAria: string;
   };
@@ -51,17 +59,20 @@ export type Messages = {
     subtitle: string;
     points: { num: string; title: string; body: string }[];
     cta: string;
+    ctaShort: string;
     ctaAria: string;
     collageLabel: string;
     imageMainAlt: string;
     imageSmallTopAlt: string;
     imageSmallBottomAlt: string;
+    imageFeatureAlt: string;
   };
   services: {
     sectionEyebrow: string;
     sectionTitle: string;
     sectionLead: string;
     reserve: string;
+    reserveShort: string;
     cardStandard: string;
     cardStandardSub: string;
     items: {
@@ -90,7 +101,8 @@ export type Messages = {
   masters: {
     eyebrow: string;
     title: string;
-    instagramAria: string;
+    ctaLead: string;
+    bookCtaAria: string;
     items: { name: string; role: string }[];
   };
   gallery: {
@@ -119,8 +131,12 @@ export type Messages = {
     hours: string;
     phone: string;
     email: string;
-    mapImageAlt: string;
-    mapPlaceholder: string;
+    /** Повний `src` для iframe з Google Maps (Код вставки → HTML) або query-embed на координати. */
+    googleMapsEmbedSrc: string;
+    /** Посилання «Відкрити в Google Картах» (той самий пункт на карті). */
+    googleMapsOpenUrl: string;
+    mapIframeTitle: string;
+    openInGoogleMaps: string;
   };
 };
 
@@ -129,7 +145,7 @@ export const messages: Record<Lang, Messages> = {
     meta: {
       title: "VENOM | Барбершоп у Львові",
       description:
-        "Стрижка, борода та догляд у темній преміальній атмосфері. Онлайн-запис і зручний сервіс.",
+        "Стрижка, борода та догляд у Львові. Онлайн-запис, зручний сервіс і команда, яка чітко формує образ.",
     },
     brand: { wordmark: "VENOM" },
     nav: {
@@ -143,6 +159,7 @@ export const messages: Record<Lang, Messages> = {
     },
     header: {
       bookNow: "Записатися зараз",
+      bookNowShort: "Записатися",
       bookAppointment: "Записатися",
       openMenu: "Відкрити меню",
       closeMenu: "Закрити меню",
@@ -176,52 +193,56 @@ export const messages: Record<Lang, Messages> = {
       headline1: "ТОЧНА СТРИЖКА.",
       headline2: "ЧИСТИЙ СТИЛЬ.",
       description:
-        "Стрижки, борода та догляд у темній преміальній атмосфері. Підберемо форму, яка пасує саме тобі.",
+        "Стрижки, борода та догляд без зайвого шуму. Підберемо форму й ритуал, які реально пасують тобі.",
       ctaPrimary: "ЗАПИСАТИСЯ",
       ctaSecondary: "ПЕРЕГЛЯНУТИ ПОСЛУГИ",
+      ctaSecondaryShort: "ПОСЛУГИ",
       stats: [
-        { value: "15K+", label: "клієнтів" },
-        { value: "8+", label: "років досвіду" },
-        { value: "5K+", label: "стрижок" },
-        { value: "24/7", label: "запис онлайн" },
+        { mode: "count", end: 1000, suffix: "+", label: "клієнтів" },
+        { mode: "count", end: 8, suffix: "+", label: "років досвіду" },
+        { mode: "count", end: 2500, suffix: "+", label: "стрижок" },
+        { mode: "text", value: "24/7", label: "запис онлайн" },
       ],
       primaryCtaAria: "Записатися на візит",
       secondaryCtaAria: "Переглянути послуги",
     },
     about: {
       eyebrow: "ПРО НАС",
-      title: "VENOM BARBERSHOP",
+      title: "МІСЦЕ ДЛЯ ОБРАЗУ",
       subtitle:
-        "Ми створюємо чоловічі стрижки, бороду та догляд у темній преміальній атмосфері. VENOM — це про точність, характер і впевненість у деталях.",
+        "VENOM у Львові — про рішення, а не галас: форма, ритм і догляд там, де це реально має сенс для тебе. Без шаблонних «історій бренду» — лише зрозумілий сервіс і охайний результат.",
       points: [
         {
           num: "01",
-          title: "Стрижки",
-          body: "Підбираємо форму під риси обличчя, стиль і звичний ритм.",
+          title: "Простір",
+          body: "Затишний зал і спокійний темп: час тільки для тебе й майстра, без зайвого шуму в навушниках чи в телефоні.",
         },
         {
           num: "02",
-          title: "Борода",
-          body: "Оформлюємо контур, довжину та чисту геометрію.",
+          title: "Пояснення",
+          body: "Показуємо логіку кроків і варіанти — ти розумієш, що відбувається, а не просто «довіряй».",
         },
         {
           num: "03",
-          title: "Атмосфера",
-          body: "Темний простір, музика, крісло і спокійний сервіс без зайвого шуму.",
+          title: "Результат",
+          body: "Чисті лінії й охайний вигляд, який легко підтримувати між візитами — без надмірного стайлінгу на камеру.",
         },
       ],
       cta: "Переглянути процес",
+      ctaShort: "Процес",
       ctaAria: "Переглянути процес",
       collageLabel: "ЛЬВІВ",
       imageMainAlt: "Зал барбершопу",
-      imageSmallTopAlt: "Крісло",
-      imageSmallBottomAlt: "Деталі простору",
+      imageSmallTopAlt: "Крісло та робоче місце",
+      imageSmallBottomAlt: "Деталі інтер'єру",
+      imageFeatureAlt: "Панорама залу",
     },
     services: {
       sectionEyebrow: "НАШІ ПОСЛУГИ",
       sectionTitle: "Послуги",
       sectionLead: "Стрижка, борода та комплексний догляд — чітко, акуратно, без зайвого.",
       reserve: "Обрати послугу",
+      reserveShort: "Обрати",
       cardStandard: "Стандарт VENOM",
       cardStandardSub: "Консультація включена · За потреби — гарячий рушник",
       items: [
@@ -230,43 +251,43 @@ export const messages: Record<Lang, Messages> = {
           tag: "Хіт",
           duration: "45 хв",
           blurb: "Класична або сучасна стрижка під форму голови та твій стиль.",
-          price: "$35",
+          price: "1 450 ₴",
         },
         {
           name: "Борода",
           tag: "Форма",
           duration: "30 хв",
           blurb: "Рівний контур, охайна довжина та охайний вигляд бороди.",
-          price: "$28",
+          price: "1 150 ₴",
         },
         {
           name: "Стрижка + борода",
           tag: "Комплекс",
           duration: "60 хв",
           blurb: "Повний апдейт образу за один візит — зручно і послідовно.",
-          price: "$55",
+          price: "2 200 ₴",
         },
         {
           name: "Гоління",
           tag: "Бритва",
           duration: "35 хв",
           blurb: "Гоління небезпечною бритвою з підготовкою шкіри та охайним фінішем.",
-          price: "$30",
+          price: "1 250 ₴",
         },
         {
           name: "VIP-догляд",
           tag: "VIP",
           duration: "90 хв",
           blurb: "Розширений сервіс: стрижка, борода та додатковий догляд за запитом.",
-          price: "$75",
+          price: "2 800 ₴",
         },
       ],
     },
     space: {
-      eyebrow: "АТМОСФЕРА",
+      eyebrow: "ІНТЕР’ЄР",
       title: "Простір",
       body:
-        "Темний інтер’єр, комфортне крісло, сильна музика і спокійна впевненість у кожній деталі.",
+        "Світлий охайний зал, зручне крісло, добра музика й увага до деталей — щоб тобі було легко розслабитись і зосередитись на результаті.",
       cta: "Записатися",
       imageMain: "Зал барбершопу",
       imageChair: "Крісло",
@@ -280,29 +301,31 @@ export const messages: Record<Lang, Messages> = {
         {
           number: "01",
           title: "Консультація",
-          desc: "Обговорюємо форму, стиль і побажання.",
+          desc: "Форма, стиль і побажання — узгоджуємо очікування до першого руху ножиць.",
         },
         {
           number: "02",
-          title: "Стрижка",
-          desc: "Працюємо з формою, довжиною та деталями.",
+          title: "Робота з формою",
+          desc: "Довжина, текстура й перехід між зонами — акуратно й послідовно.",
         },
         {
           number: "03",
-          title: "Борода",
-          desc: "Оформлюємо контур, якщо потрібно.",
+          title: "Акценти",
+          desc: "Додаткові зони лише там, де це доречно: контур, текстура чи легкий догляд — за домовленістю.",
         },
         {
           number: "04",
-          title: "Фінал",
-          desc: "Укладка, перевірка деталей і готовий образ.",
+          title: "Фініш",
+          desc: "Укладка за потреби, перевірка в дзеркалі — і ти виходиш з уже «своїм» виглядом.",
         },
       ],
     },
     masters: {
       eyebrow: "КОМАНДА",
       title: "Майстри",
-      instagramAria: "Instagram майстра",
+      ctaLead:
+        "Хочеш до конкретного майстра? Запишись онлайн — підберемо час і послугу під твій графік.",
+      bookCtaAria: "Записатися в барбершоп",
       items: [
         { name: "Marcus Stone", role: "Барбер" },
         { name: "David Chen", role: "Барбер" },
@@ -345,19 +368,22 @@ export const messages: Record<Lang, Messages> = {
       hoursLabel: "Години",
       phoneLabel: "Телефон",
       emailLabel: "Email",
-      address: "123 Premium Street, Downtown District",
+      address: "вул. Городоцька, 1, Львів",
       hours: "Пн — Сб · 9:00 — 21:00\nНд · 10:00 — 18:00",
       phone: "+1 (555) 123-4567",
       email: "book@venombarbershop.com",
-      mapImageAlt: "VENOM на карті",
-      mapPlaceholder: "Точка на карті — підключити API",
+      googleMapsEmbedSrc:
+        "https://www.google.com/maps?q=49.8414%2C24.0315&z=16&hl=uk&output=embed",
+      googleMapsOpenUrl: "https://www.google.com/maps?q=49.8414,24.0315&z=16&hl=uk",
+      mapIframeTitle: "Google Карта — Львів (замініть координати на адресу салону)",
+      openInGoogleMaps: "Відкрити в Google Картах",
     },
   },
   en: {
     meta: {
       title: "VENOM | Barbershop in Lviv",
       description:
-        "Haircuts, beard work, and grooming in a dark premium atmosphere. Online booking.",
+        "Haircuts, beard work, and grooming in Lviv. Online booking and a team that shapes your look with precision.",
     },
     brand: { wordmark: "VENOM" },
     nav: {
@@ -371,6 +397,7 @@ export const messages: Record<Lang, Messages> = {
     },
     header: {
       bookNow: "Book now",
+      bookNowShort: "Book",
       bookAppointment: "Book now",
       openMenu: "Open menu",
       closeMenu: "Close menu",
@@ -404,46 +431,49 @@ export const messages: Record<Lang, Messages> = {
       headline1: "PRECISE CUT.",
       headline2: "CLEAN STYLE.",
       description:
-        "Haircuts, beard work, and grooming in a dark premium atmosphere. We shape a look that fits you.",
+        "Haircuts, beard work, and grooming without the noise. We shape a look and routine that actually fit you.",
       ctaPrimary: "BOOK NOW",
       ctaSecondary: "VIEW SERVICES",
+      ctaSecondaryShort: "SERVICES",
       stats: [
-        { value: "15K+", label: "clients" },
-        { value: "8+", label: "years experience" },
-        { value: "5K+", label: "cuts" },
-        { value: "24/7", label: "online booking" },
+        { mode: "count", end: 1000, suffix: "+", label: "clients" },
+        { mode: "count", end: 8, suffix: "+", label: "years experience" },
+        { mode: "count", end: 2500, suffix: "+", label: "cuts" },
+        { mode: "text", value: "24/7", label: "online booking" },
       ],
       primaryCtaAria: "Book a visit",
       secondaryCtaAria: "View services",
     },
     about: {
       eyebrow: "ABOUT",
-      title: "VENOM BARBERSHOP",
+      title: "ROOM FOR YOUR LOOK",
       subtitle:
-        "We craft men's haircuts, beard work, and grooming in a dark premium atmosphere. VENOM is precision, character, and confidence in the details.",
+        "VENOM in Lviv is about choices, not noise — shape, rhythm, and care where it actually fits you. No brand monologues: just clear service and a clean finish.",
       points: [
         {
           num: "01",
-          title: "Haircuts",
-          body: "We shape the cut to your face, style, and everyday rhythm.",
+          title: "The room",
+          body: "A calm, easy pace — time for you and the barber only, without extra noise in your ears or on your screen.",
         },
         {
           num: "02",
-          title: "Beard",
-          body: "Clean outline, controlled length, and sharp geometry.",
+          title: "The why",
+          body: "We walk through the steps and options so you understand what’s happening — not just “trust me.”",
         },
         {
           num: "03",
-          title: "Atmosphere",
-          body: "A dark room, music, the chair, and calm service without noise.",
+          title: "The outcome",
+          body: "Crisp lines and a tidy look that’s easy to live with between visits — not over-styled for a photo.",
         },
       ],
       cta: "View the process",
+      ctaShort: "Process",
       ctaAria: "View the process section",
       collageLabel: "LVIV",
-      imageMainAlt: "Barbershop interior",
-      imageSmallTopAlt: "Chair detail",
-      imageSmallBottomAlt: "Space details",
+      imageMainAlt: "Barbershop floor",
+      imageSmallTopAlt: "Chair and station",
+      imageSmallBottomAlt: "Interior details",
+      imageFeatureAlt: "Wide view of the shop",
     },
     services: {
       sectionEyebrow: "OUR SERVICES",
@@ -451,6 +481,7 @@ export const messages: Record<Lang, Messages> = {
       sectionLead:
         "Haircuts, beard work, and full grooming — clean, neat, no fluff.",
       reserve: "Choose service",
+      reserveShort: "Reserve",
       cardStandard: "VENOM standard",
       cardStandardSub: "Consultation included · Hot towel on request",
       items: [
@@ -459,43 +490,43 @@ export const messages: Record<Lang, Messages> = {
           tag: "Popular",
           duration: "45 min",
           blurb: "Classic or modern cut tailored to your head shape and style.",
-          price: "$35",
+          price: "1 450 ₴",
         },
         {
           name: "Beard",
           tag: "Shape",
           duration: "30 min",
           blurb: "Sharp lines, tidy length, and a neat beard finish.",
-          price: "$28",
+          price: "1 150 ₴",
         },
         {
           name: "Haircut + beard",
           tag: "Combo",
           duration: "60 min",
           blurb: "Full refresh in one visit — efficient and consistent.",
-          price: "$55",
+          price: "2 200 ₴",
         },
         {
           name: "Shave",
           tag: "Razor",
           duration: "35 min",
           blurb: "Straight-razor shave with skin prep and a smooth finish.",
-          price: "$30",
+          price: "1 250 ₴",
         },
         {
           name: "VIP grooming",
           tag: "VIP",
           duration: "90 min",
           blurb: "Extended service: cut, beard, and extra care on request.",
-          price: "$75",
+          price: "2 800 ₴",
         },
       ],
     },
     space: {
-      eyebrow: "ATMOSPHERE",
+      eyebrow: "INTERIOR",
       title: "Space",
       body:
-        "Dark interior, a comfortable chair, strong music, and calm confidence in every detail.",
+        "Bright, clean interiors, a comfortable chair, good music, and steady attention to detail — so you can relax and focus on the result.",
       cta: "Book now",
       imageMain: "Shop floor",
       imageChair: "Chair detail",
@@ -509,29 +540,31 @@ export const messages: Record<Lang, Messages> = {
         {
           number: "01",
           title: "Consultation",
-          desc: "We discuss shape, style, and what you want.",
+          desc: "Shape, style, and expectations — aligned before the first snip.",
         },
         {
           number: "02",
-          title: "Haircut",
-          desc: "We work on shape, length, and details.",
+          title: "Shaping",
+          desc: "Length, texture, and clean transitions between areas — steady and precise.",
         },
         {
           number: "03",
-          title: "Beard",
-          desc: "We clean up the outline when needed.",
+          title: "Refinements",
+          desc: "Extra attention only where it makes sense: outline, texture, or light grooming — as agreed.",
         },
         {
           number: "04",
           title: "Finish",
-          desc: "Styling, final check, and you’re ready.",
+          desc: "Styling if needed, mirror check — you leave looking like yourself, dialed in.",
         },
       ],
     },
     masters: {
       eyebrow: "TEAM",
       title: "Masters",
-      instagramAria: "Barber Instagram",
+      ctaLead:
+        "Want a specific barber? Book online — we’ll align the time and service with your schedule.",
+      bookCtaAria: "Book an appointment at the shop",
       items: [
         { name: "Marcus Stone", role: "Barber" },
         { name: "David Chen", role: "Barber" },
@@ -574,12 +607,15 @@ export const messages: Record<Lang, Messages> = {
       hoursLabel: "Hours",
       phoneLabel: "Phone",
       emailLabel: "Email",
-      address: "123 Premium Street, Downtown District",
+      address: "1 Halytska St., Lviv",
       hours: "Mon — Sat · 9:00 — 21:00\nSun · 10:00 — 18:00",
       phone: "+1 (555) 123-4567",
       email: "book@venombarbershop.com",
-      mapImageAlt: "VENOM on the map",
-      mapPlaceholder: "Map pin — integrate API",
+      googleMapsEmbedSrc:
+        "https://www.google.com/maps?q=49.8414%2C24.0315&z=16&hl=en&output=embed",
+      googleMapsOpenUrl: "https://www.google.com/maps?q=49.8414,24.0315&z=16&hl=en",
+      mapIframeTitle: "Google Map — Lviv (replace coordinates with your shop location)",
+      openInGoogleMaps: "Open in Google Maps",
     },
   },
 };
