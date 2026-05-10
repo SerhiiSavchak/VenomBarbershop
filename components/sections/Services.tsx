@@ -2,137 +2,177 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { SymbioteAccent } from "@/components/symbiote/SymbioteLayer";
 
 const services = [
   {
     name: "Haircut",
     price: "$35",
+    tag: "Signature",
     duration: "45 MIN",
-    description: "Precision cut tailored to your style.",
-    image: "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=400&q=80",
+    blurb: "Bone-structure mapping, weight removal, and a silhouette that holds under studio light.",
+    image:
+      "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1600&q=88&auto=format&fit=crop",
   },
   {
-    name: "Beard Trim",
-    price: "$25",
-    duration: "30 MIN",
-    description: "Expert beard shaping and maintenance.",
-    image: "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=400&q=80",
+    name: "Beard Architecture",
+    price: "$28",
+    tag: "Sculpt",
+    duration: "35 MIN",
+    blurb: "Lines carved with tension — density control, temperature, and finish that reads on camera.",
+    image:
+      "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1600&q=88&auto=format&fit=crop",
   },
   {
-    name: "Haircut + Beard",
-    price: "$55",
+    name: "Total Look",
+    price: "$58",
+    tag: "Ritual",
     duration: "75 MIN",
-    description: "Complete grooming package for the modern gentleman.",
-    image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=400&q=80",
+    blurb: "Cut + beard + thermal sequence. A single narrative from chair to mirror — no compromise.",
+    image:
+      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&q=88&auto=format&fit=crop",
   },
   {
-    name: "Classic Shave",
-    price: "$30",
-    duration: "30 MIN",
-    description: "Traditional hot towel straight razor experience.",
-    image: "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=400&q=80",
-  },
-  {
-    name: "VIP Cut",
-    price: "$75",
-    duration: "90 MIN",
-    description: "Premium experience with hot towel, massage, and styling.",
-    image: "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=400&q=80",
+    name: "Straight Razor",
+    price: "$32",
+    tag: "Classic",
+    duration: "40 MIN",
+    blurb: "Slow passes, obsidian gloss skin, and silence broken only by steel on strop.",
+    image:
+      "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=1600&q=88&auto=format&fit=crop",
   },
 ];
 
+function ServiceBlock({
+  service,
+  index,
+}: {
+  service: (typeof services)[number];
+  index: number;
+}) {
+  const imageRight = index % 2 === 0;
+
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 48 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-12%" }}
+      transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] as const }}
+      className="relative min-h-[min(88vh,820px)] border-b border-white/[0.06] bg-[#030303]"
+    >
+      <SymbioteAccent band={index % 2 === 0 ? "top" : "mid"} position={imageRight ? "bottom-left" : "bottom-right"} />
+
+      <div
+        className="mx-auto grid h-full max-w-[1600px] lg:min-h-[min(88vh,820px)] lg:grid-cols-12"
+      >
+        <div
+          className={`relative z-[2] flex flex-col justify-end gap-6 px-6 py-16 md:px-10 lg:col-span-5 lg:justify-center lg:py-24 lg:pl-14 xl:pl-20 ${
+            imageRight ? "lg:order-1" : "lg:order-2 lg:pl-10"
+          }`}
+        >
+          <span className="text-[10px] font-bold uppercase tracking-[0.38em] text-accent-red">{service.tag}</span>
+          <h3 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl xl:text-6xl">
+            {service.name}
+          </h3>
+          <p className="max-w-md text-sm leading-relaxed text-white/65 md:text-base">{service.blurb}</p>
+          <div className="flex flex-wrap items-baseline gap-6">
+            <span className="font-display text-3xl font-bold text-accent-red md:text-4xl">{service.price}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.28em] text-foreground-muted">
+              {service.duration}
+            </span>
+          </div>
+          <a
+            href="#contact"
+            className="inline-flex w-max items-center border border-white/25 px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:border-white/50 hover:bg-white/[0.06]"
+          >
+            Reserve
+          </a>
+        </div>
+
+        <div
+          className={`relative min-h-[52vh] lg:col-span-7 lg:min-h-full ${imageRight ? "lg:order-2" : "lg:order-1"}`}
+        >
+          <motion.div
+            initial={{ scale: 1.12, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true, margin: "-10%" }}
+            transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] as const }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={service.image}
+              alt={service.name}
+              fill
+              sizes="(max-width:1024px) 100vw, 58vw"
+              className="object-cover contrast-[1.08] saturate-[1.05]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/55 lg:bg-gradient-to-r lg:from-black/90 lg:via-black/25 lg:to-transparent" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_70%_50%,rgba(209,18,27,0.16)_0%,transparent_55%)] mix-blend-screen opacity-80" />
+          </motion.div>
+          <div className="glass absolute bottom-6 left-6 right-6 z-[3] border-white/10 p-4 md:bottom-10 md:left-10 md:right-auto md:max-w-sm">
+            <p className="text-[10px] uppercase tracking-[0.25em] text-foreground-muted">Obsidian standard</p>
+            <p className="mt-2 text-sm text-white/85">Consultation included · Hot towel finish on request</p>
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
 export function Services() {
   return (
-    <section id="services" className="relative min-h-[700px] lg:min-h-[800px] bg-[#050505] p-6 md:p-8 lg:p-10 pt-24 md:pt-28 overflow-hidden">
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div>
-          <span className="text-accent-red text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block">What We Offer</span>
-          <h2 className="font-display text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white">
-            OUR SERVICES
-          </h2>
-        </div>
-        <p className="text-foreground-muted text-[11px] max-w-[180px] leading-relaxed text-right hidden md:block">
-          Premium grooming services crafted with precision and delivered with excellence.
-        </p>
+    <section id="services" className="relative bg-black">
+      <div className="mx-auto max-w-[1600px] px-6 pb-6 pt-24 md:px-10 md:pt-32 lg:px-14">
+        <motion.div
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] as const }}
+          className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+        >
+          <div>
+            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-accent-red">
+              Services
+            </span>
+            <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
+              Engineered <span className="ml-2 text-stroke-red md:ml-4">Looks</span>
+            </h2>
+          </div>
+          <p className="max-w-sm text-sm leading-relaxed text-foreground-muted md:text-right">
+            Full-bleed sessions — not a menu grid. Each block is a campaign frame: light, leather, and tension.
+          </p>
+        </motion.div>
       </div>
 
-      {/* Services Grid - 5 cards exactly like reference */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 md:gap-3 mb-6">
+      {/* Mobile: horizontal cinematic rails */}
+      <div className="flex gap-4 overflow-x-auto px-5 pb-20 pt-4 scrollbar-hide snap-x snap-mandatory md:hidden">
         {services.map((service, index) => (
           <motion.div
             key={service.name}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: index * 0.05, duration: 0.4 }}
-            className="group cursor-pointer"
+            transition={{ delay: index * 0.06, duration: 0.6 }}
+            className="relative w-[min(88vw,400px)] shrink-0 snap-center overflow-hidden border border-white/10 bg-[#080808]"
           >
-            <div className="relative bg-[#0a0a0a] overflow-hidden border border-white/5 hover:border-accent-red/40 transition-all duration-300">
-              {/* Liquid corner */}
-              <div className="absolute bottom-0 left-0 w-12 h-12 pointer-events-none z-10">
-                <svg viewBox="0 0 50 50" className="w-full h-full">
-                  <path d="M0,50 L0,20 Q10,25 20,20 Q30,15 35,30 Q40,45 50,50 Z" fill="#000000" />
-                  <path d="M5,35 Q15,32 22,38" stroke="#38E8FF" strokeWidth="1" strokeOpacity="0.5" fill="none" />
-                </svg>
-              </div>
-              
-              {/* Image */}
-              <div className="relative aspect-[3/4] overflow-hidden">
-                <Image
-                  src={service.image}
-                  alt={service.name}
-                  fill
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/30 to-transparent" />
-                <div className="absolute inset-0 bg-accent-red/10 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay" />
-                
-                {/* Red price badge */}
-                <div className="absolute top-2 right-2 bg-accent-red px-2 py-0.5">
-                  <span className="font-display text-sm font-bold text-white">{service.price}</span>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="p-2.5 md:p-3">
-                <h3 className="font-display text-xs md:text-sm font-bold mb-1 uppercase tracking-wide text-white">{service.name}</h3>
-                <p className="text-[9px] md:text-[10px] text-foreground-muted leading-relaxed mb-1.5 line-clamp-2">{service.description}</p>
-                <span className="text-[9px] text-foreground-muted/60 uppercase tracking-wider">{service.duration}</span>
+            <SymbioteAccent band="mid" position="bottom-right" className="opacity-70" />
+            <div className="relative aspect-[4/5] w-full">
+              <Image src={service.image} alt={service.name} fill className="object-cover" sizes="90vw" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+            </div>
+            <div className="space-y-3 p-5">
+              <h3 className="font-display text-2xl font-bold uppercase text-white">{service.name}</h3>
+              <p className="text-xs leading-relaxed text-white/65">{service.blurb}</p>
+              <div className="flex items-center justify-between border-t border-white/10 pt-4">
+                <span className="font-display text-2xl font-bold text-accent-red">{service.price}</span>
+                <span className="text-[9px] uppercase tracking-[0.2em] text-foreground-muted">{service.duration}</span>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* View full menu button */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.3 }}
-      >
-        <button className="w-full md:w-auto px-6 py-2.5 border border-white/20 text-[10px] uppercase tracking-wider hover:border-white/40 hover:bg-white/5 transition-all text-white">
-          View Full Menu
-        </button>
-      </motion.div>
-
-      {/* Bottom liquid wave */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none">
-        <svg viewBox="0 0 800 80" preserveAspectRatio="none" className="w-full h-full">
-          <path
-            d="M0,80 L0,40 Q100,20 200,50 Q300,80 400,40 Q500,0 600,30 Q700,60 800,40 L800,80 Z"
-            fill="#000000"
-          />
-          <path
-            d="M50,45 Q150,25 250,55 Q350,85 450,45"
-            stroke="#38E8FF"
-            strokeWidth="1.5"
-            strokeOpacity="0.3"
-            fill="none"
-          />
-        </svg>
-      </div>
+      <div className="hidden md:block">{services.map((s, i) => <ServiceBlock key={s.name} service={s} index={i} />)}</div>
     </section>
   );
 }

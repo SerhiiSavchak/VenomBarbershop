@@ -2,79 +2,95 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRef } from "react";
+import { SymbioteLayer } from "@/components/symbiote/SymbioteLayer";
 
 const steps = [
-  { number: "01", title: "Consultation", desc: "We discuss your style goals, face shape, and lifestyle." },
-  { number: "02", title: "Shape", desc: "Expert cutting and shaping with precision." },
-  { number: "03", title: "Details", desc: "Finishing touches that define your look." },
-  { number: "04", title: "Final Look", desc: "Professional styling for the perfect finish." },
+  { number: "01", title: "Consultation", desc: "Face shape, growth patterns, lifestyle — mapped like a fitting." },
+  { number: "02", title: "Shape", desc: "Weight and silhouette established with clippers and shears under controlled tension." },
+  { number: "03", title: "Details", desc: "Perimeter, texture, transitions — the micro-decisions that read on film." },
+  { number: "04", title: "Final Look", desc: "Finish, product, mirror moment. You leave set-ready." },
 ];
 
 export function Process() {
+  const sectionRef = useRef<HTMLElement>(null);
+
   return (
-    <section id="process" className="relative min-h-[500px] bg-[#050505] p-6 md:p-8 overflow-hidden">
-      {/* Liquid decorations */}
-      <div className="absolute top-0 right-0 w-[200px] h-[300px] pointer-events-none">
-        <svg viewBox="0 0 200 300" className="w-full h-full">
-          <path d="M200,0 L200,300 L150,300 Q120,250 150,200 Q180,150 140,100 Q100,50 150,0 Z" fill="#000000" />
-          <path d="M170,50 Q140,100 165,150 Q190,200 155,250" stroke="#38E8FF" strokeWidth="1.5" strokeOpacity="0.3" fill="none" />
-        </svg>
+    <section
+      ref={sectionRef}
+      id="process"
+      className="relative overflow-hidden bg-[#030303] py-24 md:py-32"
+    >
+      <div className="pointer-events-none absolute -right-1/4 top-0 h-[80%] w-1/2 opacity-40">
+        <SymbioteLayer
+          band="top"
+          blend="screen"
+          opacity={0.22}
+          drift
+          scrollTargetRef={sectionRef}
+          parallaxRange={[30, -40]}
+          scale={1.05}
+          className="h-full w-full"
+        />
       </div>
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,rgba(209,18,27,0.1)_0%,transparent_55%)]" />
 
-      {/* Red glow */}
-      <div className="absolute top-1/3 right-1/4 w-[200px] h-[200px] bg-accent-red/15 blur-[80px] pointer-events-none" />
+      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+        <div className="grid gap-16 lg:grid-cols-12 lg:gap-10">
+          <div className="relative lg:col-span-6">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="mb-10 lg:absolute lg:left-0 lg:top-8 lg:mb-0 lg:max-w-md"
+            >
+              <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-accent-red">
+                Process
+              </span>
+              <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl">
+                Controlled
+                <span className="mt-1 block text-white/40">Chaos</span>
+              </h2>
+            </motion.div>
 
-      <div className="relative z-10 grid grid-cols-2 gap-4 md:gap-6 h-full">
-        {/* Left: Image */}
-        <div className="relative">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="relative aspect-[3/4] overflow-hidden"
-          >
-            <Image
-              src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=700&q=80"
-              alt="Barber at work"
-              fill
-              className="object-cover grayscale-[20%]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/30" />
-            <div className="absolute inset-0 bg-accent-red/10 mix-blend-overlay" />
-            
-            {/* Red glow at top */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-12 bg-accent-red/40 blur-[40px]" />
-          </motion.div>
-        </div>
-
-        {/* Right: Steps */}
-        <div className="flex flex-col">
-          <div className="mb-4 md:mb-6">
-            <span className="text-accent-red text-[10px] font-bold uppercase tracking-[0.2em] mb-1 block">How We Work</span>
-            <h2 className="font-display text-xl md:text-2xl lg:text-3xl font-black tracking-tight text-white">
-              THE PROCESS
-            </h2>
+            <motion.div
+              initial={{ opacity: 0, scale: 1.08 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, margin: "-15%" }}
+              transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] as const }}
+              className="relative mt-8 aspect-[3/4] max-h-[min(78vh,720px)] overflow-hidden lg:mt-28"
+            >
+              <Image
+                src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1000&q=88"
+                alt="Process"
+                fill
+                sizes="(max-width:1024px) 100vw, 48vw"
+                className="object-cover contrast-[1.08]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/40" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_70%,rgba(209,18,27,0.2)_0%,transparent_50%)] mix-blend-screen" />
+            </motion.div>
           </div>
 
-          <div className="space-y-3 md:space-y-4">
+          <div className="relative flex flex-col justify-center lg:col-span-6 lg:pl-8">
             {steps.map((step, index) => (
               <motion.div
                 key={step.number}
-                initial={{ opacity: 0, x: 15 }}
+                initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-                className="group flex items-start gap-3"
+                viewport={{ once: true, margin: "-8%" }}
+                transition={{ delay: index * 0.1, duration: 0.75, ease: [0.22, 1, 0.36, 1] as const }}
+                className="group relative border-b border-white/[0.07] py-10 first:pt-0"
               >
-                {/* Red number */}
-                <span className="font-display text-xl md:text-2xl font-black text-accent-red leading-none">
+                <span className="pointer-events-none absolute -left-2 top-6 select-none font-display text-[clamp(5rem,18vw,9rem)] font-bold leading-none text-white/[0.04] transition-colors group-hover:text-accent-red/15 md:-left-4">
                   {step.number}
                 </span>
-                
-                {/* Content */}
-                <div>
-                  <h3 className="font-display text-xs md:text-sm font-bold uppercase tracking-wide mb-0.5 text-white">{step.title}</h3>
-                  <p className="text-foreground-muted text-[10px] md:text-xs leading-relaxed">{step.desc}</p>
+                <div className="relative flex flex-col gap-3 pl-4 md:pl-8">
+                  <h3 className="font-display text-xl font-bold uppercase tracking-wide text-white md:text-2xl">
+                    {step.title}
+                  </h3>
+                  <p className="max-w-md text-sm leading-relaxed text-foreground-muted md:text-[15px]">{step.desc}</p>
                 </div>
               </motion.div>
             ))}

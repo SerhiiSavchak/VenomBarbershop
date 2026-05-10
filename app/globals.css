@@ -8,10 +8,9 @@
   --foreground: #ffffff;
   --foreground-muted: #888888;
   
-  --accent-red: #D1121B;
-  --accent-red-bright: #E50914;
-  --accent-cyan: #38E8FF;
-  --accent-cyan-bright: #00D9FF;
+  --accent-red: #d1121b;
+  --accent-red-bright: #e50914;
+  --accent-red-deep: #6a0a10;
   
   --radius: 0.5rem;
 }
@@ -25,10 +24,10 @@
   --color-foreground-muted: var(--foreground-muted);
   --color-accent-red: var(--accent-red);
   --color-accent-red-bright: var(--accent-red-bright);
-  --color-accent-cyan: var(--accent-cyan);
-  --color-accent-cyan-bright: var(--accent-cyan-bright);
+  --color-accent-red-deep: var(--accent-red-deep);
   --font-sans: var(--font-geist-sans);
-  --font-display: var(--font-oswald);
+  --font-display: var(--font-montserrat);
+  --font-hero: var(--font-bebas);
 }
 
 * {
@@ -57,9 +56,9 @@ body {
   box-shadow: 0 0 40px rgba(209, 18, 27, 0.3), 0 0 80px rgba(209, 18, 27, 0.1);
 }
 
-/* Cyan reflection effect */
-.cyan-reflection {
-  background: linear-gradient(135deg, transparent 40%, rgba(56, 232, 255, 0.1) 50%, transparent 60%);
+/* Subtle rim on dark glass */
+.rim-light {
+  background: linear-gradient(135deg, transparent 42%, rgba(255, 255, 255, 0.06) 50%, transparent 58%);
 }
 
 /* Glass effect */
@@ -99,7 +98,7 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, var(--accent-red), transparent, var(--accent-cyan));
+  background: linear-gradient(135deg, var(--accent-red), transparent, rgba(255, 255, 255, 0.12));
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   animation: borderGlow 3s ease-in-out infinite;
@@ -132,12 +131,12 @@ body {
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgba(56, 232, 255, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(209, 18, 27, 0.12), transparent);
   background-size: 200% 100%;
   animation: shimmer 3s linear infinite;
 }
 
-/* Text stroke effect for hero headlines */
+/* Text stroke effect for hero headlines — poster outline */
 .text-stroke-red {
   color: transparent;
   -webkit-text-stroke: 2px var(--accent-red);
@@ -151,6 +150,13 @@ body {
   }
 }
 
+@media (min-width: 1024px) {
+  .text-stroke-red {
+    -webkit-text-stroke: 3.5px var(--accent-red);
+    text-stroke: 3.5px var(--accent-red);
+  }
+}
+
 /* Hide scrollbar for mobile carousels */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -159,4 +165,79 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.liquid-section-wave-body {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 120% 90% at 50% 100%, #000 0%, transparent 72%),
+    linear-gradient(180deg, transparent 0%, #020202 50%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 48%);
+  clip-path: ellipse(120% 85% at 50% 100%);
+}
+
+.liquid-section-wave-spec {
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 28%;
+  background: radial-gradient(ellipse 70% 100% at 50% 100%, rgba(209, 18, 27, 0.12) 0%, transparent 72%);
+  filter: blur(18px);
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.liquid-card-corner-blob {
+  position: absolute;
+  inset: 0;
+  border-radius: 0 0 100% 0;
+  background: radial-gradient(ellipse 120% 120% at 0% 100%, #000 0%, transparent 72%),
+    linear-gradient(145deg, #080808 0%, #000 100%);
+  box-shadow: inset -6px 6px 24px rgba(209, 18, 27, 0.08);
+  clip-path: polygon(0 100%, 0 35%, 18% 22%, 45% 12%, 72% 8%, 100% 0, 100% 100%);
+}
+
+.liquid-card-corner-gloss {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 90% 90% at 0% 100%, rgba(255, 255, 255, 0.08) 0%, transparent 58%);
+  filter: blur(8px);
+  mix-blend-mode: soft-light;
+  opacity: 0.65;
+  clip-path: polygon(0 100%, 0 40%, 25% 20%, 55% 10%, 100% 0, 100% 100%);
+  pointer-events: none;
+}
+
+.liquid-stain-red {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 70% 20%, rgba(209, 18, 27, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 20% 80%, rgba(209, 18, 27, 0.05) 0%, transparent 50%);
+  filter: blur(60px);
+  opacity: 0.65;
+}
+
+.liquid-stain-neutral {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 100% 80% at 50% 50%, rgba(20, 20, 20, 0.5) 0%, transparent 60%);
+  filter: blur(80px);
+  opacity: 0.6;
+}
+
+/* Hero headline — Bebas / poster stack (reference board) */
+.hero-display {
+  font-family: var(--font-bebas), system-ui, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 0.88;
+}
+
+/* Body copy in hero — Montserrat (spec) */
+.hero-copy {
+  font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
 }

@@ -3,6 +3,16 @@
 import { motion } from "framer-motion";
 import { Users, Award, Scissors, Clock } from "lucide-react";
 import Image from "next/image";
+import { HeroLiquidStack } from "@/components/liquid/HeroLiquidAsset";
+
+const LEFT_READABILITY_BG =
+  "linear-gradient(90deg, #000 0%, rgba(0,0,0,.78) 32%, rgba(0,0,0,.28) 54%, transparent 76%)";
+
+const BOTTOM_VIGNETTE_BG =
+  "linear-gradient(0deg, rgba(0,0,0,.45) 0%, transparent 45%)";
+
+const HERO_DESKTOP = "/symbiote/hero-desktop.png";
+const HERO_MOBILE = "/symbiote/hero-mobile.png";
 
 const stats = [
   { icon: Users, value: "15K+", label: "Happy Clients" },
@@ -11,153 +21,218 @@ const stats = [
   { icon: Clock, value: "24/7", label: "Premium Service" },
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.12 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 28 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, ease: [0.22, 1, 0.36, 1] as const },
+  },
+};
+
+const bgEase = [0.22, 1, 0.36, 1] as const;
+
+function HeroBackgroundDesktop() {
+  return (
+    <div className="absolute inset-0 z-[1] hidden overflow-hidden lg:block">
+      <div className="absolute inset-y-0 right-0 z-[1] h-full w-[72vw]">
+        <motion.div
+          className="absolute inset-0 bg-transparent"
+          initial={{ scale: 1.02 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 1.25, ease: bgEase, delay: 0.02 }}
+        >
+          <Image
+            src={HERO_DESKTOP}
+            alt=""
+            fill
+            priority
+            quality={92}
+            sizes="72vw"
+            className="h-full w-full object-cover object-center opacity-100"
+          />
+        </motion.div>
+      </div>
+
+      {/* Narrow strip only — gradient must not cover chair / center-right */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-[min(46vw,620px)] max-w-[92vw] bg-transparent"
+        aria-hidden
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-transparent"
+          style={{ background: LEFT_READABILITY_BG }}
+          aria-hidden
+        />
+      </div>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-0 z-[2] bg-transparent"
+        aria-hidden
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-transparent"
+          style={{ background: BOTTOM_VIGNETTE_BG }}
+          aria-hidden
+        />
+      </div>
+    </div>
+  );
+}
+
+function HeroBackgroundMobile() {
+  return (
+    <div className="absolute inset-0 z-[1] overflow-hidden lg:hidden">
+      <motion.div
+        className="absolute inset-0 z-[1] bg-transparent"
+        initial={{ scale: 1.02 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1.1, ease: bgEase, delay: 0.03 }}
+      >
+        <Image
+          src={HERO_MOBILE}
+          alt=""
+          fill
+          priority
+          quality={92}
+          sizes="100vw"
+          className="object-cover object-[50%_28%] opacity-100"
+        />
+      </motion.div>
+
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-[min(88vw,440px)] max-w-[92vw] bg-transparent"
+        aria-hidden
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-transparent"
+          style={{ background: LEFT_READABILITY_BG }}
+          aria-hidden
+        />
+      </div>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-0 z-[2] bg-transparent"
+        aria-hidden
+      >
+        <div
+          className="pointer-events-none absolute inset-0 bg-transparent"
+          style={{ background: BOTTOM_VIGNETTE_BG }}
+          aria-hidden
+        />
+      </div>
+    </div>
+  );
+}
+
 export function Hero() {
   return (
-    <section className="relative min-h-[700px] lg:min-h-[800px] overflow-hidden bg-black border-r border-white/5">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1200&q=80"
-          alt="Dark barbershop interior"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        {/* Dark overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
-      </div>
+    <section
+      id="hero"
+      className="relative min-h-[100dvh] min-h-[100svh] w-full overflow-hidden bg-black"
+    >
+      <div className="pointer-events-none absolute inset-0 z-0 bg-black" aria-hidden />
 
-      {/* Red volumetric glow at top */}
-      <div className="absolute top-0 right-0 w-[400px] h-[300px] bg-accent-red/30 blur-[100px] pointer-events-none" />
-      <div className="absolute top-1/4 right-1/4 w-[200px] h-[200px] bg-accent-red/20 blur-[80px] pointer-events-none" />
+      <HeroBackgroundMobile />
+      <HeroBackgroundDesktop />
 
-      {/* MASSIVE LIQUID WRAP - Bottom and right side */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <svg 
-          className="absolute -bottom-10 -left-20 w-[120%] h-[500px]" 
-          viewBox="0 0 1200 400" 
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient id="heroLiquid" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#000000" />
-              <stop offset="50%" stopColor="#050505" />
-              <stop offset="100%" stopColor="#0a0a0a" />
-            </linearGradient>
-          </defs>
-          {/* Main liquid body */}
-          <path
-            d="M0,400 L0,200 Q100,180 200,220 Q350,280 500,200 Q650,120 800,180 Q950,240 1100,160 Q1200,100 1200,400 Z"
-            fill="url(#heroLiquid)"
-          />
-          {/* Cyan edge highlight */}
-          <path
-            d="M50,200 Q150,180 280,230 Q420,290 560,210 Q700,130 840,190 Q980,250 1120,170"
-            stroke="#38E8FF"
-            strokeWidth="2"
-            strokeOpacity="0.4"
-            fill="none"
-          />
-        </svg>
-        
-        {/* Right side liquid tendril */}
-        <svg 
-          className="absolute -right-20 top-0 w-[300px] h-full" 
-          viewBox="0 0 200 800" 
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M200,0 L200,800 L100,800 Q80,700 120,600 Q160,500 100,400 Q40,300 100,200 Q160,100 120,0 Z"
-            fill="#000000"
-          />
-          <path
-            d="M150,100 Q120,200 150,300 Q180,400 130,500"
-            stroke="#38E8FF"
-            strokeWidth="1.5"
-            strokeOpacity="0.3"
-            fill="none"
-          />
-        </svg>
-      </div>
+      <HeroLiquidStack variant="desktop" />
+      <HeroLiquidStack variant="mobile" />
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-between p-6 md:p-10 lg:p-12 pt-24 md:pt-28">
-        <div className="max-w-lg">
-          {/* Eyebrow */}
+      <motion.div
+        className="relative z-[10] mx-auto flex min-h-[calc(100dvh-9.25rem)] w-full max-w-[1600px] flex-col justify-center px-6 pb-[9.5rem] pt-28 sm:px-8 md:min-h-[calc(100dvh-9.5rem)] md:pb-40 md:pt-32 lg:absolute lg:left-[clamp(2rem,4vw,4.5rem)] lg:right-auto lg:top-[46%] lg:mx-0 lg:max-w-[600px] lg:min-h-0 lg:flex lg:w-auto lg:-translate-y-[46%] lg:translate-x-0 lg:flex-col lg:items-start lg:justify-center lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        <div className="w-full max-w-[600px]">
           <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-accent-red text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-4 block"
+            variants={item}
+            className="hero-copy mb-2.5 inline-block text-[10px] font-semibold uppercase tracking-[0.38em] text-accent-red md:mb-3 md:text-[11px] lg:mb-2.5"
           >
             Premium Barbershop Experience
           </motion.span>
 
-          {/* Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.9] tracking-tight mb-6"
-          >
-            <span className="block text-white">SHARP</span>
-            <span className="block text-white">LOOKS.</span>
-            <span className="block text-stroke-red">BOLD INK.</span>
-          </motion.h1>
+          <div className="hero-display mb-4 !tracking-[0em] text-[clamp(3rem,11vw,5.5rem)] leading-[0.84] text-white md:mb-4 lg:mb-[1rem] lg:text-[clamp(92px,7vw,136px)] lg:leading-[0.84]">
+            <motion.span
+              variants={item}
+              className="block drop-shadow-[0_8px_28px_rgba(0,0,0,0.35)]"
+            >
+              Sharp Looks.
+            </motion.span>
+            <motion.span
+              variants={item}
+              className="block translate-y-[-0.02em] text-transparent [-webkit-text-stroke:2px_#E50914]"
+            >
+              Bold Ink.
+            </motion.span>
+          </div>
 
-          {/* Description */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.25 }}
-            className="text-foreground-muted text-sm md:text-base max-w-md mb-8 leading-relaxed"
+            variants={item}
+            className="hero-copy mb-0 max-w-[430px] text-[13px] font-medium leading-[1.74] text-white/86 md:text-[15px] lg:mb-0"
           >
-            Experience precision craftsmanship in a cinematic atmosphere. Where every cut is a masterpiece and every visit feels like luxury.
+            Experience precision craftsmanship in a cinematic atmosphere. Where every cut is a masterpiece
+            and every visit feels like luxury.
           </motion.p>
 
-          {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-            className="flex flex-wrap gap-3"
-          >
-            <button className="bg-accent-red hover:bg-accent-red-bright text-white px-6 py-3 text-xs font-bold uppercase tracking-wider transition-colors">
+          <motion.div variants={item} className="mt-6 flex flex-wrap items-center gap-2.5 md:gap-3 lg:mt-6">
+            <a
+              href="#contact"
+              className="hero-copy inline-flex h-[56px] w-full max-w-[min(100%,280px)] flex-none items-center justify-center bg-[#E50914] px-6 text-[11px] font-bold uppercase tracking-[0.08em] text-white transition-colors hover:bg-[#ff1a24] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E50914]/50 sm:max-w-none lg:w-[220px] lg:max-w-[220px] lg:px-4"
+            >
               Book Appointment
-            </button>
-            <button className="border border-white/30 hover:border-white/60 text-white px-6 py-3 text-xs font-bold uppercase tracking-wider transition-colors hover:bg-white/5">
+            </a>
+            <a
+              href="#services"
+              className="hero-copy inline-flex h-[56px] w-full max-w-[min(100%,260px)] flex-none items-center justify-center border border-[rgba(255,255,255,0.35)] bg-black/50 px-6 text-[11px] font-bold uppercase tracking-[0.08em] text-white/92 transition-colors hover:border-white/55 hover:bg-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/25 sm:max-w-none lg:w-[190px] lg:max-w-[190px] lg:px-4"
+            >
               View Services
-            </button>
+            </a>
           </motion.div>
         </div>
+      </motion.div>
 
-        {/* Trust indicators at bottom */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-auto pt-8"
-        >
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.75, duration: 0.6, ease: bgEase }}
+        className="absolute bottom-0 left-0 right-0 z-[12] min-h-[86px] border-t border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.72)] px-4 py-3 md:px-10 lg:max-h-[92px] lg:min-h-[88px] lg:px-14 lg:py-0"
+      >
+        <div className="mx-auto grid h-full max-w-[1600px] grid-cols-2 content-center items-center gap-y-5 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-white/[0.08]">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.55 + index * 0.08 }}
-              className="flex items-center gap-2"
+              transition={{
+                delay: 0.82 + index * 0.05,
+                duration: 0.48,
+                ease: bgEase,
+              }}
+              className="flex min-h-[4.5rem] items-center justify-center gap-3 px-3 py-1 sm:min-h-0 sm:gap-3.5 sm:px-6 md:px-8 lg:min-h-[88px] lg:px-10"
             >
-              <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center bg-white/5">
-                <stat.icon className="w-3.5 h-3.5 text-foreground-muted" />
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent-red bg-black md:h-10 md:w-10">
+                <stat.icon className="h-3.5 w-3.5 text-accent-red md:h-4 md:w-4" strokeWidth={1.35} aria-hidden />
               </div>
-              <div>
-                <span className="block font-display text-base md:text-lg font-bold text-white">{stat.value}</span>
-                <span className="text-[9px] text-foreground-muted uppercase tracking-wider">{stat.label}</span>
+              <div className="min-w-0">
+                <p className="font-display text-lg font-bold leading-none tracking-tight text-white md:text-xl">
+                  {stat.value}
+                </p>
+                <p className="hero-copy mt-1.5 text-[8px] font-semibold uppercase tracking-[0.26em] text-white/55 md:text-[9px]">
+                  {stat.label}
+                </p>
               </div>
             </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </section>
   );
 }

@@ -3,149 +3,114 @@
 import { motion } from "framer-motion";
 import { MapPin, Clock, Phone, Mail } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
+import { SymbioteLayer } from "@/components/symbiote/SymbioteLayer";
 
 export function Contact() {
+  const sectionRef = useRef<HTMLElement>(null);
+
   return (
-    <section id="contact" className="relative min-h-[350px] bg-[#050505] p-6 md:p-8 overflow-hidden">
-      {/* Liquid background stain */}
-      <div className="absolute -bottom-20 -left-32 w-[500px] h-[400px] pointer-events-none opacity-60">
-        <svg viewBox="0 0 500 400" className="w-full h-full">
-          <path d="M0,400 L0,200 Q50,150 120,180 Q200,210 280,150 Q360,90 400,140 Q450,190 500,120 L500,400 Z" fill="#000" />
-          <path d="M50,220 Q120,180 200,200 Q280,220 350,170 Q420,120 480,150" stroke="#38E8FF" strokeWidth="1" strokeOpacity="0.2" fill="none" />
-        </svg>
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="relative overflow-hidden bg-black py-28 md:py-40"
+    >
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_120%,rgba(209,18,27,0.35)_0%,transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
+
+      <div className="pointer-events-none absolute -right-[18%] bottom-[-35%] z-[2] h-[min(72vh,640px)] w-[min(100vw,900px)] opacity-95">
+        <div className="relative h-full w-full">
+          <SymbioteLayer
+            band="top"
+            blend="screen"
+            opacity={0.45}
+            drift
+            scrollTargetRef={sectionRef}
+            parallaxRange={[24, -36]}
+            scale={1.12}
+            className="absolute inset-0"
+          />
+          <SymbioteLayer
+            band="mid"
+            blend="lighten"
+            opacity={0.28}
+            drift
+            scrollTargetRef={sectionRef}
+            parallaxRange={[12, -20]}
+            scale={1.08}
+            className="absolute inset-0"
+          />
+        </div>
       </div>
 
-      {/* Red ambient glow */}
-      <div className="absolute top-1/2 left-1/4 w-48 h-48 bg-accent-red/15 rounded-full blur-[80px]" />
-
-      <div className="relative z-10 grid lg:grid-cols-3 gap-6 md:gap-8 items-center">
-        
-        {/* Left: CTA Content */}
+      <div className="relative z-[10] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 48 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.95, ease: [0.22, 1, 0.36, 1] as const }}
+          className="max-w-5xl"
         >
-          <span className="text-accent-red text-[10px] font-bold uppercase tracking-[0.3em] mb-2 block">
-            Book Your Experience
-          </span>
-          
-          <h2 className="font-display text-2xl md:text-3xl font-black leading-[0.9] mb-4 text-white">
-            READY FOR A<br />
-            <span className="text-accent-red">SHARPER LOOK?</span>
+          <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.42em] text-accent-red">Final scene</span>
+          <h2 className="hero-display text-[clamp(3rem,10vw,6.5rem)] text-white">
+            Own the
+            <span className="mt-2 block text-stroke-red">Mirror</span>
           </h2>
-          
-          <p className="text-foreground-muted text-xs md:text-sm mb-5 leading-relaxed max-w-xs">
-            Experience the difference of premium grooming. Book your appointment today.
+          <p className="mt-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
+            One chair. One narrative. Book the cut that reads like a poster — we will hold the date.
           </p>
-          
-          <div className="flex flex-wrap gap-3">
-            <button className="bg-accent-red hover:bg-accent-red-bright text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider transition-colors">
-              Book Appointment
-            </button>
-            <button className="border border-white/30 hover:border-white/60 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider transition-colors hover:bg-white/5">
-              Call Us Now
-            </button>
+          <div className="mt-12 flex flex-wrap gap-4">
+            <a
+              href="tel:+15551234567"
+              className="red-glow inline-flex min-h-[56px] items-center justify-center bg-accent-red px-10 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:bg-accent-red-bright"
+            >
+              Book appointment
+            </a>
+            <a
+              href="mailto:book@obsidianbarbershop.com"
+              className="inline-flex min-h-[56px] items-center justify-center border border-white/40 px-10 py-4 text-xs font-semibold uppercase tracking-[0.22em] text-white transition-colors hover:border-white/65 hover:bg-white/[0.06]"
+            >
+              Email concierge
+            </a>
           </div>
         </motion.div>
 
-        {/* Center: Image with liquid frame */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 32 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="relative hidden lg:block"
+          transition={{ delay: 0.15, duration: 0.85 }}
+          className="mt-24 grid gap-10 border-t border-white/[0.08] pt-16 lg:grid-cols-12 lg:items-start"
         >
-          <div className="relative aspect-[4/5] max-w-[220px] mx-auto overflow-hidden">
+          <div className="space-y-8 lg:col-span-5">
+            {[
+              { icon: MapPin, label: "Address", text: "123 Premium Street, Downtown District" },
+              { icon: Clock, label: "Hours", text: "Mon — Sat · 9:00 — 21:00\nSun · 10:00 — 18:00" },
+              { icon: Phone, label: "Phone", text: "+1 (555) 123-4567" },
+              { icon: Mail, label: "Email", text: "book@obsidianbarbershop.com" },
+            ].map((row) => (
+              <div key={row.label} className="flex gap-4">
+                <row.icon className="mt-0.5 h-4 w-4 shrink-0 text-accent-red" strokeWidth={1.5} />
+                <div>
+                  <p className="text-[9px] font-bold uppercase tracking-[0.28em] text-foreground-muted">{row.label}</p>
+                  <p className="mt-2 whitespace-pre-line text-sm text-white/85">{row.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="relative aspect-[16/10] overflow-hidden border border-white/[0.08] lg:col-span-7">
             <Image
-              src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=80"
-              alt="Barbershop interior"
+              src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=88"
+              alt="Obsidian location mood"
               fill
-              className="object-cover"
+              className="object-cover brightness-[0.75] contrast-[1.1]"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/30" />
-            <div className="absolute inset-0 bg-accent-red/10 mix-blend-overlay" />
-            
-            {/* Red glow at top */}
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-2/3 h-8 bg-accent-red/40 blur-[30px]" />
-          </div>
-
-          {/* Liquid corners */}
-          <div className="absolute -top-2 -left-2 w-16 h-16 pointer-events-none">
-            <svg viewBox="0 0 60 60" className="w-full h-full">
-              <path d="M0,0 L45,0 Q30,12 25,25 Q20,38 10,45 Q0,52 0,60 Z" fill="#050505" />
-              <path d="M6,12 Q20,10 30,20" stroke="#38E8FF" strokeWidth="1" strokeOpacity="0.4" fill="none" />
-            </svg>
-          </div>
-          <div className="absolute -bottom-2 -right-2 w-16 h-16 pointer-events-none">
-            <svg viewBox="0 0 60 60" className="w-full h-full">
-              <path d="M60,60 L15,60 Q30,48 35,35 Q40,22 50,15 Q60,8 60,0 Z" fill="#050505" />
-              <path d="M54,48 Q40,51 30,40" stroke="#38E8FF" strokeWidth="1" strokeOpacity="0.4" fill="none" />
-            </svg>
-          </div>
-        </motion.div>
-
-        {/* Right: Contact details + Map */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-        >
-          {/* Contact details */}
-          <div className="space-y-2.5 mb-4">
-            <div className="flex items-start gap-2.5">
-              <MapPin className="w-3.5 h-3.5 text-accent-red mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-[8px] text-foreground-muted uppercase tracking-wider">Address</p>
-                <p className="text-[11px] text-white">123 Premium Street, Downtown District</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-2.5">
-              <Clock className="w-3.5 h-3.5 text-accent-red mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-[8px] text-foreground-muted uppercase tracking-wider">Hours</p>
-                <p className="text-[11px] text-white">Mon - Sat: 9AM - 9PM<br />Sun: 10AM - 6PM</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-2.5">
-              <Phone className="w-3.5 h-3.5 text-accent-red mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-[8px] text-foreground-muted uppercase tracking-wider">Phone</p>
-                <p className="text-[11px] text-white">+1 (555) 123-4567</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start gap-2.5">
-              <Mail className="w-3.5 h-3.5 text-accent-red mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-[8px] text-foreground-muted uppercase tracking-wider">Email</p>
-                <p className="text-[11px] text-white">book@obsidianbarbershop.com</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Map placeholder */}
-          <div className="relative aspect-[16/9] bg-[#0a0a0a] overflow-hidden border border-white/5">
-            {/* Grid lines */}
-            <div className="absolute inset-0 opacity-15">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={`h${i}`} className="absolute w-full h-px bg-accent-red" style={{ top: `${(i + 1) * 20}%` }} />
-              ))}
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={`v${i}`} className="absolute w-px h-full bg-accent-red" style={{ left: `${(i + 1) * 20}%` }} />
-              ))}
-            </div>
-            
-            {/* Red glow on map */}
-            <div className="absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2 w-20 h-20 bg-accent-red/30 rounded-full blur-[30px]" />
-            
-            {/* Map pin */}
-            <div className="absolute top-1/2 left-2/3 -translate-x-1/2 -translate-y-1/2">
-              <div className="relative">
-                <MapPin className="w-5 h-5 text-accent-red" />
-                <div className="absolute -inset-2 bg-accent-red/20 rounded-full animate-ping" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-black via-black/40 to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex items-center gap-3 rounded-full border border-white/15 bg-black/50 px-5 py-3 backdrop-blur-md">
+                <MapPin className="h-5 w-5 text-accent-red" />
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white">Map pin — integrate API</span>
               </div>
             </div>
           </div>

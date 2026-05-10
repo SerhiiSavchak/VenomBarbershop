@@ -19,111 +19,118 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <>
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
+        initial={{ y: -24, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-black/90 backdrop-blur-md py-3" : "bg-transparent py-4"
+        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        className={`fixed left-0 right-0 top-0 z-50 isolate transition-[padding,background] duration-500 ${
+          isScrolled
+            ? "border-b border-white/[0.06] bg-black/92 py-3 backdrop-blur-xl"
+            : "border-b border-black/40 bg-black/75 py-5 backdrop-blur-md"
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-          <nav className="flex items-center justify-between">
-            {/* Logo - red circle with O + OBSIDIAN wordmark */}
-            <a href="#" className="flex items-center gap-2 group">
-              <div className="relative">
-                <div className="w-8 h-8 bg-accent-red rounded-full flex items-center justify-center">
-                  <span className="font-display text-sm font-bold text-white">O</span>
-                </div>
-                <div className="absolute inset-0 bg-accent-red rounded-full blur-sm opacity-50 group-hover:opacity-80 transition-opacity" />
-              </div>
-              <span className="font-display text-base md:text-lg font-bold tracking-wider text-white">OBSIDIAN</span>
-            </a>
-
-            {/* Desktop Navigation - centered */}
-            <div className="hidden lg:flex items-center gap-6">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="text-[11px] font-medium text-foreground-muted hover:text-white uppercase tracking-wider transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 px-5 md:px-10 lg:px-14">
+          <a href="#hero" className="group flex shrink-0 items-center gap-2.5">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-full bg-accent-red">
+              <span className="font-display text-sm font-bold text-white">O</span>
+              <span className="pointer-events-none absolute inset-0 rounded-full bg-accent-red opacity-35 blur-[10px] transition-opacity group-hover:opacity-55" />
             </div>
+            <span className="font-display text-sm font-bold tracking-[0.18em] text-white md:text-base">OBSIDIAN</span>
+          </a>
 
-            {/* CTA & Mobile Menu Button */}
-            <div className="flex items-center gap-4">
-              <button className="bg-accent-red hover:bg-accent-red-bright text-white px-4 py-2 text-[10px] font-bold uppercase tracking-wider transition-colors hidden sm:block">
-                Book Now
-              </button>
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 text-white hover:text-accent-red transition-colors"
-                aria-label="Open menu"
+          <nav className="hidden items-center justify-center gap-8 lg:flex">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-[10px] font-semibold uppercase tracking-[0.22em] text-white/75 antialiased transition-colors hover:text-white"
               >
-                <Menu className="w-5 h-5" />
-              </button>
-            </div>
+                {link.label}
+              </a>
+            ))}
           </nav>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="#contact"
+              className="hidden bg-accent-red px-5 py-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-colors hover:bg-accent-red-bright sm:inline-flex"
+            >
+              Book Now
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="p-2 text-white/80 transition-colors hover:text-white lg:hidden"
+              aria-label="Open menu"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 lg:hidden"
+            transition={{ duration: 0.35 }}
+            className="fixed inset-0 z-[60] lg:hidden"
           >
-            <div className="absolute inset-0 bg-black/95 backdrop-blur-lg" />
-            <motion.div
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/90 backdrop-blur-lg"
+              aria-label="Close menu backdrop"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.aside
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-[#050505] p-8"
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute right-0 top-0 flex h-full w-full max-w-sm flex-col bg-[#050505] px-8 pb-10 pt-6 shadow-2xl shadow-black"
             >
-              <div className="flex justify-end mb-12">
+              <div className="mb-10 flex justify-end">
                 <button
+                  type="button"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 text-white hover:text-accent-red transition-colors"
+                  className="p-2 text-white/70 hover:text-white"
                   aria-label="Close menu"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="h-6 w-6" />
                 </button>
               </div>
-              <nav className="flex flex-col gap-6">
+              <nav className="flex flex-1 flex-col gap-6">
                 {navLinks.map((link, index) => (
                   <motion.a
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    initial={{ opacity: 0, x: 20 }}
+                    initial={{ opacity: 0, x: 16 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="text-xl font-display font-semibold text-white hover:text-accent-red transition-colors uppercase tracking-wider"
+                    transition={{ delay: 0.05 + index * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    className="font-display text-2xl font-semibold uppercase tracking-wide text-white"
                   >
                     {link.label}
                   </motion.a>
                 ))}
-                <button className="mt-8 w-full bg-accent-red hover:bg-accent-red-bright text-white px-6 py-3 text-xs font-bold uppercase tracking-wider transition-colors">
-                  Book Appointment
-                </button>
               </nav>
-            </motion.div>
+              <a
+                href="#contact"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="mt-auto w-full bg-accent-red py-4 text-center text-xs font-bold uppercase tracking-[0.2em] text-white"
+              >
+                Book appointment
+              </a>
+            </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>

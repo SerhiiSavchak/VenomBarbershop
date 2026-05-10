@@ -10,39 +10,35 @@ import { Gallery } from "@/components/sections/Gallery";
 import { Reviews } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { SymbioteSectionBreak } from "@/components/symbiote/SymbioteLayer";
 
 export default function Home() {
   return (
-    <main className="relative bg-black min-h-screen">
+    <main className="relative min-h-screen bg-black">
       <Header />
-      
-      {/* Bento Grid Layout matching reference exactly */}
-      <div className="max-w-[1440px] mx-auto">
-        
-        {/* ROW 1: Hero (left ~55%) + Services (right ~45%) */}
-        <div className="grid lg:grid-cols-[55fr_45fr] border-b border-white/5">
-          <Hero />
-          <Services />
-        </div>
-        
-        {/* ROW 2: Space (left ~55%) + Process (right ~45%) */}
-        <div className="grid lg:grid-cols-[55fr_45fr] border-b border-white/5">
-          <Space />
-          <Process />
-        </div>
-        
-        {/* ROW 3: Masters + Gallery + Reviews (3 columns) */}
-        <div className="grid lg:grid-cols-3 border-b border-white/5">
-          <Masters />
-          <Gallery />
-          <Reviews />
-        </div>
-        
-        {/* ROW 4: Contact (full width) */}
-        <Contact />
-        
-      </div>
-      
+      <Hero />
+
+      <SymbioteSectionBreak />
+      <Services />
+
+      <SymbioteSectionBreak flip />
+      <Space />
+
+      <SymbioteSectionBreak />
+      <Process />
+
+      <SymbioteSectionBreak flip />
+      <Masters />
+
+      <SymbioteSectionBreak />
+      <Gallery />
+
+      <SymbioteSectionBreak flip />
+      <Reviews />
+
+      <SymbioteSectionBreak />
+      <Contact />
+
       <Footer />
     </main>
   );
