@@ -8,7 +8,7 @@ export type Messages = {
   meta: { title: string; description: string };
   brand: { wordmark: string };
   nav: Record<
-    "services" | "space" | "process" | "masters" | "gallery" | "reviews" | "contact",
+    "about" | "process" | "services" | "space" | "gallery" | "reviews" | "contact",
     string
   >;
   header: {
@@ -44,6 +44,18 @@ export type Messages = {
     stats: { value: string; label: string }[];
     primaryCtaAria: string;
     secondaryCtaAria: string;
+  };
+  about: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    points: { num: string; title: string; body: string }[];
+    cta: string;
+    ctaAria: string;
+    collageLabel: string;
+    imageMainAlt: string;
+    imageSmallTopAlt: string;
+    imageSmallBottomAlt: string;
   };
   services: {
     sectionEyebrow: string;
@@ -121,10 +133,10 @@ export const messages: Record<Lang, Messages> = {
     },
     brand: { wordmark: "VENOM" },
     nav: {
+      about: "Про нас",
+      process: "Процес",
       services: "Послуги",
       space: "Простір",
-      process: "Процес",
-      masters: "Майстри",
       gallery: "Галерея",
       reviews: "Відгуки",
       contact: "Контакти",
@@ -175,6 +187,35 @@ export const messages: Record<Lang, Messages> = {
       ],
       primaryCtaAria: "Записатися на візит",
       secondaryCtaAria: "Переглянути послуги",
+    },
+    about: {
+      eyebrow: "ПРО НАС",
+      title: "VENOM BARBERSHOP",
+      subtitle:
+        "Ми створюємо чоловічі стрижки, бороду та догляд у темній преміальній атмосфері. VENOM — це про точність, характер і впевненість у деталях.",
+      points: [
+        {
+          num: "01",
+          title: "Стрижки",
+          body: "Підбираємо форму під риси обличчя, стиль і звичний ритм.",
+        },
+        {
+          num: "02",
+          title: "Борода",
+          body: "Оформлюємо контур, довжину та чисту геометрію.",
+        },
+        {
+          num: "03",
+          title: "Атмосфера",
+          body: "Темний простір, музика, крісло і спокійний сервіс без зайвого шуму.",
+        },
+      ],
+      cta: "Переглянути процес",
+      ctaAria: "Переглянути процес",
+      collageLabel: "ЛЬВІВ",
+      imageMainAlt: "Зал барбершопу",
+      imageSmallTopAlt: "Крісло",
+      imageSmallBottomAlt: "Деталі простору",
     },
     services: {
       sectionEyebrow: "НАШІ ПОСЛУГИ",
@@ -320,10 +361,10 @@ export const messages: Record<Lang, Messages> = {
     },
     brand: { wordmark: "VENOM" },
     nav: {
+      about: "About",
+      process: "Process",
       services: "Services",
       space: "Space",
-      process: "Process",
-      masters: "Masters",
       gallery: "Gallery",
       reviews: "Reviews",
       contact: "Contact",
@@ -374,6 +415,35 @@ export const messages: Record<Lang, Messages> = {
       ],
       primaryCtaAria: "Book a visit",
       secondaryCtaAria: "View services",
+    },
+    about: {
+      eyebrow: "ABOUT",
+      title: "VENOM BARBERSHOP",
+      subtitle:
+        "We craft men's haircuts, beard work, and grooming in a dark premium atmosphere. VENOM is precision, character, and confidence in the details.",
+      points: [
+        {
+          num: "01",
+          title: "Haircuts",
+          body: "We shape the cut to your face, style, and everyday rhythm.",
+        },
+        {
+          num: "02",
+          title: "Beard",
+          body: "Clean outline, controlled length, and sharp geometry.",
+        },
+        {
+          num: "03",
+          title: "Atmosphere",
+          body: "A dark room, music, the chair, and calm service without noise.",
+        },
+      ],
+      cta: "View the process",
+      ctaAria: "View the process section",
+      collageLabel: "LVIV",
+      imageMainAlt: "Barbershop interior",
+      imageSmallTopAlt: "Chair detail",
+      imageSmallBottomAlt: "Space details",
     },
     services: {
       sectionEyebrow: "OUR SERVICES",

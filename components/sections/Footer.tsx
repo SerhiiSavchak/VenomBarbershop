@@ -25,7 +25,7 @@ export function Footer() {
 
   const footerLinks = [
     { label: t.footerNav.services, href: "#services" },
-    { label: t.footerNav.about, href: "#space" },
+    { label: t.footerNav.about, href: "#about" },
     { label: t.footerNav.team, href: "#masters" },
     { label: t.footerNav.gallery, href: "#gallery" },
     { label: t.footerNav.reviews, href: "#reviews" },

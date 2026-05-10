@@ -13,10 +13,10 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
+    { href: "#about", label: t.nav.about },
+    { href: "#process", label: t.nav.process },
     { href: "#services", label: t.nav.services },
     { href: "#space", label: t.nav.space },
-    { href: "#process", label: t.nav.process },
-    { href: "#masters", label: t.nav.masters },
     { href: "#gallery", label: t.nav.gallery },
     { href: "#reviews", label: t.nav.reviews },
     { href: "#contact", label: t.nav.contact },
