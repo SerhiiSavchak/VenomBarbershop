@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
+import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 const masterImages = [
   "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&q=88",
@@ -52,10 +55,14 @@ const tapSpring = { type: "spring" as const, stiffness: 520, damping: 32 };
 export function Masters() {
   const { t } = useI18n();
   const lg = useLgUp();
+  const belowMd = useBelowMd();
+  const [mastersRail, setMastersRail] = useState<HTMLDivElement | null>(null);
   const masters = t.masters.items.map((m, i) => ({
     ...m,
     image: masterImages[i] ?? masterImages[0],
   }));
+
+  useSnapCarouselAutoplay(mastersRail, masters.length, belowMd);
 
   return (
     <section id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
@@ -78,6 +85,7 @@ export function Masters() {
         </motion.div>
 
         <motion.div
+          ref={setMastersRail}
           className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4"
           initial="hidden"
           whileInView="show"

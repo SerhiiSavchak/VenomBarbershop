@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -41,22 +41,60 @@ export function Header() {
   ];
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 40);
+    const handleScroll = () => {
+      if (isMobileMenuOpen) return;
+      setIsScrolled(window.scrollY > 40);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isMobileMenuOpen]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isMobileMenuOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollY = window.scrollY;
+
+    const prev = {
+      htmlOverflow: html.style.overflow,
+      htmlOverscroll: html.style.overscrollBehavior,
+      bodyPosition: body.style.position,
+      bodyTop: body.style.top,
+      bodyLeft: body.style.left,
+      bodyRight: body.style.right,
+      bodyWidth: body.style.width,
+      bodyTouchAction: body.style.touchAction,
+    };
+
+    /* Не чіпаємо scrollbar-gutter і не додаємо padding-right — з `scrollbar-gutter: stable` у globals це часто дає подвійний зсув. */
+    html.style.overscrollBehavior = "none";
+    html.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+    body.style.touchAction = "none";
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsMobileMenuOpen(false);
     };
     window.addEventListener("keydown", onKey);
+
     return () => {
-      document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      html.style.overflow = prev.htmlOverflow;
+      html.style.overscrollBehavior = prev.htmlOverscroll;
+      body.style.position = prev.bodyPosition;
+      body.style.top = prev.bodyTop;
+      body.style.left = prev.bodyLeft;
+      body.style.right = prev.bodyRight;
+      body.style.width = prev.bodyWidth;
+      body.style.touchAction = prev.bodyTouchAction;
+      window.scrollTo(0, scrollY);
+      queueMicrotask(() => setIsScrolled(window.scrollY > 40));
     };
   }, [isMobileMenuOpen]);
 
@@ -69,15 +107,18 @@ export function Header() {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.95, ease: cinematicEase }}
-        className={`fixed left-0 right-0 top-0 z-50 isolate transition-[padding,background] duration-500 ${
-          isScrolled
-            ? "border-b border-white/[0.06] bg-black/92 py-3.5 backdrop-blur-xl md:py-4"
-            : "border-b border-black/40 bg-black/75 py-5 backdrop-blur-md md:py-6"
+        className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
+          /* Мобілка: один стиль завжди — зміна padding/blur від scroll або lock не рухає шапку. */
+          "max-lg:border-white/[0.06] max-lg:bg-black/92 max-lg:backdrop-blur-xl max-lg:transition-[background-color,border-color] max-lg:duration-500 max-lg:motion-reduce:transition-none " +
+          /* Десктоп: компактність від скролу + анімація padding. */
+          (isScrolled
+            ? "lg:border-white/[0.06] lg:bg-black/92 lg:py-3.5 lg:backdrop-blur-xl lg:md:py-4 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none"
+            : "lg:border-black/40 lg:bg-black/75 lg:py-5 lg:backdrop-blur-md lg:md:py-6 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none")
         }`}
       >
-        <div className="mx-auto flex w-full max-w-[min(100%,1820px)] items-center justify-between gap-3 px-4 sm:gap-4 sm:px-8 md:gap-5 md:px-12 lg:gap-7 lg:px-16">
+        <div className="mx-auto flex w-full max-w-[min(100%,1820px)] items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[52px] max-lg:px-4 max-lg:pb-2 max-lg:pt-[max(0.25rem,env(safe-area-inset-top,0px))] sm:max-lg:px-8 sm:max-lg:pb-3 sm:max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] md:max-lg:px-12 lg:px-16 lg:py-0">
           <div className="min-w-0 shrink">
-            <BrandLogo wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
+            <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
           </div>
 
           <nav className="hidden items-center justify-center gap-9 xl:gap-11 2xl:gap-12 lg:flex" aria-label={t.header.navPrimaryAria}>
@@ -133,10 +174,10 @@ export function Header() {
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="relative z-[2] flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/[0.22] bg-[#0a0a0a]/95 text-white shadow-[0_0_0_1px_rgba(229,9,20,0.15),inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:border-[#E50914]/65 hover:bg-[#E50914]/15 hover:text-white lg:hidden"
+              className="relative z-[2] flex h-14 w-14 min-h-[56px] min-w-[56px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 lg:hidden touch-manipulation [-webkit-tap-highlight-color:transparent]"
               aria-label={t.header.openMenu}
             >
-              <Menu className="h-6 w-6 text-white" strokeWidth={2} />
+              <Menu className="h-7 w-7" strokeWidth={2.1} />
             </button>
           </div>
         </div>
@@ -165,7 +206,7 @@ export function Header() {
             />
 
             <motion.div
-              className="relative z-[1] flex min-h-[100dvh] w-full cursor-default flex-col border-l border-r border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black shadow-[0_0_0_1px_rgba(255,255,255,0.04)]"
+              className="relative z-[1] flex min-h-[100svh] w-full cursor-default flex-col bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -178,17 +219,17 @@ export function Header() {
               />
               <div className="pointer-events-none absolute inset-x-0 top-24 h-40 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(229,9,20,0.12)_0%,transparent_72%)]" aria-hidden />
 
-              <div className="flex min-h-[3.25rem] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 px-5 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-8">
+              <div className="flex max-lg:min-h-[52px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 px-4 pb-2 pt-[max(0.25rem,env(safe-area-inset-top,0px))] sm:px-8 sm:pb-3 sm:pt-[max(0.5rem,env(safe-area-inset-top,0px))]">
                 <div className="min-w-0 shrink" onClick={closeMenu}>
-                  <BrandLogo wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
+                  <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
                 </div>
                 <button
                   type="button"
                   onClick={closeMenu}
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/[0.14] bg-black/45 text-white/90 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition-colors hover:border-[#E50914]/50 hover:bg-[#E50914]/12 hover:text-white"
+                  className="flex h-14 w-14 min-h-[56px] min-w-[56px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 touch-manipulation [-webkit-tap-highlight-color:transparent]"
                   aria-label={t.header.closeMenu}
                 >
-                  <X className="h-6 w-6" strokeWidth={1.85} />
+                  <X className="h-7 w-7" strokeWidth={2.1} />
                 </button>
               </div>
 

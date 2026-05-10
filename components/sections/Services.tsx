@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
+import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 const serviceImages = [
   "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1600&q=88&auto=format&fit=crop",
@@ -111,10 +114,14 @@ function ServiceBlock({
 export function Services() {
   const { t } = useI18n();
   const isLg = useLgUp();
+  const belowMd = useBelowMd();
+  const [mobileRail, setMobileRail] = useState<HTMLDivElement | null>(null);
   const services = t.services.items.map((item, i) => ({
     ...item,
     image: serviceImages[i] ?? serviceImages[0],
   }));
+
+  useSnapCarouselAutoplay(mobileRail, services.length, belowMd);
 
   return (
     <section id="services" className="relative bg-black">
@@ -135,6 +142,7 @@ export function Services() {
       </div>
 
       <motion.div
+        ref={setMobileRail}
         className="flex gap-4 overflow-x-auto px-5 pb-20 pt-4 scrollbar-hide snap-x snap-mandatory md:hidden"
         initial="hidden"
         whileInView="show"

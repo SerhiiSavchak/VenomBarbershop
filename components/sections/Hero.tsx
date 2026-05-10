@@ -278,13 +278,16 @@ export function Hero() {
 
             <div className="flex w-full max-w-full flex-col gap-8 lg:gap-9">
               <motion.p
-                className="hero-copy m-0 max-w-xl text-[15px] font-medium leading-[1.6] text-white/88 lg:text-[15px] lg:leading-[1.74]"
+                className="hero-copy m-0 w-full max-w-xl text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:max-w-xl lg:max-w-none lg:pl-[0.45rem] lg:text-[15px] lg:leading-[1.72]"
                 {...descMotion}
               >
                 {hero.description}
               </motion.p>
 
-              <motion.div className="hero-cta-group m-0 w-full max-w-full" {...ctaGroupMotion}>
+              <motion.div
+                className="hero-cta-group m-0 w-full max-w-full lg:pl-[0.45rem]"
+                {...ctaGroupMotion}
+              >
                 <a
                   href="#contact"
                   aria-label={hero.primaryCtaAria}
