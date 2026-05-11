@@ -9,9 +9,9 @@ import {
   mobilePopEase,
   revealLiftEnter,
   revealLiftInitial,
-  viewportReveal,
   sectionTitleInset,
 } from "@/lib/motion";
+import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { useLgUp } from "@/lib/useLgUp";
 
 const ABOUT_IMAGE_MAIN = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1400&q=88";
@@ -54,22 +54,18 @@ export function About() {
           {/* Left content column */}
           <div className={`flex flex-col lg:col-span-5 ${sectionTitleInset}`}>
             <motion.div
-              initial={revealLiftInitial(lg)}
-              whileInView={revealLiftEnter}
+              initial="hidden"
+              whileInView="show"
               viewport={{ once: false, amount: 0.2 }}
-              transition={{ duration: 0.88, ease: cinematicEase }}
               className="mb-10 md:mb-12 lg:mb-14"
             >
-              {/* Brand accent line */}
-              <div className="mb-4 flex items-center gap-3">
-                <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
-                <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
-                  {a.eyebrow}
-                </span>
-              </div>
-              <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-white md:text-4xl lg:text-5xl">
+              <SectionEyebrow text={a.eyebrow} />
+              <motion.h2 
+                variants={sectionHeadingVariants}
+                className="font-display text-3xl font-bold uppercase tracking-tight text-white md:text-4xl lg:text-5xl"
+              >
                 {a.title}
-              </h2>
+              </motion.h2>
             </motion.div>
 
             <motion.p

@@ -67,6 +67,40 @@ select,
 }
 
 /* ========================================
+   SECTION EYEBROW VERTICAL MARK
+   ======================================== */
+
+/* Vertical brand mark - connected to logo identity */
+.section-eyebrow-mark {
+  position: relative;
+  width: 3px;
+  min-height: 20px;
+  background: linear-gradient(to bottom, #E50914 0%, #E50914 70%, rgba(229, 9, 20, 0.4) 100%);
+}
+
+.section-eyebrow-mark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #E50914;
+  filter: blur(3px);
+  opacity: 0.6;
+}
+
+.section-eyebrow-mark::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #E50914;
+  box-shadow: 0 0 8px rgba(229, 9, 20, 0.8);
+}
+
+/* ========================================
    PREMIUM EFFECTS
    ======================================== */
 

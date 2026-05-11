@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
+import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
@@ -18,22 +19,7 @@ const masterImages = [
   "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900&q=88",
 ];
 
-const titleParentVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.14, delayChildren: 0.06 } },
-};
 
-function titleChildVariants(lg: boolean) {
-  return {
-    hidden: lg ? { opacity: 0, y: 22, x: 0 } : { opacity: 0, y: 30, x: -10 },
-    show: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      transition: { duration: 0.72, ease: lg ? cinematicEase : mobilePopEase },
-    },
-  };
-}
 
 function cardVariants(lg: boolean) {
   return {
@@ -92,16 +78,12 @@ export function Masters() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: false, amount: 0.3 }}
-          variants={titleParentVariants}
         >
-          {/* Brand accent line */}
-          <motion.div variants={titleChildVariants(lg)} className="mb-4 flex items-center gap-3">
-            <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
-              {t.masters.eyebrow}
-            </span>
-          </motion.div>
-          <motion.h2 variants={titleChildVariants(lg)} className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-6xl">
+          <SectionEyebrow text={t.masters.eyebrow} />
+          <motion.h2 
+            variants={sectionHeadingVariants}
+            className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-6xl"
+          >
             {t.masters.title}
           </motion.h2>
         </motion.div>

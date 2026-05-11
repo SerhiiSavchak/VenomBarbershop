@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { ExternalLink, MapPin, Clock, Phone, Mail, Calendar, ArrowRight } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { useLgUp } from "@/lib/useLgUp";
 
 const contactCardVariants = {
@@ -45,18 +46,18 @@ export function Contact() {
       <div className="relative z-[10] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         {/* Main headline */}
         <motion.div
-          initial={lg ? { opacity: 0, y: 48, x: 0 } : { opacity: 0, y: 36, x: -18 }}
-          whileInView={revealLiftEnter}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: false, amount: 0.15 }}
-          transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
           className={`max-w-5xl ${sectionTitleInset}`}
         >
-          {/* Brand accent line */}
-          <div className="mb-6 flex items-center gap-3">
-            <div className="h-px w-10 bg-gradient-to-r from-[#E50914] to-transparent" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.42em] text-[#E50914]">{c.eyebrow}</span>
-          </div>
-          <h2 className="hero-display text-[clamp(3rem,10vw,6.5rem)] text-white">{c.title}</h2>
+          <SectionEyebrow text={c.eyebrow} className="mb-6" />
+          <motion.h2 
+            variants={sectionHeadingVariants}
+            className="hero-display text-[clamp(3rem,10vw,6.5rem)] text-white"
+          >
+            {c.title}
+          </motion.h2>
           <p className="mt-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">{c.lead}</p>
           
           {/* CTA buttons */}

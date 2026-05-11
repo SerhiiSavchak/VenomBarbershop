@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { useLgUp } from "@/lib/useLgUp";
 
 const featuresList = [
@@ -28,18 +29,18 @@ export function Space() {
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-8">
           {/* Text content */}
           <motion.div
-            initial={revealLiftInitial(lg)}
-            whileInView={revealLiftEnter}
+            initial="hidden"
+            whileInView="show"
             viewport={{ once: false, amount: 0.2 }}
-            transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
             className={`lg:col-span-5 ${sectionTitleInset}`}
           >
-            {/* Brand accent line */}
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.38em] text-[#E50914]">{t.space.eyebrow}</span>
-            </div>
-            <h2 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-[4.25rem]">{t.space.title}</h2>
+            <SectionEyebrow text={t.space.eyebrow} />
+            <motion.h2 
+              variants={sectionHeadingVariants}
+              className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-[4.25rem]"
+            >
+              {t.space.title}
+            </motion.h2>
             <p className="mt-8 max-w-md text-sm leading-relaxed text-white/68 md:text-base">{t.space.body}</p>
             
             {/* Features list */}

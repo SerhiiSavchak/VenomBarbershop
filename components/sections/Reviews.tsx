@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { useLgUp } from "@/lib/useLgUp";
 
 const reviewCardVariants = {
@@ -38,19 +39,19 @@ export function Reviews() {
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         {/* Section header */}
         <motion.div
-          initial={revealLiftInitial(lg)}
-          whileInView={revealLiftEnter}
+          initial="hidden"
+          whileInView="show"
           viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase }}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
-            {/* Brand accent line */}
-            <div className="mb-4 flex items-center gap-3">
-              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.reviews.eyebrow}</span>
-            </div>
-            <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">{t.reviews.title}</h2>
+            <SectionEyebrow text={t.reviews.eyebrow} />
+            <motion.h2 
+              variants={sectionHeadingVariants}
+              className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl"
+            >
+              {t.reviews.title}
+            </motion.h2>
           </div>
           <div className="flex items-center gap-2">
             <div className="flex gap-0.5">
