@@ -66,6 +66,10 @@ select,
   background: transparent;
 }
 
+/* ========================================
+   PREMIUM EFFECTS
+   ======================================== */
+
 /* Red glow effect */
 .red-glow {
   box-shadow: 0 0 40px rgba(209, 18, 27, 0.3), 0 0 80px rgba(209, 18, 27, 0.1);
@@ -81,6 +85,16 @@ select,
   background: rgba(17, 17, 17, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Premium glass card */
+.glass-card {
+  background: linear-gradient(145deg, rgba(17, 17, 17, 0.9), rgba(8, 8, 8, 0.95));
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 20px 50px -20px rgba(0, 0, 0, 0.8);
 }
 
 /* Gradient text */
@@ -141,6 +155,22 @@ select,
   animation: shimmer 3s linear infinite;
 }
 
+/* Liquid shimmer for premium surfaces */
+@keyframes liquidShimmer {
+  0% { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(200%) skewX(-15deg); }
+}
+
+.liquid-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: translateX(-100%) skewX(-15deg);
+  animation: liquidShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
 /* Hide scrollbar for mobile carousels */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
@@ -151,7 +181,10 @@ select,
   scrollbar-width: none;
 }
 
-/* Соцмережі — червоний акцент, трохи більший розмір, виразний hover */
+/* ========================================
+   SOCIAL LINKS
+   ======================================== */
+
 .social-link {
   display: flex;
   align-items: center;
@@ -194,7 +227,10 @@ select,
   outline-offset: 3px;
 }
 
-/* Hero CTAs — premium shine + micro-motion */
+/* ========================================
+   HERO CTA BUTTONS
+   ======================================== */
+
 .hero-cta-group {
   display: flex;
   flex-direction: column;
@@ -233,7 +269,7 @@ select,
   min-width: 0;
   min-height: 56px;
   height: auto;
-  padding: 0.65rem 1rem;
+  padding: 0.75rem 1.25rem;
   font-weight: 800;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -241,6 +277,7 @@ select,
   line-height: 1.28;
   text-align: center;
   white-space: normal;
+  border-radius: 2px;
   transition:
     transform 0.35s ease,
     box-shadow 0.35s ease,
@@ -256,11 +293,11 @@ select,
 
 @media (min-width: 1024px) {
   .hero-cta {
-    min-height: 58px;
-    height: 58px;
-    padding: 0 1.25rem;
+    min-height: 60px;
+    height: 60px;
+    padding: 0 1.5rem;
     letter-spacing: 0.05em;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.15;
     white-space: nowrap;
   }
@@ -273,9 +310,10 @@ select,
 
 .hero-cta--primary {
   color: #fff;
-  background: #e50914;
+  background: linear-gradient(135deg, #e50914 0%, #c5080f 100%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 20px -4px rgba(229, 9, 20, 0.5),
     0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -286,7 +324,7 @@ select,
   background: linear-gradient(
     115deg,
     transparent 38%,
-    rgba(255, 255, 255, 0.22) 50%,
+    rgba(255, 255, 255, 0.25) 50%,
     transparent 62%
   );
   transform: translateX(-130%) skewX(-14deg);
@@ -295,10 +333,11 @@ select,
 }
 
 .hero-cta--primary:hover {
-  transform: translateY(-2px) scale(1.015);
+  transform: translateY(-3px) scale(1.02);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 0 32px rgba(229, 9, 20, 0.42);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 32px -4px rgba(229, 9, 20, 0.55),
+    0 0 0 1px rgba(229, 9, 20, 0.3);
 }
 
 .hero-cta--primary:hover::before {
@@ -306,14 +345,16 @@ select,
 }
 
 .hero-cta--primary:active {
-  transform: scale(0.985);
+  transform: scale(0.98);
 }
 
 .hero-cta--secondary {
   color: rgba(255, 255, 255, 0.95);
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 16px -4px rgba(0, 0, 0, 0.5);
 }
 
 .hero-cta--secondary::before {
@@ -323,7 +364,7 @@ select,
   background: linear-gradient(
     115deg,
     transparent 38%,
-    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.12) 50%,
     transparent 62%
   );
   transform: translateX(-130%) skewX(-14deg);
@@ -332,11 +373,13 @@ select,
 }
 
 .hero-cta--secondary:hover {
-  transform: translateY(-2px) scale(1.015);
+  transform: translateY(-3px) scale(1.02);
   border-color: #e50914;
+  background: rgba(229, 9, 20, 0.1);
   box-shadow:
-    inset 0 0 28px rgba(229, 9, 20, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    inset 0 0 32px rgba(229, 9, 20, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 8px 24px -4px rgba(229, 9, 20, 0.25);
 }
 
 .hero-cta--secondary:hover::before {
@@ -344,7 +387,7 @@ select,
 }
 
 .hero-cta--secondary:active {
-  transform: scale(0.985);
+  transform: scale(0.98);
 }
 
 .hero-cta:focus-visible {
@@ -361,20 +404,25 @@ select,
   transform: translateX(3px);
 }
 
-/* Уніфіковані CTA по секціях — компактні, однакової висоти */
+/* ========================================
+   SITE CTA BUTTONS (Unified)
+   ======================================== */
+
 .site-cta-primary,
 .site-cta-outline {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
+  overflow: hidden;
   width: 100%;
-  min-height: 48px;
+  min-height: 52px;
   min-width: 0;
-  padding: 0.65rem 1.15rem;
+  padding: 0.75rem 1.35rem;
   font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.16em;
   line-height: 1.35;
   text-transform: uppercase;
@@ -382,47 +430,106 @@ select,
   text-wrap: balance;
   white-space: normal;
   text-decoration: none;
+  border-radius: 2px;
   transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.2s ease;
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.25s ease;
 }
 
 @media (min-width: 640px) {
   .site-cta-primary,
   .site-cta-outline {
     width: auto;
-    min-width: 168px;
-    min-height: 50px;
-    padding: 0.7rem 1.35rem;
+    min-width: 180px;
+    min-height: 54px;
+    padding: 0.85rem 1.5rem;
+    font-size: 12px;
     letter-spacing: 0.17em;
   }
 }
 
 .site-cta-primary {
   color: #fff;
-  background: #e50914;
+  background: linear-gradient(135deg, #e50914 0%, #c5080f 100%);
   border: 1px solid transparent;
-  box-shadow: 0 8px 28px -14px rgba(229, 9, 20, 0.5);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 8px 28px -10px rgba(229, 9, 20, 0.55);
+}
+
+.site-cta-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) skewX(-14deg);
+  transition: transform 600ms ease;
+  pointer-events: none;
 }
 
 .site-cta-primary:hover {
-  background: var(--accent-red-bright);
-  box-shadow: 0 12px 36px -12px rgba(229, 9, 20, 0.55);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff1a24 0%, #e50914 100%);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 12px 36px -8px rgba(229, 9, 20, 0.6),
+    0 0 0 1px rgba(229, 9, 20, 0.3);
+}
+
+.site-cta-primary:hover::before {
+  transform: translateX(130%) skewX(-14deg);
+}
+
+.site-cta-primary:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .site-cta-outline {
   color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.site-cta-outline::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.08) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%) skewX(-14deg);
+  transition: transform 600ms ease;
+  pointer-events: none;
 }
 
 .site-cta-outline:hover {
-  border-color: rgba(229, 9, 20, 0.55);
-  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+  border-color: rgba(229, 9, 20, 0.6);
+  background: rgba(229, 9, 20, 0.08);
   color: #fff;
+  box-shadow: 
+    inset 0 0 24px rgba(229, 9, 20, 0.12),
+    0 8px 24px -8px rgba(229, 9, 20, 0.2);
+}
+
+.site-cta-outline:hover::before {
+  transform: translateX(130%) skewX(-14deg);
+}
+
+.site-cta-outline:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .site-cta-primary:focus-visible,
@@ -436,17 +543,16 @@ select,
   min-width: 0;
 }
 
-/* Компактна кнопка в картках послуг — без жорсткої min-width */
+/* Compact variant for cards */
 .site-cta-primary.site-cta--compact,
 .site-cta-outline.site-cta--compact {
   width: max-content;
   max-width: 100%;
   min-width: 0;
-  min-height: 44px;
-  padding: 0.55rem 1rem;
+  min-height: 46px;
+  padding: 0.6rem 1.1rem;
   letter-spacing: 0.14em;
   font-size: 10px;
-  box-shadow: none;
 }
 
 @media (min-width: 768px) {
@@ -454,13 +560,9 @@ select,
   .site-cta-outline.site-cta--compact {
     font-size: 11px;
     letter-spacing: 0.15em;
-    min-height: 46px;
-    padding: 0.6rem 1.1rem;
+    min-height: 48px;
+    padding: 0.65rem 1.2rem;
   }
-}
-
-.site-cta-primary.site-cta--compact {
-  box-shadow: 0 6px 22px -12px rgba(229, 9, 20, 0.45);
 }
 
 @media (min-width: 640px) {
@@ -470,6 +572,10 @@ select,
     width: max-content;
   }
 }
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
 
 /* Hero headline — Bebas / poster stack */
 .hero-display {
@@ -491,7 +597,10 @@ select,
   font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Page loader — орбіти для трьох шарів кілець */
+/* ========================================
+   PAGE LOADER ANIMATIONS
+   ======================================== */
+
 @keyframes venom-orbit {
   to {
     transform: rotate(360deg);
@@ -522,5 +631,66 @@ select,
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* ========================================
+   PREMIUM CARD HOVER EFFECTS
+   ======================================== */
+
+.premium-card {
+  position: relative;
+  background: linear-gradient(145deg, #0c0c0c 0%, #050505 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.5s ease;
+}
+
+.premium-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at top, rgba(229, 9, 20, 0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.premium-card:hover {
+  border-color: rgba(229, 9, 20, 0.3);
+  box-shadow: 
+    0 20px 50px -20px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(229, 9, 20, 0.1);
+}
+
+.premium-card:hover::before {
+  opacity: 1;
+}
+
+/* Top glossy rim for cards */
+.glossy-rim::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
   }
 }
