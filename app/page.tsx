@@ -11,6 +11,7 @@ import { Reviews } from "@/components/sections/Reviews";
 import { Contact } from "@/components/sections/Contact";
 import { Masters } from "@/components/sections/Masters";
 import { Footer } from "@/components/sections/Footer";
+import { SectionDivider } from "@/components/ui/SectionDivider";
 
 export default function Home() {
   return (
@@ -18,13 +19,21 @@ export default function Home() {
       <Header />
       <Hero />
 
+      <SectionDivider variant="brand" />
       <About />
+      <SectionDivider variant="subtle" />
       <Process />
+      <SectionDivider variant="brand" />
       <Services />
+      <SectionDivider variant="gradient" />
       <Space />
+      <SectionDivider variant="subtle" />
       <Masters />
+      <SectionDivider variant="brand" />
       <Gallery />
+      <SectionDivider variant="subtle" />
       <Reviews />
+      <SectionDivider variant="gradient" />
       <Contact />
 
       <Footer />

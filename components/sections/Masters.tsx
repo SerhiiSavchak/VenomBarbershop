@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Calendar } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
@@ -50,10 +50,18 @@ export function Masters() {
   const lg = useLgUp();
   const belowMd = useBelowMd();
   const [mastersRail, setMastersRail] = useState<HTMLDivElement | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const masters = t.masters.items.map((m, i) => ({
     ...m,
     image: masterImages[i] ?? masterImages[0],
   }));
+
+  // Parallax for background
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
 
   useSnapCarouselAutoplay(mastersRail, masters.length, belowMd);
   useHorizontalRailVerticalWheelPassthrough(mastersRail, belowMd);
