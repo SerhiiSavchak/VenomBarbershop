@@ -67,7 +67,7 @@ export function Masters() {
   useHorizontalRailVerticalWheelPassthrough(mastersRail, belowMd);
 
   return (
-    <section id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
+    <section ref={sectionRef} id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_100%_100%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
