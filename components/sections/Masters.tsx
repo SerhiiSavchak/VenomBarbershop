@@ -7,6 +7,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, viewportReveal, sectionTitleInset } from "@/lib/motion";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
+import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
 import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 const masterImages = [
@@ -63,6 +64,7 @@ export function Masters() {
   }));
 
   useSnapCarouselAutoplay(mastersRail, masters.length, belowMd);
+  useHorizontalRailVerticalWheelPassthrough(mastersRail, belowMd);
 
   return (
     <section id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
@@ -86,7 +88,7 @@ export function Masters() {
 
         <motion.div
           ref={setMastersRail}
-          className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:pb-0 lg:grid-cols-4"
+          className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-4 scrollbar-hide snap-x snap-mandatory md:grid md:grid-cols-2 md:gap-6 md:overflow-visible md:overscroll-auto md:pb-0 lg:grid-cols-4"
           initial="hidden"
           whileInView="show"
           viewport={viewportReveal}

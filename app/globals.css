@@ -38,6 +38,9 @@
 html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 body {
@@ -46,15 +49,21 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Майже непомітне виділення — без «синьої плями» браузера */
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+
 ::selection {
-  background: rgba(255, 255, 255, 0.06);
-  color: inherit;
+  background: transparent;
 }
 
 ::-moz-selection {
-  background: rgba(255, 255, 255, 0.06);
-  color: inherit;
+  background: transparent;
 }
 
 /* Red glow effect */

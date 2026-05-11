@@ -24,15 +24,15 @@ export function BrandLogo({
   const isFooter = size === "footer";
 
   const barClass = isFooter
-    ? "h-6 w-[2px] rounded-full bg-gradient-to-b from-[#ff2a32] via-[#E50914] to-[#3a0609] shadow-[0_0_14px_rgba(229,9,20,0.4)]"
+    ? "h-11 w-[3px] rounded-full bg-gradient-to-b from-[#ff2a32] via-[#E50914] to-[#3a0609] shadow-[0_0_22px_rgba(229,9,20,0.48)] md:h-12 md:w-[3px]"
     : emphasizeMobile
-      ? "h-9 w-[3px] rounded-full bg-gradient-to-b from-[#ff2a32] via-[#E50914] to-[#2a0508] shadow-[0_0_22px_rgba(229,9,20,0.42)] md:h-10 max-lg:h-11 max-lg:shadow-[0_0_28px_rgba(229,9,20,0.52)]"
+      ? "h-9 w-[3px] rounded-full bg-gradient-to-b from-[#ff2a32] via-[#E50914] to-[#2a0508] shadow-[0_0_22px_rgba(229,9,20,0.42)] md:h-10 max-lg:h-[52px] max-lg:w-1 max-lg:shadow-[0_0_32px_rgba(229,9,20,0.55)]"
       : "h-9 w-[3px] rounded-full bg-gradient-to-b from-[#ff2a32] via-[#E50914] to-[#2a0508] shadow-[0_0_22px_rgba(229,9,20,0.42)] md:h-10";
 
   const wordmarkSizeClass = isFooter
-    ? "text-[11px] md:text-xs"
+    ? "text-[15px] font-semibold uppercase tracking-[0.22em] md:text-[17px] md:tracking-[0.2em]"
     : emphasizeMobile
-      ? "text-[14px] font-semibold uppercase tracking-[0.26em] text-white md:text-[16px] max-lg:text-[17px] max-lg:tracking-[0.22em]"
+      ? "text-[14px] font-semibold uppercase tracking-[0.26em] text-white md:text-[16px] max-lg:text-[19px] max-lg:tracking-[0.2em]"
       : "text-[14px] md:text-[16px]";
 
   const inner = (
@@ -49,8 +49,10 @@ export function BrandLogo({
     </>
   );
 
-  const className =
-    "group inline-flex shrink-0 items-center gap-3 outline-none transition-opacity max-lg:gap-3.5 lg:gap-3 md:gap-3.5 focus-visible:ring-2 focus-visible:ring-[#E50914]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-black";
+  const className = [
+    "group inline-flex shrink-0 items-center outline-none transition-opacity focus-visible:ring-2 focus-visible:ring-[#E50914]/55 focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+    isFooter ? "gap-4 md:gap-5" : "gap-3 max-lg:gap-4 lg:gap-3 md:gap-3.5",
+  ].join(" ");
 
   if (asStatic) {
     return (

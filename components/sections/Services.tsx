@@ -7,6 +7,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
+import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
 import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 const serviceImages = [
@@ -122,6 +123,7 @@ export function Services() {
   }));
 
   useSnapCarouselAutoplay(mobileRail, services.length, belowMd);
+  useHorizontalRailVerticalWheelPassthrough(mobileRail, belowMd);
 
   return (
     <section id="services" className="relative bg-black">
@@ -143,7 +145,7 @@ export function Services() {
 
       <motion.div
         ref={setMobileRail}
-        className="flex gap-4 overflow-x-auto px-5 pb-20 pt-4 scrollbar-hide snap-x snap-mandatory md:hidden"
+        className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-5 pb-20 pt-4 scrollbar-hide snap-x snap-mandatory md:hidden"
         initial="hidden"
         whileInView="show"
         viewport={viewportReveal}

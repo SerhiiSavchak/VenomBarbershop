@@ -93,7 +93,11 @@ export function Header() {
       body.style.right = prev.bodyRight;
       body.style.width = prev.bodyWidth;
       body.style.touchAction = prev.bodyTouchAction;
+      /* html { scroll-behavior: smooth } інакше дає «проскрол» при scrollTo після unlock */
+      const prevScrollBehavior = html.style.scrollBehavior;
+      html.style.scrollBehavior = "auto";
       window.scrollTo(0, scrollY);
+      html.style.scrollBehavior = prevScrollBehavior;
       queueMicrotask(() => setIsScrolled(window.scrollY > 40));
     };
   }, [isMobileMenuOpen]);
@@ -116,7 +120,7 @@ export function Header() {
             : "lg:border-black/40 lg:bg-black/75 lg:py-5 lg:backdrop-blur-md lg:md:py-6 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none")
         }`}
       >
-        <div className="mx-auto flex w-full max-w-[min(100%,1820px)] items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[52px] max-lg:px-4 max-lg:pb-2 max-lg:pt-[max(0.25rem,env(safe-area-inset-top,0px))] sm:max-lg:px-8 sm:max-lg:pb-3 sm:max-lg:pt-[max(0.5rem,env(safe-area-inset-top,0px))] md:max-lg:px-12 lg:px-16 lg:py-0">
+        <div className="mx-auto flex w-full max-w-[min(100%,1820px)] items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:px-4 max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:px-8 sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] md:max-lg:px-12 lg:px-16 lg:py-0">
           <div className="min-w-0 shrink">
             <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
           </div>
@@ -174,10 +178,10 @@ export function Header() {
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(true)}
-              className="relative z-[2] flex h-14 w-14 min-h-[56px] min-w-[56px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 lg:hidden touch-manipulation [-webkit-tap-highlight-color:transparent]"
+              className="relative z-[2] flex h-16 w-16 min-h-[64px] min-w-[64px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 lg:hidden touch-manipulation [-webkit-tap-highlight-color:transparent]"
               aria-label={t.header.openMenu}
             >
-              <Menu className="h-7 w-7" strokeWidth={2.1} />
+              <Menu className="h-8 w-8" strokeWidth={2.1} />
             </button>
           </div>
         </div>
@@ -219,17 +223,17 @@ export function Header() {
               />
               <div className="pointer-events-none absolute inset-x-0 top-24 h-40 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(229,9,20,0.12)_0%,transparent_72%)]" aria-hidden />
 
-              <div className="flex max-lg:min-h-[52px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 px-4 pb-2 pt-[max(0.25rem,env(safe-area-inset-top,0px))] sm:px-8 sm:pb-3 sm:pt-[max(0.5rem,env(safe-area-inset-top,0px))]">
+              <div className="flex max-lg:min-h-[64px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 px-4 pb-3 pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:px-8 sm:pb-3.5 sm:pt-[max(0.55rem,env(safe-area-inset-top,0px))]">
                 <div className="min-w-0 shrink" onClick={closeMenu}>
                   <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
                 </div>
                 <button
                   type="button"
                   onClick={closeMenu}
-                  className="flex h-14 w-14 min-h-[56px] min-w-[56px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 touch-manipulation [-webkit-tap-highlight-color:transparent]"
+                  className="flex h-16 w-16 min-h-[64px] min-w-[64px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 touch-manipulation [-webkit-tap-highlight-color:transparent]"
                   aria-label={t.header.closeMenu}
                 >
-                  <X className="h-7 w-7" strokeWidth={2.1} />
+                  <X className="h-8 w-8" strokeWidth={2.1} />
                 </button>
               </div>
 

@@ -16,7 +16,7 @@ import {
   type Lang,
   type Messages,
 } from "@/lib/i18n";
-import { PageLoader } from "@/components/PageLoader";
+import { PageIntroProvider } from "@/components/providers/PageIntroProvider";
 
 type I18nContextValue = {
   lang: Lang;
@@ -65,8 +65,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   return (
     <I18nContext.Provider value={value}>
-      <PageLoader />
-      {children}
+      <PageIntroProvider>{children}</PageIntroProvider>
     </I18nContext.Provider>
   );
 }

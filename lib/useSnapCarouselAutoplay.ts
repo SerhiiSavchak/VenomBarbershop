@@ -25,9 +25,9 @@ export function useSnapCarouselAutoplay(
 
     const io = new IntersectionObserver(
       ([e]) => {
-        inViewRef.current = Boolean(e?.isIntersecting && (e.intersectionRatio ?? 0) > 0.02);
+        inViewRef.current = Boolean(e?.isIntersecting && (e.intersectionRatio ?? 0) > 0.2);
       },
-      { threshold: [0, 0.02, 0.08] },
+      { threshold: [0, 0.12, 0.2, 0.35] },
     );
     io.observe(el);
 
@@ -63,7 +63,10 @@ export function useSnapCarouselAutoplay(
         }
       });
       const next = (best + 1) % kids.length;
-      kids[next].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
+      const nextEl = kids[next];
+      const maxScroll = Math.max(0, el.scrollWidth - el.clientWidth);
+      const targetLeft = Math.min(maxScroll, Math.max(0, nextEl.offsetLeft));
+      el.scrollTo({ left: targetLeft, behavior: "smooth" });
     };
 
     const id = window.setInterval(tick, SLIDER_AUTOPLAY_INTERVAL_MS);

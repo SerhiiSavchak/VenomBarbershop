@@ -7,7 +7,12 @@ import { useI18n } from "@/components/providers/I18nProvider";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
-export function PageLoader() {
+type PageLoaderProps = {
+  /** Після повного зникнення оверлею (exit Framer) — для старту анімацій Hero тощо */
+  onIntroComplete?: () => void;
+};
+
+export function PageLoader({ onIntroComplete }: PageLoaderProps) {
   const { t } = useI18n();
   const reduce = useReducedMotion() ?? false;
   const [show, setShow] = useState(true);
@@ -40,7 +45,7 @@ export function PageLoader() {
   }, [reduce]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onIntroComplete}>
       {show && (
         <motion.div
           key="venom-page-loader"
