@@ -120,7 +120,7 @@ function HeroPhotoShine({ reducedMotion, introDone }: { reducedMotion: boolean; 
       initial={{ x: "-55%", skewX: -14 }}
       animate={introDone ? { x: "165%", skewX: -14 } : { x: "-55%", skewX: -14 }}
       transition={
-        introDone ? { duration: 1.55, ease: [0.2, 0.85, 0.15, 1], delay: 0.42 } : { duration: 0 }
+        introDone ? { duration: 1.35, ease: [0.2, 0.85, 0.15, 1], delay: 0.22 } : { duration: 0 }
       }
     />
   );
@@ -133,7 +133,7 @@ function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: bo
   const photoAnimate = reducedMotion ? { opacity: 1 } : { scale: 1, x: 0, rotate: 0, opacity: 1 };
   const photoTransition = reducedMotion
     ? { duration: 0.35 }
-    : { duration: 1.38, ease: cinematicEase, delay: 0.02 };
+    : { duration: 1.12, ease: cinematicEase, delay: 0 };
 
   return (
     <div className="absolute inset-0 z-[1] hidden overflow-hidden lg:block">
@@ -231,7 +231,7 @@ export function Hero() {
     : {
         initial: { x: "-103%", opacity: 1 },
         animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.92, ease: cinematicEase, delay: 0.18 },
+        transition: { duration: 0.88, ease: cinematicEase, delay: 0.06 },
       };
 
   const barberMotion = reduce
@@ -239,7 +239,7 @@ export function Hero() {
     : {
         initial: { x: "103%", opacity: 1 },
         animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.92, ease: cinematicEase, delay: 0.3 },
+        transition: { duration: 0.88, ease: cinematicEase, delay: 0.16 },
       };
 
   const descMotion = reduce
@@ -248,7 +248,7 @@ export function Hero() {
       ? {
           initial: { opacity: 0, y: 22 },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.9, ease: cinematicEase, delay: 0.52 },
+          transition: { duration: 0.82, ease: cinematicEase, delay: 0.34 },
         }
       : {
           initial: { opacity: 0, y: 28, x: -12 },
@@ -259,13 +259,13 @@ export function Hero() {
   const ctaGroupMotion = reduce
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4, delay: 0.35 } }
     : isLg
-      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.55, delay: 0.52, ease: cinematicEase } }
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.34, ease: cinematicEase } }
       : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.38, ease: mobilePopEase } };
 
   const statsStripMotion = reduce
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.5, duration: 0.4 } }
     : isLg
-      ? { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.88, duration: 0.95, ease: cinematicEase } }
+      ? { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.62, duration: 0.88, ease: cinematicEase } }
       : { initial: { opacity: 0, y: 48 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.72, duration: 0.88, ease: mobilePopEase } };
 
   const statItemInitial = reduce
@@ -281,52 +281,61 @@ export function Hero() {
 
       <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
         <div className="relative z-[10] flex w-full max-w-[1600px] flex-1 flex-col px-5 pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(10.25rem+env(safe-area-inset-top,0px))] sm:px-8 lg:mx-auto lg:h-full lg:min-h-0 lg:max-w-none lg:flex-1 lg:flex-col lg:justify-center lg:px-0 lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="my-auto w-full max-w-[640px] pb-1 max-lg:mb-0 max-lg:my-0 max-lg:flex max-lg:min-h-0 max-lg:flex-1 max-lg:flex-col max-lg:-translate-y-2 lg:my-0 lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:translate-y-0 lg:pb-0 lg:relative lg:pl-[clamp(3.35rem,6.35vw,7.35rem)] lg:pr-8 lg:self-start">
-            <div className="hero-display mb-4 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] lg:mb-6 lg:max-w-none lg:text-[clamp(88px,6.9vw,140px)]">
-              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
-                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
-                  VENOM
-                </motion.span>
+          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 max-lg:-translate-y-2 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:pl-[clamp(3.35rem,6.35vw,7.35rem)] lg:pr-8 lg:self-start">
+            <div className="block lg:table-row-group">
+              <div className="block lg:table-row">
+                <div className="block lg:table-cell lg:align-top lg:p-0">
+                  <div className="hero-display mb-4 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] lg:mb-6 lg:w-max lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
+                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
+                      <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
+                        VENOM
+                      </motion.span>
+                    </div>
+                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
+                      <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
+                        BARBERSHOP
+                      </motion.span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
-                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
-                  BARBERSHOP
-                </motion.span>
+              <div className="block lg:table-row">
+                <div className="block lg:table-cell lg:align-top lg:p-0">
+                  <div className="flex w-full min-h-0 max-w-full flex-1 flex-col gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
+                    <motion.p
+                      className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:pl-[0.45rem] lg:text-[15px] lg:leading-[1.72]"
+                      {...gateIntro(introDone, descMotion)}
+                    >
+                      {hero.description}
+                    </motion.p>
+
+                    <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[min(26dvh,220px)] max-lg:flex-1 max-lg:basis-0" aria-hidden />
+
+                    <motion.div
+                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0 lg:pl-[0.45rem]"
+                      {...gateIntro(introDone, ctaGroupMotion)}
+                    >
+                      <a
+                        href="#contact"
+                        aria-label={hero.primaryCtaAria}
+                        className="hero-copy hero-cta hero-cta--primary group"
+                      >
+                        <Calendar className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+                        <span className="hero-cta-text">{hero.ctaPrimary}</span>
+                      </a>
+                      <a
+                        href="#services"
+                        aria-label={hero.secondaryCtaAria}
+                        title={hero.ctaSecondary}
+                        className="hero-copy hero-cta hero-cta--secondary group"
+                      >
+                        <span className="hero-cta-text">{hero.ctaSecondaryShort}</span>
+                        <ChevronRight className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
+                      </a>
+                    </motion.div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <div className="flex w-full min-h-0 max-w-full flex-1 flex-col gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
-              <motion.p
-                className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:pl-[0.45rem] lg:text-[15px] lg:leading-[1.72]"
-                {...gateIntro(introDone, descMotion)}
-              >
-                {hero.description}
-              </motion.p>
-
-              <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[min(26dvh,220px)] max-lg:flex-1 max-lg:basis-0" aria-hidden />
-
-              <motion.div
-                className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0 lg:pl-[0.45rem]"
-                {...gateIntro(introDone, ctaGroupMotion)}
-              >
-                <a
-                  href="#contact"
-                  aria-label={hero.primaryCtaAria}
-                  className="hero-copy hero-cta hero-cta--primary group"
-                >
-                  <Calendar className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
-                  <span className="hero-cta-text">{hero.ctaPrimary}</span>
-                </a>
-                <a
-                  href="#services"
-                  aria-label={hero.secondaryCtaAria}
-                  title={hero.ctaSecondary}
-                  className="hero-copy hero-cta hero-cta--secondary group"
-                >
-                  <span className="hero-cta-text">{hero.ctaSecondaryShort}</span>
-                  <ChevronRight className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
-                </a>
-              </motion.div>
             </div>
           </div>
         </div>
@@ -345,7 +354,7 @@ export function Hero() {
                   initial={statItemInitial}
                   animate={introDone ? { opacity: 1, y: 0, x: 0 } : statItemInitial}
                   transition={{
-                    delay: introDone ? (isLg ? 0.94 : 0.78) + index * (isLg ? 0.06 : 0.07) : 0,
+                    delay: introDone ? (isLg ? 0.68 : 0.78) + index * (isLg ? 0.05 : 0.07) : 0,
                     duration: introDone ? (reduce ? 0.35 : 0.72) : 0,
                     ease: isLg ? cinematicEase : mobilePopEase,
                   }}

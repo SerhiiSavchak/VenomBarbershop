@@ -23,7 +23,7 @@ export function PageLoader({ onIntroComplete }: PageLoaderProps) {
       return () => window.clearTimeout(id);
     }
 
-    const minMs = 920;
+    const minMs = window.matchMedia("(min-width: 1024px)").matches ? 480 : 920;
     const t0 = performance.now();
     let hideTimer = 0;
 
