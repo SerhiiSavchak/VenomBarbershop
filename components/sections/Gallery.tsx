@@ -56,12 +56,16 @@ export function Gallery() {
         <motion.div
           initial={revealLiftInitial(lg)}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.88, ease: lg ? cinematicEase : mobilePopEase }}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
-            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.gallery.eyebrow}</span>
+            {/* Brand accent line */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.gallery.eyebrow}</span>
+            </div>
             <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">{t.gallery.title}</h2>
           </div>
           <p className="max-w-sm text-sm leading-relaxed text-foreground-muted md:text-right md:text-base">
@@ -74,7 +78,7 @@ export function Gallery() {
           className="columns-2 gap-3 md:columns-3 md:gap-4 lg:gap-5"
           initial="hidden"
           whileInView="show"
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           variants={masonryVariants}
         >
           {galleryImages.map((src, index) => (
@@ -90,7 +94,7 @@ export function Gallery() {
               <motion.div
                 initial={lg ? { scale: 1.12 } : { scale: 1.06, y: 14 }}
                 whileInView={{ scale: 1, y: 0 }}
-                viewport={viewportReveal}
+                viewport={{ once: false, amount: 0.2 }}
                 transition={{ duration: lg ? 1.2 : 0.95, ease: lg ? cinematicEase : mobilePopEase }}
                 className="relative h-full w-full"
               >
@@ -127,7 +131,7 @@ export function Gallery() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >

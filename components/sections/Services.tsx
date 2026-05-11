@@ -1,64 +1,51 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import { Clock, Sparkles, ChevronRight } from "lucide-react";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import Image from "next/image";
+import { Clock, ChevronRight } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, viewportReveal, sectionTitleInset } from "@/lib/motion";
-import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
-import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
-import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
-const serviceTags: Record<string, "popular" | "shape" | "combo" | "razor" | "vip"> = {
-  "Хіт": "popular",
-  "Popular": "popular",
-  "Форма": "shape",
-  "Shape": "shape",
-  "Комплекс": "combo",
-  "Combo": "combo",
-  "Бритва": "razor",
-  "Razor": "razor",
-  "VIP": "vip",
-};
-
-const tagColors: Record<string, { bg: string; text: string; glow: string }> = {
-  popular: { bg: "bg-[#E50914]/20", text: "text-[#E50914]", glow: "shadow-[0_0_20px_rgba(229,9,20,0.3)]" },
-  shape: { bg: "bg-white/10", text: "text-white/90", glow: "" },
-  combo: { bg: "bg-[#E50914]/25", text: "text-[#E50914]", glow: "shadow-[0_0_24px_rgba(229,9,20,0.35)]" },
-  razor: { bg: "bg-white/8", text: "text-white/80", glow: "" },
-  vip: { bg: "bg-gradient-to-r from-[#E50914]/30 to-[#E50914]/10", text: "text-[#E50914]", glow: "shadow-[0_0_28px_rgba(229,9,20,0.4)]" },
-};
-
-const mobileRailVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-};
+// Service images - premium barber imagery
+const serviceImages = [
+  "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800&q=90",
+  "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=90",
+  "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=90",
+  "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=90",
+  "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=90",
+];
 
 const mobileCardVariants = {
-  hidden: { opacity: 0, y: 34, x: -14, scale: 0.97 },
+  hidden: { opacity: 0, y: 40, scale: 0.96 },
   show: {
     opacity: 1,
     y: 0,
-    x: 0,
     scale: 1,
-    transition: { duration: 0.82, ease: mobilePopEase },
+    transition: { duration: 0.7, ease: mobilePopEase },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    scale: 0.98,
+    transition: { duration: 0.4, ease: cinematicEase },
   },
 };
 
 const desktopGridVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
 
 function desktopCardVariants(index: number) {
   return {
-    hidden: { opacity: 0, y: 48, scale: 0.96 },
+    hidden: { opacity: 0, y: 60, scale: 0.95 },
     show: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.85, ease: cinematicEase, delay: index * 0.06 },
+      transition: { duration: 0.8, ease: cinematicEase, delay: index * 0.08 },
     },
   };
 }
@@ -67,6 +54,7 @@ function ServiceCard({
   service,
   index,
   isDesktop,
+  image,
 }: {
   service: {
     name: string;
@@ -77,112 +65,120 @@ function ServiceCard({
   };
   index: number;
   isDesktop: boolean;
+  image: string;
 }) {
   const { t } = useI18n();
-  const tagType = serviceTags[service.tag] || "shape";
-  const colors = tagColors[tagType];
-  const isVip = tagType === "vip";
-  const isCombo = tagType === "combo";
-  const isPopular = tagType === "popular";
+  const isVip = service.tag === "VIP";
+  const isCombo = service.tag === "Комплекс" || service.tag === "Combo";
+  const isPopular = service.tag === "Хіт" || service.tag === "Popular";
   const isHighlighted = isVip || isCombo || isPopular;
 
   return (
     <motion.article
       variants={isDesktop ? desktopCardVariants(index) : mobileCardVariants}
-      className={`group relative flex flex-col overflow-hidden transition-all duration-500 ${
-        isDesktop ? "min-h-[420px]" : "w-[min(85vw,360px)] shrink-0 snap-center"
-      } ${
-        isHighlighted
-          ? "border border-[#E50914]/30 bg-gradient-to-b from-[#0c0c0c] via-[#080808] to-[#050505]"
-          : "border border-white/[0.08] bg-gradient-to-b from-[#0a0a0a] to-[#050505]"
+      initial="hidden"
+      whileInView="show"
+      exit="exit"
+      viewport={{ once: false, amount: 0.2 }}
+      className={`group relative overflow-hidden ${
+        isDesktop ? "aspect-[3/4]" : "aspect-[4/5] w-[min(85vw,340px)] shrink-0 snap-center"
       }`}
-      whileHover={isDesktop ? { y: -6, scale: 1.01 } : undefined}
+      whileHover={isDesktop ? { y: -8 } : undefined}
       transition={{ duration: 0.4, ease: cinematicEase }}
     >
-      {/* Animated border glow on hover (desktop) */}
-      {isDesktop && (
-        <div
-          className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${
-            isHighlighted ? "bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.12)_0%,transparent_60%)]" : "bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04)_0%,transparent_60%)]"
-          }`}
+      {/* Image */}
+      <div className="absolute inset-0">
+        <Image
+          src={image}
+          alt={service.name}
+          fill
+          sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
+          className="object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110"
         />
-      )}
+        {/* Cinematic dark overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+        {/* Red tint on hover */}
+        <div className="absolute inset-0 bg-[#E50914]/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-[#E50914]/20" />
+      </div>
 
       {/* Top glossy rim */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.12] to-transparent"
-        aria-hidden
-      />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
-      {/* Inner glow */}
-      {isHighlighted && (
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(229,9,20,0.08)_0%,transparent_70%)]"
-          aria-hidden
-        />
-      )}
+      {/* Border glow on hover */}
+      <div className={`pointer-events-none absolute inset-0 border transition-all duration-500 ${
+        isHighlighted 
+          ? "border-[#E50914]/30 group-hover:border-[#E50914]/60" 
+          : "border-white/[0.06] group-hover:border-white/20"
+      }`} />
 
-      <div className="relative flex flex-1 flex-col p-6 md:p-7">
-        {/* Tag and duration row */}
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.22em] ${colors.bg} ${colors.text} ${colors.glow}`}
-          >
-            {isVip && <Sparkles className="h-3 w-3" aria-hidden />}
-            {service.tag}
-          </span>
-          <span className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/50">
-            <Clock className="h-3 w-3" aria-hidden />
-            {service.duration}
-          </span>
+      {/* Tag badge */}
+      <div className="absolute left-4 top-4 z-10 md:left-5 md:top-5">
+        <span className={`inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] backdrop-blur-sm ${
+          isHighlighted 
+            ? "bg-[#E50914]/90 text-white shadow-[0_4px_20px_-4px_rgba(229,9,20,0.5)]" 
+            : "border border-white/20 bg-black/60 text-white/90"
+        }`}>
+          {service.tag}
+        </span>
+      </div>
+
+      {/* Duration badge */}
+      <div className="absolute right-4 top-4 z-10 md:right-5 md:top-5">
+        <span className="flex items-center gap-1.5 rounded-sm border border-white/10 bg-black/60 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-white/80 backdrop-blur-sm">
+          <Clock className="h-3 w-3" strokeWidth={2} aria-hidden />
+          {service.duration}
+        </span>
+      </div>
+
+      {/* Bottom content */}
+      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-4 p-5 md:gap-5 md:p-6">
+        {/* Service name */}
+        <div>
+          <h3 className="font-display text-2xl font-bold uppercase leading-tight tracking-tight text-white drop-shadow-lg md:text-3xl">
+            {service.name}
+          </h3>
+          <p className="mt-2 text-[13px] leading-relaxed text-white/70 md:text-sm">
+            {service.blurb}
+          </p>
         </div>
 
-        {/* Service name */}
-        <h3 className="mb-3 font-display text-2xl font-bold uppercase tracking-tight text-white md:text-[1.75rem]">
-          {service.name}
-        </h3>
-
-        {/* Description */}
-        <p className="mb-auto text-sm leading-relaxed text-white/60 md:text-[15px]">
-          {service.blurb}
-        </p>
-
         {/* Divider */}
-        <div className="my-5 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent md:my-6" />
+        <div className="h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10" />
 
         {/* Price and CTA row */}
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+            <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-white/50">
               {t.services.cardStandard}
             </p>
-            <p className={`font-display text-3xl font-bold tracking-tight md:text-4xl ${isHighlighted ? "text-[#E50914]" : "text-white"}`}>
+            <p className={`font-display text-3xl font-bold tracking-tight md:text-4xl ${
+              isHighlighted ? "text-[#E50914]" : "text-white"
+            }`}>
               {service.price}
             </p>
           </div>
           <a
             href="#contact"
-            className={`group/btn relative flex items-center gap-2 overflow-hidden rounded-sm px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 md:px-5 md:py-3.5 md:text-[11px] ${
+            className={`group/btn relative flex items-center gap-2 overflow-hidden rounded-sm px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-300 md:px-5 md:py-3.5 md:text-[11px] ${
               isHighlighted
-                ? "bg-[#E50914] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.6)]"
-                : "border border-white/20 bg-white/[0.03] text-white/90 hover:border-[#E50914]/50 hover:bg-[#E50914]/10 hover:text-white"
+                ? "bg-[#E50914] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.65)]"
+                : "border border-white/25 bg-white/5 text-white/95 backdrop-blur-sm hover:border-[#E50914] hover:bg-[#E50914] hover:text-white"
             }`}
           >
             {/* Shine effect */}
-            <span className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-14deg] bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
+            <span className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-14deg] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
             <span className="relative">{t.services.reserveShort}</span>
-            <ChevronRight className="relative h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" aria-hidden />
+            <ChevronRight className="relative h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" strokeWidth={2.5} aria-hidden />
           </a>
         </div>
       </div>
 
-      {/* Bottom accent line */}
-      {isHighlighted && (
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] bg-gradient-to-r from-transparent via-[#E50914]/60 to-transparent"
-          aria-hidden
-        />
-      )}
+      {/* Bottom accent line on hover */}
+      <div className={`pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${
+        isHighlighted 
+          ? "bg-gradient-to-r from-transparent via-[#E50914] to-transparent" 
+          : "bg-gradient-to-r from-transparent via-white/40 to-transparent"
+      }`} />
     </motion.article>
   );
 }
@@ -190,34 +186,52 @@ function ServiceCard({
 export function Services() {
   const { t } = useI18n();
   const isLg = useLgUp();
-  const belowMd = useBelowMd();
-  const [mobileRail, setMobileRail] = useState<HTMLDivElement | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.15 });
+  const isInView = useInView(sectionRef, { once: false, amount: 0.1 });
   const services = t.services.items;
 
-  useSnapCarouselAutoplay(mobileRail, services.length, belowMd);
-  useHorizontalRailVerticalWheelPassthrough(mobileRail, belowMd);
+  // Parallax for section
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
     <section ref={sectionRef} id="services" className="relative overflow-hidden bg-black py-24 md:py-32">
-      {/* Background ambient glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.1)_0%,transparent_50%)]" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
+      {/* Background ambient glow with parallax */}
+      <motion.div 
+        className="pointer-events-none absolute inset-0" 
+        style={{ y: bgY }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
+      </motion.div>
+
+      {/* Subtle brand watermark */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
+        <span className="select-none font-display text-[20vw] font-black uppercase leading-none tracking-tighter text-white/[0.015] md:text-[15vw]">
+          VENOM
+        </span>
+      </div>
 
       <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
         {/* Section header */}
         <motion.div
           initial={revealLiftInitial(isLg)}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 0.88, ease: cinematicEase }}
           className="mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between"
         >
           <div className={sectionTitleInset}>
-            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
-              {t.services.sectionEyebrow}
-            </span>
+            {/* Brand accent line */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
+                {t.services.sectionEyebrow}
+              </span>
+            </div>
             <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
               {t.services.sectionTitle}
             </h2>
@@ -228,18 +242,17 @@ export function Services() {
         </motion.div>
 
         {/* Mobile horizontal carousel */}
-        <motion.div
-          ref={setMobileRail}
-          className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
-          initial="hidden"
-          whileInView="show"
-          viewport={viewportReveal}
-          variants={mobileRailVariants}
-        >
+        <div className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden">
           {services.map((service, index) => (
-            <ServiceCard key={service.name} service={service} index={index} isDesktop={false} />
+            <ServiceCard 
+              key={service.name} 
+              service={service} 
+              index={index} 
+              isDesktop={false} 
+              image={serviceImages[index] ?? serviceImages[0]}
+            />
           ))}
-        </motion.div>
+        </div>
 
         {/* Desktop grid */}
         <motion.div
@@ -249,15 +262,21 @@ export function Services() {
           variants={desktopGridVariants}
         >
           {services.map((service, index) => (
-            <ServiceCard key={service.name} service={service} index={index} isDesktop={true} />
+            <ServiceCard 
+              key={service.name} 
+              service={service} 
+              index={index} 
+              isDesktop={true} 
+              image={serviceImages[index] ?? serviceImages[0]}
+            />
           ))}
         </motion.div>
 
         {/* Bottom CTA section */}
         <motion.div
           initial={isLg ? { opacity: 0, y: 28 } : { opacity: 0, y: 22, x: -12 }}
-          whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          whileInView={{ opacity: 1, y: 0, x: 0 }}
+          viewport={{ once: false, amount: 0.5 }}
           transition={{ duration: 0.8, ease: isLg ? cinematicEase : mobilePopEase, delay: 0.2 }}
           className={`mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12 ${sectionTitleInset}`}
         >

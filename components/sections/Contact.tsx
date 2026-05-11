@@ -47,11 +47,15 @@ export function Contact() {
         <motion.div
           initial={lg ? { opacity: 0, y: 48, x: 0 } : { opacity: 0, y: 36, x: -18 }}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
           className={`max-w-5xl ${sectionTitleInset}`}
         >
-          <span className="mb-6 block text-[10px] font-bold uppercase tracking-[0.42em] text-[#E50914]">{c.eyebrow}</span>
+          {/* Brand accent line */}
+          <div className="mb-6 flex items-center gap-3">
+            <div className="h-px w-10 bg-gradient-to-r from-[#E50914] to-transparent" />
+            <span className="text-[10px] font-bold uppercase tracking-[0.42em] text-[#E50914]">{c.eyebrow}</span>
+          </div>
           <h2 className="hero-display text-[clamp(3rem,10vw,6.5rem)] text-white">{c.title}</h2>
           <p className="mt-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">{c.lead}</p>
           
@@ -79,7 +83,7 @@ export function Contact() {
         <motion.div
           initial={lg ? { opacity: 0, y: 32, x: 0 } : { opacity: 0, y: 26, x: -14 }}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.15 }}
           transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
           className="mt-24 grid gap-10 border-t border-white/[0.08] pt-16 lg:grid-cols-12 lg:items-start lg:gap-12"
         >
@@ -89,7 +93,7 @@ export function Contact() {
             variants={contactCardVariants}
             initial="hidden"
             whileInView="show"
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.15 }}
           >
             {rows.map((row) => {
               const content = (

@@ -56,13 +56,17 @@ export function About() {
             <motion.div
               initial={revealLiftInitial(lg)}
               whileInView={revealLiftEnter}
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.88, ease: cinematicEase }}
               className="mb-10 md:mb-12 lg:mb-14"
             >
-              <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914] md:mb-3">
-                {a.eyebrow}
-              </span>
+              {/* Brand accent line */}
+              <div className="mb-4 flex items-center gap-3">
+                <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+                <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
+                  {a.eyebrow}
+                </span>
+              </div>
               <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-white md:text-4xl lg:text-5xl">
                 {a.title}
               </h2>
@@ -72,7 +76,7 @@ export function About() {
               className="max-w-lg text-base leading-relaxed text-white/72 md:text-lg md:leading-relaxed"
               initial={lg ? { opacity: 0, y: 22, x: 0 } : { opacity: 0, y: 20, x: -12 }}
               whileInView={revealLiftEnter}
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.82, ease: lg ? cinematicEase : mobilePopEase }}
             >
               {a.subtitle}
@@ -83,7 +87,7 @@ export function About() {
               className="mt-12 flex flex-col gap-0 border-t border-white/[0.08] pt-12"
               initial="hidden"
               whileInView="show"
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               variants={pointsParentVariants}
             >
               {a.points.map((p) => (
@@ -116,7 +120,7 @@ export function About() {
             <motion.div
               initial={lg ? { opacity: 0, y: 16, x: 0 } : { opacity: 0, y: 22, x: -10 }}
               whileInView={revealLiftEnter}
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.72, ease: lg ? cinematicEase : mobilePopEase, delay: 0.35 }}
               className="mt-12"
             >
@@ -147,7 +151,7 @@ export function About() {
               className="relative z-[2] grid min-h-[min(78vh,820px)] w-full grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1.22fr)_minmax(0,0.46fr)] lg:grid-rows-[1fr_1fr_auto] lg:gap-4"
               initial={lg ? { opacity: 0, y: 28, x: 0 } : { opacity: 0, y: 16, x: -18, scale: 0.986 }}
               whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
             >
               {/* Main large image */}

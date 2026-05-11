@@ -30,11 +30,15 @@ export function Space() {
           <motion.div
             initial={revealLiftInitial(lg)}
             whileInView={revealLiftEnter}
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
             className={`lg:col-span-5 ${sectionTitleInset}`}
           >
-            <span className="mb-4 block text-[10px] font-bold uppercase tracking-[0.38em] text-[#E50914]">{t.space.eyebrow}</span>
+            {/* Brand accent line */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.38em] text-[#E50914]">{t.space.eyebrow}</span>
+            </div>
             <h2 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-white md:text-6xl lg:text-[4.25rem]">{t.space.title}</h2>
             <p className="mt-8 max-w-md text-sm leading-relaxed text-white/68 md:text-base">{t.space.body}</p>
             
@@ -45,7 +49,7 @@ export function Space() {
                   key={feature}
                   initial={lg ? { opacity: 0, x: -20 } : { opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={viewportReveal}
+                  viewport={{ once: false, amount: 0.2 }}
                   transition={{ duration: 0.5, ease: cinematicEase, delay: 0.2 + index * 0.08 }}
                   className="flex items-center gap-3"
                 >
@@ -69,7 +73,7 @@ export function Space() {
           <motion.div
             initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, scale: 1.07, y: 20 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 1.1, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative lg:col-span-7"
           >
@@ -125,7 +129,7 @@ export function Space() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.7, ease: cinematicEase, delay: 0.3 }}
               className="absolute -bottom-4 -left-4 z-10 border border-white/[0.08] bg-black/80 p-4 backdrop-blur-md md:-bottom-6 md:-left-6 md:p-5"
             >

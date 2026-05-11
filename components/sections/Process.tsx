@@ -138,14 +138,18 @@ export function Process() {
         <motion.div
           initial={revealLiftInitial(lg)}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.88, ease: lg ? cinematicEase : mobilePopEase }}
           className="mb-12 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between lg:mb-16"
         >
           <div className={sectionTitleInset}>
-            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
-              {t.process.eyebrow}
-            </span>
+            {/* Brand accent line */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">
+                {t.process.eyebrow}
+              </span>
+            </div>
             <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">
               {t.process.title}
             </h2>
@@ -158,7 +162,7 @@ export function Process() {
           <motion.div
             initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, scale: 1.09, y: 22 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 1.1, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative aspect-[3/4] max-h-[min(78vh,720px)] min-h-[min(52vh,420px)] overflow-hidden border border-white/[0.06] lg:col-span-6 lg:aspect-[4/5] lg:max-h-[min(82vh,760px)] lg:min-h-[min(58vh,600px)]"
           >
@@ -192,7 +196,7 @@ export function Process() {
               className="relative flex w-full min-w-0 flex-1 flex-col justify-center pl-10 md:pl-8 lg:min-h-full lg:pl-3 xl:pl-4"
               initial="hidden"
               whileInView="show"
-              viewport={viewportReveal}
+              viewport={{ once: false, amount: 0.2 }}
               variants={stepParentVariants}
             >
               {/* Progress line rail */}
@@ -291,7 +295,7 @@ export function Process() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:pt-12"
         >

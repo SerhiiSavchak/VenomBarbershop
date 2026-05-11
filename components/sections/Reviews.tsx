@@ -40,12 +40,16 @@ export function Reviews() {
         <motion.div
           initial={revealLiftInitial(lg)}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase }}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
-            <span className="mb-3 block text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.reviews.eyebrow}</span>
+            {/* Brand accent line */}
+            <div className="mb-4 flex items-center gap-3">
+              <div className="h-px w-8 bg-gradient-to-r from-[#E50914] to-transparent" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.35em] text-[#E50914]">{t.reviews.eyebrow}</span>
+            </div>
             <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl">{t.reviews.title}</h2>
           </div>
           <div className="flex items-center gap-2">
@@ -63,7 +67,7 @@ export function Reviews() {
           <motion.div
             initial={lg ? { opacity: 0, y: 40, x: 0 } : { opacity: 0, y: 28, x: -16 }}
             whileInView={revealLiftEnter}
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
             className="group relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-[#0a0a0a] to-[#050505]"
           >
@@ -128,7 +132,7 @@ export function Reviews() {
             variants={reviewCardVariants}
             initial="hidden"
             whileInView="show"
-            viewport={viewportReveal}
+            viewport={{ once: false, amount: 0.2 }}
           >
             {reviews.slice(1).map((review, index) => (
               <motion.div
@@ -176,7 +180,7 @@ export function Reviews() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={viewportReveal}
+          viewport={{ once: false, amount: 0.2 }}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.15 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >
