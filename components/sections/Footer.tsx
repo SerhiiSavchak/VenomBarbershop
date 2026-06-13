@@ -2,6 +2,7 @@
 
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
+import { isSectionVisible } from "@/lib/site-sections";
 
 const InstagramIcon = () => (
   <svg className="h-5 w-5 md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -28,7 +29,7 @@ export function Footer() {
     { label: t.footerNav.services, href: "#services" },
     { label: t.footerNav.about, href: "#about" },
     { label: t.footerNav.team, href: "#masters" },
-    { label: t.footerNav.gallery, href: "#gallery" },
+    ...(isSectionVisible("gallery") ? [{ label: t.footerNav.gallery, href: "#gallery" as const }] : []),
     { label: t.footerNav.reviews, href: "#reviews" },
     { label: t.footerNav.contact, href: "#contact" },
   ];

@@ -12,6 +12,7 @@ import { Contact } from "@/components/sections/Contact";
 import { Masters } from "@/components/sections/Masters";
 import { Footer } from "@/components/sections/Footer";
 import { SectionDivider } from "@/components/ui/SectionDivider";
+import { isSectionVisible } from "@/lib/site-sections";
 
 export default function Home() {
   return (
@@ -25,13 +26,25 @@ export default function Home() {
       <Process />
       <SectionDivider variant="brand" />
       <Services />
-      <SectionDivider variant="gradient" />
-      <Space />
-      <SectionDivider variant="subtle" />
+      {isSectionVisible("space") ? (
+        <>
+          <SectionDivider variant="gradient" />
+          <Space />
+          <SectionDivider variant="subtle" />
+        </>
+      ) : (
+        <SectionDivider variant="gradient" />
+      )}
       <Masters />
-      <SectionDivider variant="brand" />
-      <Gallery />
-      <SectionDivider variant="subtle" />
+      {isSectionVisible("gallery") ? (
+        <>
+          <SectionDivider variant="brand" />
+          <Gallery />
+          <SectionDivider variant="subtle" />
+        </>
+      ) : (
+        <SectionDivider variant="brand" />
+      )}
       <Reviews />
       <SectionDivider variant="gradient" />
       <Contact />

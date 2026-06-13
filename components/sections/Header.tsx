@@ -8,6 +8,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import type { Lang } from "@/lib/i18n";
 import { altegioBookingLink } from "@/lib/altegio";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
+import { isSectionVisible } from "@/lib/site-sections";
 
 const menuListVariants = {
   hidden: { opacity: 0 },
@@ -35,8 +36,8 @@ export function Header() {
     { href: "#about", label: t.nav.about },
     { href: "#process", label: t.nav.process },
     { href: "#services", label: t.nav.services },
-    { href: "#space", label: t.nav.space },
-    { href: "#gallery", label: t.nav.gallery },
+    ...(isSectionVisible("space") ? [{ href: "#space" as const, label: t.nav.space }] : []),
+    ...(isSectionVisible("gallery") ? [{ href: "#gallery" as const, label: t.nav.gallery }] : []),
     { href: "#reviews", label: t.nav.reviews },
     { href: "#contact", label: t.nav.contact },
   ];
