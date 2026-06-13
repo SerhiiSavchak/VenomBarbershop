@@ -7,6 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
 const stepParentVariants = {
@@ -298,7 +299,7 @@ export function Process() {
         >
           <p className="text-sm text-white/50 md:text-base">Готовий почати свій візит?</p>
           <a
-            href="#contact"
+            {...altegioBookingLink}
             className="site-cta-primary"
           >
             {t.contact.bookAppointment}

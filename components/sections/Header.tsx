@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
 import type { Lang } from "@/lib/i18n";
+import { altegioBookingLink } from "@/lib/altegio";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
 
 const menuListVariants = {
@@ -169,7 +170,7 @@ export function Header() {
             </div>
 
             <div className="hidden items-center lg:flex">
-              <a href="#contact" className="site-cta-primary">
+              <a {...altegioBookingLink} className="site-cta-primary">
                 <span className="xl:hidden">{t.header.bookNowShort}</span>
                 <span className="hidden xl:inline">{t.header.bookNow}</span>
               </a>
@@ -294,7 +295,7 @@ export function Header() {
                     </button>
                   </div>
                   <a
-                    href="#contact"
+                    {...altegioBookingLink}
                     onClick={closeMenu}
                     className="site-cta-primary w-full max-w-sm justify-center text-center"
                   >

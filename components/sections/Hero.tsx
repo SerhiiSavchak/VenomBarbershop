@@ -8,6 +8,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { usePageIntro } from "@/components/providers/PageIntroProvider";
 import type { HeroStat, Lang } from "@/lib/i18n";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
 const LEFT_READABILITY_DESKTOP =
@@ -316,7 +317,7 @@ export function Hero() {
                       {...gateIntro(introDone, ctaGroupMotion)}
                     >
                       <a
-                        href="#contact"
+                        {...altegioBookingLink}
                         aria-label={hero.primaryCtaAria}
                         className="hero-copy hero-cta hero-cta--primary group"
                       >

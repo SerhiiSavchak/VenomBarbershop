@@ -5,6 +5,7 @@ import { ExternalLink, MapPin, Clock, Phone, Mail, Calendar, ArrowRight } from "
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
 const contactCardVariants = {
@@ -63,7 +64,7 @@ export function Contact() {
           {/* CTA buttons */}
           <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-stretch lg:justify-start">
             <a
-              href={`mailto:${c.email}?subject=${encodeURIComponent(c.bookAppointment)}`}
+              {...altegioBookingLink}
               className="group site-cta-primary order-1 w-full sm:order-1 sm:w-auto"
             >
               <Calendar className="h-4 w-4" strokeWidth={2} aria-hidden />

@@ -10,6 +10,7 @@ import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 // Service images - premium barber imagery
@@ -159,7 +160,7 @@ function ServiceCard({
             </p>
           </div>
           <a
-            href="#contact"
+            {...altegioBookingLink}
             className={`group/btn relative flex items-center gap-2 overflow-hidden rounded-sm px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-300 md:px-5 md:py-3.5 md:text-[11px] ${
               isHighlighted
                 ? "bg-[#E50914] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.65)]"
@@ -289,7 +290,7 @@ export function Services() {
           <p className="text-sm text-white/50 md:text-base">{t.services.cardStandardSub}</p>
           <span className="hidden h-1 w-1 rounded-full bg-white/20 md:block" />
           <a
-            href="#contact"
+            {...altegioBookingLink}
             className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
             {t.services.reserve} &rarr;

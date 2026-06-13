@@ -10,6 +10,7 @@ import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionE
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
 
 const masterImages = [
@@ -150,7 +151,7 @@ export function Masters() {
 
                 {/* Book CTA */}
                 <a
-                  href="#contact"
+                  {...altegioBookingLink}
                   className="group/btn relative flex w-full items-center justify-center gap-2 overflow-hidden border border-white/15 bg-white/[0.03] px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm transition-all duration-300 hover:border-[#E50914] hover:bg-[#E50914] hover:text-white md:text-[11px]"
                 >
                   {/* Shine effect */}
@@ -177,7 +178,7 @@ export function Masters() {
           <p className="max-w-xl text-sm leading-relaxed text-foreground-muted md:text-base">{t.masters.ctaLead}</p>
           <div className="flex w-full shrink-0 flex-col gap-3 sm:ml-auto sm:w-auto sm:flex-row sm:items-stretch sm:justify-end sm:gap-3">
             <motion.a
-              href="#contact"
+              {...altegioBookingLink}
               aria-label={t.masters.bookCtaAria}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

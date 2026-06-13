@@ -6,6 +6,7 @@ import { Expand } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
 const galleryImages = [
@@ -138,7 +139,7 @@ export function Gallery() {
         >
           <p className="text-sm text-white/50 md:text-base">Хочеш так само?</p>
           <a
-            href="#contact"
+            {...altegioBookingLink}
             className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
             Записатися на візит &rarr;
