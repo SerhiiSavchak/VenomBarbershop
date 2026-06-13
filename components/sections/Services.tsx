@@ -90,8 +90,6 @@ function ServiceCard({
       exit="exit"
       viewport={{ once: false, amount: 0.2 }}
       className={`group relative overflow-hidden ${aspectClass}`}
-      whileHover={isDesktop ? { y: -8 } : undefined}
-      transition={{ duration: 0.4, ease: cinematicEase }}
     >
       <div className="absolute inset-0">
         <Image
@@ -108,10 +106,10 @@ function ServiceCard({
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
 
       <div
-        className={`pointer-events-none absolute inset-0 border transition-all duration-500 ${
+        className={`pointer-events-none absolute inset-0 transition-[box-shadow] duration-500 ${
           isHighlighted
-            ? "border-[#E50914]/30 group-hover:border-[#E50914]/60"
-            : "border-white/[0.06] group-hover:border-white/20"
+            ? "shadow-[inset_0_0_0_1px_rgba(229,9,20,0.3)] group-hover:shadow-[inset_0_0_0_1px_rgba(229,9,20,0.6)]"
+            : "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] group-hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)]"
         }`}
       />
 

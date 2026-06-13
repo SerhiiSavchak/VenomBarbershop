@@ -244,7 +244,7 @@ export const messages: Record<Lang, Messages> = {
       reserve: "Обрати послугу",
       reserveShort: "Обрати",
       cardStandard: "Стандарт VENOM",
-      cardStandardSub: "Консультація включена · За потреби — гарячий рушник",
+      cardStandardSub: "Консультація включена",
       items: [
         {
           name: "Стрижка",
@@ -483,7 +483,7 @@ export const messages: Record<Lang, Messages> = {
       reserve: "Choose service",
       reserveShort: "Reserve",
       cardStandard: "VENOM standard",
-      cardStandardSub: "Consultation included · Hot towel on request",
+      cardStandardSub: "Consultation included",
       items: [
         {
           name: "Haircut",
