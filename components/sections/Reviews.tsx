@@ -6,7 +6,9 @@ import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteContainer } from "@/components/ui/SiteContainer";
 import { altegioBookingLink } from "@/lib/altegio";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const reviewCardVariants = {
@@ -32,12 +34,12 @@ export function Reviews() {
   const lg = useLgUp();
 
   return (
-    <section id="reviews" className="relative overflow-hidden bg-black py-24 md:py-32">
+    <section id="reviews" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_30%,rgba(209,18,27,0.1)_0%,transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_20%_80%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         {/* Section header */}
         <motion.div
           initial="hidden"
@@ -195,7 +197,7 @@ export function Reviews() {
             Записатися зараз &rarr;
           </a>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

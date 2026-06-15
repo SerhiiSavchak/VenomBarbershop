@@ -10,8 +10,10 @@ import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
-import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { altegioBookingLink } from "@/lib/altegio";
+import { siteSectionYClass } from "@/lib/site-layout";
 import {
   SERVICES_AUTOPLAY_INTERVAL_MS,
   SERVICES_INTERACTION_PAUSE_MS,
@@ -343,7 +345,7 @@ export function Services() {
   const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   return (
-    <section ref={sectionRef} id="services" className="relative overflow-hidden bg-black py-24 md:py-32">
+    <section ref={sectionRef} id="services" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
       <motion.div className="pointer-events-none absolute inset-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
@@ -355,7 +357,7 @@ export function Services() {
         </span>
       </div>
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -435,7 +437,7 @@ export function Services() {
             {t.services.reserve} &rarr;
           </a>
         </motion.div>
-      </div>
+      </SiteContainer>
 
       <AnimatePresence mode="wait">
         {activeCategory ? (

@@ -9,6 +9,8 @@ import type { Lang } from "@/lib/i18n";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteContainerClass } from "@/lib/site-layout";
 import { isSectionVisible } from "@/lib/site-sections";
 
 const menuListVariants = {
@@ -123,7 +125,7 @@ export function Header() {
             : "lg:border-black/40 lg:bg-black/75 lg:py-5 lg:backdrop-blur-md lg:md:py-6 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none")
         }`}
       >
-        <div className="mx-auto flex w-full max-w-[min(100%,1820px)] items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:px-4 max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:px-8 sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] md:max-lg:px-12 lg:px-16 lg:py-0">
+        <SiteContainer className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] lg:py-0">
           <div className="min-w-0 shrink">
             <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
           </div>
@@ -187,7 +189,7 @@ export function Header() {
               <Menu className="h-8 w-8" strokeWidth={2.1} />
             </button>
           </div>
-        </div>
+        </SiteContainer>
       </motion.header>
 
       <AnimatePresence>
@@ -226,7 +228,7 @@ export function Header() {
               />
               <div className="pointer-events-none absolute inset-x-0 top-24 h-40 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(229,9,20,0.12)_0%,transparent_72%)]" aria-hidden />
 
-              <div className="flex max-lg:min-h-[64px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 px-4 pb-3 pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:px-8 sm:pb-3.5 sm:pt-[max(0.55rem,env(safe-area-inset-top,0px))]">
+              <div className={`flex max-lg:min-h-[64px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 pb-3 pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:pb-3.5 sm:pt-[max(0.55rem,env(safe-area-inset-top,0px))] ${siteContainerClass}`}>
                 <div className="min-w-0 shrink" onClick={closeMenu}>
                   <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
                 </div>

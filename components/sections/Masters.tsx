@@ -7,6 +7,8 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 import { altegioBookingLink } from "@/lib/altegio";
 import { MASTER_PHOTO_SRC } from "@/lib/masters";
@@ -114,7 +116,7 @@ export function Masters() {
   if (masters.length === 0) return null;
 
   return (
-    <section ref={sectionRef} id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
+    <section ref={sectionRef} id="masters" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_45%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_100%_100%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
 
@@ -124,7 +126,7 @@ export function Masters() {
         </span>
       </div>
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         <motion.div
           className={`mb-14 ${sectionTitleInset}`}
           initial="hidden"
@@ -174,7 +176,7 @@ export function Masters() {
             </SiteCta>
           </div>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

@@ -9,6 +9,7 @@ import { usePageIntro } from "@/components/providers/PageIntroProvider";
 import type { HeroStat, Lang } from "@/lib/i18n";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
 import { altegioBookingLink } from "@/lib/altegio";
+import { SiteContainer } from "@/components/ui/SiteContainer";
 import { useLgUp } from "@/lib/useLgUp";
 
 const LEFT_READABILITY_DESKTOP =
@@ -281,8 +282,8 @@ export function Hero() {
       <HeroBackgroundDesktop reducedMotion={reduce} introDone={introDone} />
 
       <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
-        <div className="relative z-[10] flex w-full max-w-[1600px] flex-1 flex-col px-5 pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(10.25rem+env(safe-area-inset-top,0px))] sm:px-8 lg:mx-auto lg:h-full lg:min-h-0 lg:max-w-none lg:flex-1 lg:flex-col lg:justify-center lg:px-0 lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 max-lg:-translate-y-2 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:pl-[clamp(3.35rem,6.35vw,7.35rem)] lg:pr-8 lg:self-start">
+        <SiteContainer className="relative z-[10] flex flex-1 flex-col pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(10.25rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
+          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 max-lg:-translate-y-2 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:self-start">
             <div className="block lg:table-row-group">
               <div className="block lg:table-row">
                 <div className="block lg:table-cell lg:align-top lg:p-0">
@@ -304,7 +305,7 @@ export function Hero() {
                 <div className="block lg:table-cell lg:align-top lg:p-0">
                   <div className="flex w-full min-h-0 max-w-full flex-1 flex-col gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
                     <motion.p
-                      className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:pl-[0.45rem] lg:text-[15px] lg:leading-[1.72]"
+                      className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:text-[15px] lg:leading-[1.72]"
                       {...gateIntro(introDone, descMotion)}
                     >
                       {hero.description}
@@ -313,7 +314,7 @@ export function Hero() {
                     <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[min(26dvh,220px)] max-lg:flex-1 max-lg:basis-0" aria-hidden />
 
                     <motion.div
-                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0 lg:pl-[0.45rem]"
+                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0"
                       {...gateIntro(introDone, ctaGroupMotion)}
                     >
                       <a
@@ -338,14 +339,14 @@ export function Hero() {
               </div>
             </div>
           </div>
-        </div>
+        </SiteContainer>
 
         <motion.div
           ref={statsRef}
           {...gateIntro(introDone, statsStripMotion)}
-          className="relative z-[12] mt-auto shrink-0 border-t border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.72)] px-4 py-4 backdrop-blur-[2px] md:px-10 lg:absolute lg:bottom-0 lg:left-0 lg:right-0 lg:mt-0 lg:max-h-[92px] lg:min-h-[88px] lg:px-14 lg:py-0 lg:backdrop-blur-none"
+          className="relative z-[12] mt-auto shrink-0 border-t border-[rgba(255,255,255,0.08)] bg-[rgba(0,0,0,0.72)] py-4 backdrop-blur-[2px] lg:absolute lg:bottom-0 lg:left-0 lg:right-0 lg:mt-0 lg:max-h-[92px] lg:min-h-[88px] lg:py-0 lg:backdrop-blur-none"
         >
-          <div className="mx-auto grid max-w-[1600px] grid-cols-2 content-center items-center gap-x-3 gap-y-5 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-white/[0.08]">
+          <SiteContainer className="grid grid-cols-2 content-center items-center gap-x-3 gap-y-5 sm:grid-cols-4 sm:gap-y-0 sm:divide-x sm:divide-white/[0.08]">
             {hero.stats.map((stat, index) => {
               const Icon = statIcons[index] ?? Users;
               return (
@@ -374,7 +375,7 @@ export function Hero() {
                 </motion.div>
               );
             })}
-          </div>
+          </SiteContainer>
         </motion.div>
       </div>
     </section>

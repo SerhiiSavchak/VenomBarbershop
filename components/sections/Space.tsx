@@ -8,6 +8,8 @@ import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, secti
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const featuresList = [
@@ -22,12 +24,12 @@ export function Space() {
   const lg = useLgUp();
 
   return (
-    <section id="space" className="relative overflow-hidden bg-black">
+    <section id="space" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_20%_80%,rgba(209,18,27,0.12)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_90%_20%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 py-24 md:px-10 md:py-32 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-8">
           {/* Text content */}
           <motion.div
@@ -147,7 +149,7 @@ export function Space() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

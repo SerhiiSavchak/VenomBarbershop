@@ -2,6 +2,7 @@
 
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
+import { SiteContainer } from "@/components/ui/SiteContainer";
 import { isSectionVisible } from "@/lib/site-sections";
 import { SITE_FACEBOOK_URL, SITE_INSTAGRAM_URL } from "@/lib/site-contact";
 
@@ -31,7 +32,7 @@ export function Footer() {
 
   return (
     <footer className="relative border-t border-white/5 bg-black">
-      <div className="mx-auto max-w-[1440px] px-4 py-7 md:px-8 md:py-10">
+      <SiteContainer className="py-7 md:py-10">
         <div className="flex flex-col items-center justify-between gap-7 md:flex-row md:gap-8">
           <BrandLogo href="#hero" wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="footer" />
 
@@ -74,7 +75,7 @@ export function Footer() {
             &copy; {new Date().getFullYear()} {t.brand.wordmark} Barbershop. {t.footer.copyright}
           </p>
         </div>
-      </div>
+      </SiteContainer>
     </footer>
   );
 }

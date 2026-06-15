@@ -9,6 +9,8 @@ import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const stepParentVariants = {
@@ -247,12 +249,12 @@ export function Process() {
   }, [applySmoothedProgress, computeTargetProgress, measureLayout, n, steps.length]);
 
   return (
-    <section ref={sectionRef} id="process" className="relative overflow-hidden bg-[#030303] py-24 md:py-32">
+    <section ref={sectionRef} id="process" className={`relative overflow-hidden bg-[#030303] ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,rgba(209,18,27,0.1)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_0%_80%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         {/* Section header */}
         <motion.div
           initial="hidden"
@@ -405,7 +407,7 @@ export function Process() {
             {t.contact.bookAppointment}
           </SiteCta>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

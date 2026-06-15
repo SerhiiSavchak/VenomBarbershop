@@ -6,6 +6,8 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYContactClass } from "@/lib/site-layout";
 import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
@@ -38,12 +40,12 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-black py-28 md:py-40">
+    <section id="contact" className={`relative overflow-hidden bg-black ${siteSectionYContactClass}`}>
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_50%_120%,rgba(209,18,27,0.35)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_10%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_90%_50%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
 
-      <div className="relative z-[10] mx-auto box-border w-full min-w-0 max-w-[1600px] px-5 pb-[env(safe-area-inset-bottom,0px)] sm:px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[10] box-border min-w-0 pb-[env(safe-area-inset-bottom,0px)]">
         <motion.div
           initial="hidden"
           whileInView="show"
@@ -152,7 +154,7 @@ export function Contact() {
             </a>
           </div>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }
