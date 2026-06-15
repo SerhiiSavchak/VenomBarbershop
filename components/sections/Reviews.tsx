@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
@@ -85,11 +85,12 @@ export function Reviews() {
               {/* Image side */}
               <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-auto md:min-h-[380px]">
                 <div className="absolute inset-0 origin-center scale-100 transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=88"
+                  <OptimizedImage
+                    src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=75"
                     alt={t.reviews.featuredImageAlt}
                     fill
                     sizes="(max-width: 768px) 100vw, 42vw"
+                    quality={80}
                     className="object-cover brightness-[0.88] transition-[filter] duration-700 ease-out group-hover:brightness-100"
                   />
                 </div>

@@ -2,7 +2,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { ImageHoverZoom } from "@/components/ui/ImageHoverZoom";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
@@ -70,14 +71,17 @@ function MasterCard({
       <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-[.is-active]:opacity-100" />
 
       <div className="relative aspect-[3/4.2] overflow-hidden">
-        <Image
-          src={MASTER_PHOTO_SRC}
-          alt={master.imageAlt}
-          fill
-          sizes="(max-width:768px) 90vw, 420px"
-          className="object-cover object-top grayscale transition-all duration-700 ease-out will-change-transform group-hover:scale-[1.04] group-hover:grayscale-0 group-[.is-active]:scale-[1.04] group-[.is-active]:grayscale-0"
-          priority
-        />
+        <ImageHoverZoom active={isActive}>
+          <OptimizedImage
+            src={MASTER_PHOTO_SRC}
+            alt={master.imageAlt}
+            fill
+            fadeIn={false}
+            sizes="(max-width:768px) 90vw, 420px"
+            quality={85}
+            className="hover-filter-img object-cover object-[center_18%] grayscale group-hover:grayscale-0 group-[.is-active]:grayscale-0"
+          />
+        </ImageHoverZoom>
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
         <div className="pointer-events-none absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 ease-out group-hover:bg-accent-red/12 group-[.is-active]:bg-accent-red/12" />
       </div>

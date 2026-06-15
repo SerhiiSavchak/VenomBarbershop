@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { Award, ChevronRight, Clock, Scissors, Users } from "lucide-react";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { usePageIntro } from "@/components/providers/PageIntroProvider";
 import type { HeroStat, Lang } from "@/lib/i18n";
@@ -146,12 +146,12 @@ function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: bo
           animate={introDone ? photoAnimate : photoInitial}
           transition={introDone ? photoTransition : { duration: 0 }}
         >
-          <Image
+          <OptimizedImage
             src={HERO_DESKTOP}
             alt=""
             fill
             priority
-            quality={92}
+            quality={88}
             sizes="72vw"
             className="h-full w-full object-cover object-center opacity-100"
           />
@@ -195,12 +195,12 @@ function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boo
         animate={introDone ? photoAnimate : photoInitial}
         transition={introDone ? photoTransition : { duration: 0 }}
       >
-        <Image
+        <OptimizedImage
           src={HERO_MOBILE}
           alt=""
           fill
           priority
-          quality={92}
+          quality={88}
           sizes="100vw"
           className="object-cover object-[50%_26%] opacity-100"
         />
