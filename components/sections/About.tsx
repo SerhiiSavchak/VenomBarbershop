@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
 import {
   cinematicEase,
@@ -15,10 +15,10 @@ import { SiteContainer } from "@/components/ui/SiteContainer";
 import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
-const ABOUT_IMAGE_MAIN = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1400&q=88";
-const ABOUT_IMAGE_SMALL_TOP = "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&q=88";
-const ABOUT_IMAGE_SMALL_BOTTOM = "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=900&q=88";
-const ABOUT_IMAGE_FEATURE = "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=1600&q=88";
+const ABOUT_IMAGE_MAIN = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=75";
+const ABOUT_IMAGE_SMALL_TOP = "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=75";
+const ABOUT_IMAGE_SMALL_BOTTOM = "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=75";
+const ABOUT_IMAGE_FEATURE = "https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=1200&q=75";
 
 const pointsParentVariants = {
   hidden: {},
@@ -37,6 +37,68 @@ function pointItemVariants(lg: boolean) {
       transition: { duration: 0.72, ease: lg ? cinematicEase : mobilePopEase },
     },
   };
+}
+
+const ABOUT_TILE_HOVER_TRANSITION = { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const };
+
+const aboutTileVariants = {
+  idle: {},
+  hover: {},
+};
+
+function aboutImageVariants(hoverScale: number) {
+  return {
+    idle: { scale: 1 },
+    hover: { scale: hoverScale },
+  };
+}
+
+function AboutCollageTile({
+  containerClassName,
+  gradientClassName,
+  hoverScale,
+  src,
+  alt,
+  sizes,
+  imageClassName,
+}: {
+  containerClassName: string;
+  gradientClassName: string;
+  hoverScale: number;
+  src: string;
+  alt: string;
+  sizes: string;
+  imageClassName: string;
+}) {
+  const reduce = useReducedMotion() ?? false;
+
+  return (
+    <motion.div
+      className={containerClassName}
+      initial={false}
+      variants={aboutTileVariants}
+      animate="idle"
+      whileHover={reduce ? undefined : "hover"}
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+      <motion.div
+        className="absolute inset-0 origin-center"
+        variants={aboutImageVariants(hoverScale)}
+        transition={reduce ? { duration: 0 } : ABOUT_TILE_HOVER_TRANSITION}
+      >
+        <OptimizedImage
+          src={src}
+          alt={alt}
+          fill
+          fadeIn={false}
+          sizes={sizes}
+          quality={80}
+          className={`hover-filter-img ${imageClassName}`}
+        />
+      </motion.div>
+      <div className={`pointer-events-none absolute inset-0 ${gradientClassName}`} />
+    </motion.div>
+  );
 }
 
 export function About() {
@@ -149,57 +211,45 @@ export function About() {
               viewport={{ once: false, amount: 0.2 }}
               transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
             >
-              {/* Main large image */}
-              <div className="group relative min-h-[min(52vh,480px)] overflow-hidden border border-white/[0.06] lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:min-h-0">
-                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-                <Image
-                  src={ABOUT_IMAGE_MAIN}
-                  alt={a.imageMainAlt}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 45vw"
-                  className="object-cover object-[center_32%] brightness-[0.88] contrast-[1.08] transition-all duration-700 group-hover:scale-[1.03] group-hover:brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/60 via-transparent to-black/35" />
-              </div>
+              <AboutCollageTile
+                containerClassName="group relative min-h-[min(52vh,480px)] overflow-hidden border border-white/[0.06] lg:col-start-1 lg:row-start-1 lg:row-span-2 lg:min-h-0"
+                gradientClassName="bg-gradient-to-tr from-black/60 via-transparent to-black/35"
+                hoverScale={1.03}
+                src={ABOUT_IMAGE_MAIN}
+                alt={a.imageMainAlt}
+                sizes="(max-width:1024px) 100vw, 45vw"
+                imageClassName="object-cover object-[center_32%] brightness-[0.88] contrast-[1.08] group-hover:brightness-95"
+              />
 
-              {/* Top right image */}
-              <div className="group relative min-h-[200px] overflow-hidden border border-white/[0.06] lg:col-start-2 lg:row-start-1 lg:min-h-0">
-                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-                <Image
-                  src={ABOUT_IMAGE_SMALL_TOP}
-                  alt={a.imageSmallTopAlt}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 18vw"
-                  className="object-cover object-[center_42%] brightness-[0.86] contrast-[1.1] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-              </div>
+              <AboutCollageTile
+                containerClassName="group relative min-h-[200px] overflow-hidden border border-white/[0.06] lg:col-start-2 lg:row-start-1 lg:min-h-0"
+                gradientClassName="bg-gradient-to-t from-black/70 to-transparent"
+                hoverScale={1.05}
+                src={ABOUT_IMAGE_SMALL_TOP}
+                alt={a.imageSmallTopAlt}
+                sizes="(max-width:1024px) 100vw, 18vw"
+                imageClassName="object-cover object-[center_42%] brightness-[0.86] contrast-[1.1] group-hover:brightness-95"
+              />
 
-              {/* Bottom right image */}
-              <div className="group relative min-h-[200px] overflow-hidden border border-white/[0.06] lg:col-start-2 lg:row-start-2 lg:min-h-0">
-                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-                <Image
-                  src={ABOUT_IMAGE_SMALL_BOTTOM}
-                  alt={a.imageSmallBottomAlt}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 18vw"
-                  className="object-cover object-[center_28%] brightness-[0.86] contrast-[1.06] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
-              </div>
+              <AboutCollageTile
+                containerClassName="group relative min-h-[200px] overflow-hidden border border-white/[0.06] lg:col-start-2 lg:row-start-2 lg:min-h-0"
+                gradientClassName="bg-gradient-to-t from-black/75 to-transparent"
+                hoverScale={1.05}
+                src={ABOUT_IMAGE_SMALL_BOTTOM}
+                alt={a.imageSmallBottomAlt}
+                sizes="(max-width:1024px) 100vw, 18vw"
+                imageClassName="object-cover object-[center_28%] brightness-[0.86] contrast-[1.06] group-hover:brightness-95"
+              />
 
-              {/* Bottom wide image */}
-              <div className="group relative min-h-[min(28vw,200px)] overflow-hidden border border-white/[0.06] lg:col-span-2 lg:col-start-1 lg:row-start-3 lg:min-h-[200px] xl:min-h-[220px]">
-                <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-                <Image
-                  src={ABOUT_IMAGE_FEATURE}
-                  alt={a.imageFeatureAlt}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 52vw"
-                  className="object-cover object-[center_55%] brightness-[0.85] contrast-[1.05] transition-all duration-700 group-hover:scale-[1.03] group-hover:brightness-95"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/40" />
-              </div>
+              <AboutCollageTile
+                containerClassName="group relative min-h-[min(28vw,200px)] overflow-hidden border border-white/[0.06] lg:col-span-2 lg:col-start-1 lg:row-start-3 lg:min-h-[200px] xl:min-h-[220px]"
+                gradientClassName="bg-gradient-to-r from-black/50 via-transparent to-black/40"
+                hoverScale={1.03}
+                src={ABOUT_IMAGE_FEATURE}
+                alt={a.imageFeatureAlt}
+                sizes="(max-width:1024px) 100vw, 52vw"
+                imageClassName="object-cover object-[center_55%] brightness-[0.85] contrast-[1.05] group-hover:brightness-95"
+              />
             </motion.div>
 
             {/* Location badge */}

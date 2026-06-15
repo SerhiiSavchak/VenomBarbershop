@@ -627,6 +627,10 @@ select,
   font-family: var(--font-montserrat), var(--font-geist-sans), system-ui, sans-serif;
 }
 
+.hover-filter-img {
+  transition: filter 700ms ease-out;
+}
+
 /* ========================================
    PAGE LOADER ANIMATIONS
    ======================================== */

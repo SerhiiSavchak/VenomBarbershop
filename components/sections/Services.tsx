@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
+import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { Clock, X } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
@@ -24,7 +24,7 @@ import {
   getServiceCategoryImageFocus,
   SERVICE_CATEGORY_IMAGES,
 } from "@/lib/service-categories";
-import { formatPriceDisplay } from "@/lib/format-price";
+import { formatCategoryPrice, formatModalPrice } from "@/lib/format-price";
 import { lockBodyScroll } from "@/lib/body-scroll-lock";
 import type { Messages } from "@/lib/i18n";
 
@@ -76,11 +76,11 @@ function ServiceCardContent({
       />
 
       <div className="pointer-events-none absolute inset-0">
-        <Image
+        <OptimizedImage
           src={image}
           alt={category.imageAlt}
           fill
-          quality={95}
+          quality={80}
           sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
           className={`${imageFocus} object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110`}
         />
@@ -103,7 +103,7 @@ function ServiceCardContent({
         </div>
 
         <p className="mt-2.5 min-h-[1.75rem] font-display text-2xl font-bold tracking-tight text-white md:mt-3 md:min-h-[2rem] md:text-3xl">
-          {formatPriceDisplay(category.priceRange)}
+          {formatCategoryPrice(category.priceRange)}
         </p>
 
         <div className="mt-3 h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10 md:mt-3.5" />
@@ -252,11 +252,11 @@ function ServiceCategoryModal({
           transition={{ duration: 0.5, ease: cinematicEase, delay: 0.04 }}
           className="relative h-24 shrink-0 overflow-hidden md:h-32"
         >
-          <Image
+          <OptimizedImage
             src={SERVICE_CATEGORY_IMAGES[category.id]}
             alt={category.imageAlt}
             fill
-            quality={95}
+            quality={80}
             sizes="(max-width: 768px) 328px, 832px"
             className={`${modalImageFocus} object-cover`}
           />
@@ -289,7 +289,7 @@ function ServiceCategoryModal({
               {category.blurb}
             </p>
             <p className="mt-2 font-display text-lg font-bold text-[#E50914] md:text-xl">
-              {formatPriceDisplay(category.priceRange)}
+              {formatCategoryPrice(category.priceRange)}
             </p>
           </div>
 
@@ -303,8 +303,8 @@ function ServiceCategoryModal({
                   <p className="min-w-0 flex-1 font-display text-[13px] font-bold uppercase leading-snug tracking-tight text-white md:text-base">
                     {item.name}
                   </p>
-                  <p className="shrink-0 whitespace-nowrap font-display text-[13px] font-bold text-white md:text-lg">
-                    {formatPriceDisplay(item.price)}
+                  <p className="shrink-0 whitespace-nowrap pl-2 text-right font-display text-[13px] font-bold tabular-nums text-white md:min-w-[7.5rem] md:text-lg">
+                    {formatModalPrice(item.price)}
                   </p>
                 </div>
                 {item.blurb ? (
