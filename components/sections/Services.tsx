@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { Clock, ChevronRight } from "lucide-react";
+import { Clock, X } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
@@ -11,32 +11,18 @@ import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
 import { altegioBookingLink } from "@/lib/altegio";
-import { useSnapCarouselAutoplay } from "@/lib/useSnapCarouselAutoplay";
+import {
+  SERVICES_AUTOPLAY_INTERVAL_MS,
+  SERVICES_INTERACTION_PAUSE_MS,
+  useSnapCarouselAutoplay,
+} from "@/lib/useSnapCarouselAutoplay";
+import {
+  getServiceCategoryImageFocus,
+  SERVICE_CATEGORY_IMAGES,
+} from "@/lib/service-categories";
+import type { Messages } from "@/lib/i18n";
 
-// Service images - premium barber imagery
-const serviceImages = [
-  "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=800&q=90",
-  "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=90",
-  "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=90",
-  "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=90",
-  "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=90",
-];
-
-const mobileCardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.96 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { duration: 0.7, ease: mobilePopEase },
-  },
-  exit: {
-    opacity: 0,
-    y: -20,
-    scale: 0.98,
-    transition: { duration: 0.4, ease: cinematicEase },
-  },
-};
+type ServiceCategory = Messages["services"]["categories"][number];
 
 const desktopGridVariants = {
   hidden: {},
@@ -55,131 +41,281 @@ function desktopCardVariants(index: number) {
   };
 }
 
+const cardBorderClass =
+  "pointer-events-none absolute inset-0 z-20 shadow-[inset_0_0_0_1px_rgba(229,9,20,0.28)] transition-[box-shadow] duration-500 group-hover:shadow-[inset_0_0_0_1px_rgba(229,9,20,0.72)]";
+
+function ServiceCardContent({
+  category,
+  isDesktop,
+  onDetails,
+  detailsLabel,
+  reserveLabel,
+}: {
+  category: ServiceCategory;
+  isDesktop: boolean;
+  onDetails: () => void;
+  detailsLabel: string;
+  reserveLabel: string;
+}) {
+  const image = SERVICE_CATEGORY_IMAGES[category.id];
+  const imageFocus = getServiceCategoryImageFocus(category.id, isDesktop);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={onDetails}
+        aria-label={`${detailsLabel}: ${category.name}`}
+        className="absolute inset-0 z-[5] cursor-pointer"
+      />
+
+      <div className="pointer-events-none absolute inset-0">
+        <Image
+          src={image}
+          alt={category.imageAlt}
+          fill
+          quality={95}
+          sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
+          className={`${imageFocus} object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110`}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
+        <div className="absolute inset-0 bg-[#E50914]/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-[#E50914]/20" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100" />
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+      <div className={cardBorderClass} aria-hidden />
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex flex-col p-5 md:p-6">
+        <div>
+          <h3 className="font-display text-2xl font-bold uppercase leading-tight tracking-tight text-white drop-shadow-lg md:text-3xl">
+            {category.name}
+          </h3>
+          <p className="mt-1.5 text-[13px] leading-snug text-white/70 md:mt-2 md:text-sm md:leading-relaxed">
+            {category.blurb}
+          </p>
+        </div>
+
+        <p className="mt-2.5 font-display text-2xl font-bold tracking-tight text-white md:mt-3 md:text-3xl">
+          {category.priceRange}
+        </p>
+
+        <div className="mt-3 h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10 md:mt-3.5" />
+
+        <div className="service-card-cta-row relative z-20 mt-3 flex flex-col gap-2.5 pointer-events-none sm:flex-row md:mt-3.5">
+          <span className="service-card-cta service-card-cta--outline">{detailsLabel}</span>
+          <a
+            {...altegioBookingLink}
+            className="service-card-cta service-card-cta--primary pointer-events-auto"
+          >
+            {reserveLabel}
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
 function ServiceCard({
-  service,
+  category,
   index,
   isDesktop,
-  image,
+  onDetails,
+  detailsLabel,
+  reserveLabel,
 }: {
-  service: {
-    name: string;
-    tag: string;
-    duration: string;
-    blurb: string;
-    price: string;
-  };
+  category: ServiceCategory;
   index: number;
   isDesktop: boolean;
-  image: string;
+  onDetails: () => void;
+  detailsLabel: string;
+  reserveLabel: string;
 }) {
-  const { t } = useI18n();
-  const isVip = service.tag === "VIP";
-  const isCombo = service.tag === "Комплекс" || service.tag === "Combo";
-  const isPopular = service.tag === "Хіт" || service.tag === "Popular";
-  const isHighlighted = isVip || isCombo || isPopular;
-
   const aspectClass = isDesktop
     ? "aspect-[3/4]"
     : "aspect-[4/5] w-[min(85vw,340px)] shrink-0 snap-center";
 
+  const contentProps = {
+    category,
+    isDesktop,
+    onDetails,
+    detailsLabel,
+    reserveLabel,
+  };
+
+  if (!isDesktop) {
+    return (
+      <article className={`group relative overflow-hidden ${aspectClass}`}>
+        <ServiceCardContent {...contentProps} />
+      </article>
+    );
+  }
+
   return (
     <motion.article
-      variants={isDesktop ? desktopCardVariants(index) : mobileCardVariants}
+      variants={desktopCardVariants(index)}
       initial="hidden"
       whileInView="show"
-      exit="exit"
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.2 }}
       className={`group relative overflow-hidden ${aspectClass}`}
     >
-      <div className="absolute inset-0">
-        <Image
-          src={image}
-          alt={service.name}
-          fill
-          sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
-          className="object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
-        <div className="absolute inset-0 bg-[#E50914]/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-[#E50914]/20" />
-      </div>
+      <ServiceCardContent {...contentProps} />
+    </motion.article>
+  );
+}
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+function ServiceCategoryModal({
+  category,
+  onClose,
+  reserveLabel,
+  closeLabel,
+}: {
+  category: ServiceCategory;
+  onClose: () => void;
+  reserveLabel: string;
+  closeLabel: string;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
+  const belowMd = useBelowMd();
+  const modalImageFocus = getServiceCategoryImageFocus(category.id, !belowMd);
 
-      <div
-        className={`pointer-events-none absolute inset-0 transition-[box-shadow] duration-500 ${
-          isHighlighted
-            ? "shadow-[inset_0_0_0_1px_rgba(229,9,20,0.3)] group-hover:shadow-[inset_0_0_0_1px_rgba(229,9,20,0.6)]"
-            : "shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)] group-hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.2)]"
-        }`}
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    },
+    [onClose],
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    panelRef.current?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [handleKeyDown]);
+
+  return (
+    <motion.div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="service-modal-title"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.35, ease: cinematicEase }}
+      className="fixed inset-0 z-[70] flex items-center justify-center px-5 py-8 sm:px-6 sm:py-10"
+    >
+      <motion.button
+        type="button"
+        aria-label={closeLabel}
+        className="absolute inset-0 cursor-pointer bg-black/88 backdrop-blur-md"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4, ease: cinematicEase }}
+        onClick={onClose}
       />
 
-      <div className="absolute left-4 top-4 z-10 md:left-5 md:top-5">
-        <span
-          className={`inline-flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] backdrop-blur-sm ${
-            isHighlighted
-              ? "bg-[#E50914]/90 text-white shadow-[0_4px_20px_-4px_rgba(229,9,20,0.5)]"
-              : "border border-white/20 bg-black/60 text-white/90"
-          }`}
+      <motion.div
+        ref={panelRef}
+        tabIndex={-1}
+        initial={{ opacity: 0, y: 48, scale: 0.92 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 32, scale: 0.95 }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        className="relative z-[1] flex max-h-[85vh] w-full max-w-[min(100%,20.5rem)] cursor-default flex-col overflow-hidden rounded-sm border border-white/[0.08] bg-gradient-to-b from-[#0c0c0c] to-black shadow-[0_24px_80px_-20px_rgba(0,0,0,0.9)] md:max-w-[min(90vw,52rem)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E50914]/75 to-transparent" aria-hidden />
+
+        <motion.div
+          initial={{ opacity: 0, scale: 1.04 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: cinematicEase, delay: 0.04 }}
+          className="relative h-24 shrink-0 overflow-hidden md:h-32"
         >
-          {service.tag}
-        </span>
-      </div>
+          <Image
+            src={SERVICE_CATEGORY_IMAGES[category.id]}
+            alt={category.imageAlt}
+            fill
+            quality={95}
+            sizes="(max-width: 768px) 328px, 832px"
+            className={`${modalImageFocus} object-cover`}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20" />
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-3 top-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-sm border border-white/15 bg-black/60 text-white backdrop-blur-sm transition-colors hover:border-[#E50914]/50 hover:text-[#E50914]"
+            aria-label={closeLabel}
+          >
+            <X className="h-4 w-4" strokeWidth={2} aria-hidden />
+          </button>
+        </motion.div>
 
-      <div className="absolute right-4 top-4 z-10 md:right-5 md:top-5">
-        <span className="flex items-center gap-1.5 rounded-sm border border-white/10 bg-black/60 px-2.5 py-1.5 text-[9px] font-semibold uppercase tracking-[0.15em] text-white/80 backdrop-blur-sm">
-          <Clock className="h-3 w-3" strokeWidth={2} aria-hidden />
-          {service.duration}
-        </span>
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-4 p-5 md:gap-5 md:p-6">
-        <div>
-          <h3 className="font-display text-2xl font-bold uppercase leading-tight tracking-tight text-white drop-shadow-lg md:text-3xl">
-            {service.name}
-          </h3>
-          <p className="mt-2 text-[13px] leading-relaxed text-white/70 md:text-sm">
-            {service.blurb}
-          </p>
-        </div>
-
-        <div className="h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10" />
-
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="mb-1 text-[9px] font-semibold uppercase tracking-[0.2em] text-white/50">
-              {t.services.cardStandard}
-            </p>
-            <p
-              className={`font-display text-3xl font-bold tracking-tight md:text-4xl ${
-                isHighlighted ? "text-[#E50914]" : "text-white"
-              }`}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.38, ease: cinematicEase, delay: 0.08 }}
+          className="flex min-h-0 flex-1 flex-col"
+        >
+          <div className="shrink-0 border-b border-white/[0.06] px-4 py-4 md:px-6 md:py-5">
+            <h3
+              id="service-modal-title"
+              className="font-display text-xl font-bold uppercase tracking-tight text-white md:text-2xl"
             >
-              {service.price}
+              {category.name}
+            </h3>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-white/65 md:text-sm">
+              {category.blurb}
+            </p>
+            <p className="mt-2 font-display text-lg font-bold text-[#E50914] md:text-xl">
+              {category.priceRange}
             </p>
           </div>
-          <a
-            {...altegioBookingLink}
-            className={`group/btn relative flex items-center gap-2 overflow-hidden rounded-sm px-4 py-3 text-[10px] font-bold uppercase tracking-[0.16em] transition-all duration-300 md:px-5 md:py-3.5 md:text-[11px] ${
-              isHighlighted
-                ? "bg-[#E50914] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.65)]"
-                : "border border-white/25 bg-white/5 text-white/95 backdrop-blur-sm hover:border-[#E50914] hover:bg-[#E50914] hover:text-white"
-            }`}
-          >
-            <span className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-14deg] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
-            <span className="relative">{t.services.reserveShort}</span>
-            <ChevronRight className="relative h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5" strokeWidth={2.5} aria-hidden />
-          </a>
-        </div>
-      </div>
 
-      <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100 ${
-          isHighlighted
-            ? "bg-gradient-to-r from-transparent via-[#E50914] to-transparent"
-            : "bg-gradient-to-r from-transparent via-white/40 to-transparent"
-        }`}
-      />
-    </motion.article>
+          <ul className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-3 md:px-6 md:py-4">
+            {category.items.map((item) => (
+              <li
+                key={item.name}
+                className="border-b border-white/[0.06] py-3.5 first:pt-0 last:border-b-0 last:pb-0 md:py-4"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <p className="min-w-0 flex-1 font-display text-[13px] font-bold uppercase leading-snug tracking-tight text-white md:text-base">
+                    {item.name}
+                  </p>
+                  <p className="shrink-0 whitespace-nowrap font-display text-[13px] font-bold text-white md:text-lg">
+                    {item.price}
+                  </p>
+                </div>
+                {item.blurb ? (
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-white/55">{item.blurb}</p>
+                ) : null}
+                <span className="mt-2 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white/45">
+                  <Clock className="h-3 w-3 shrink-0" strokeWidth={2} aria-hidden />
+                  {item.duration}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="shrink-0 border-t border-white/[0.06] p-4 md:p-6">
+            <a
+              {...altegioBookingLink}
+              className="flex w-full cursor-pointer items-center justify-center rounded-sm bg-[#E50914] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.65)] md:text-xs"
+            >
+              {reserveLabel}
+            </a>
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -188,14 +324,20 @@ export function Services() {
   const isLg = useLgUp();
   const belowMd = useBelowMd();
   const [servicesRail, setServicesRail] = useState<HTMLDivElement | null>(null);
+  const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, amount: 0.1 });
-  const services = t.services.items;
+  const categories = t.services.categories;
 
-  useSnapCarouselAutoplay(servicesRail, services.length, belowMd);
+  const activeCategory =
+    categories.find((category) => category.id === activeCategoryId) ?? null;
+
+  useSnapCarouselAutoplay(servicesRail, categories.length, belowMd, {
+    intervalMs: SERVICES_AUTOPLAY_INTERVAL_MS,
+    interactionPauseMs: SERVICES_INTERACTION_PAUSE_MS,
+  });
   useHorizontalRailVerticalWheelPassthrough(servicesRail, belowMd);
 
-  // Parallax for section
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
@@ -243,41 +385,42 @@ export function Services() {
           </motion.p>
         </motion.div>
 
-        {/* Mobile horizontal carousel */}
         <div
           ref={setServicesRail}
           className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
         >
-          {services.map((service, index) => (
-            <ServiceCard 
-              key={service.name} 
-              service={service} 
-              index={index} 
-              isDesktop={false} 
-              image={serviceImages[index] ?? serviceImages[0]}
+          {categories.map((category, index) => (
+            <ServiceCard
+              key={category.id}
+              category={category}
+              index={index}
+              isDesktop={false}
+              detailsLabel={t.services.detailsCta}
+              reserveLabel={t.services.reserveCta}
+              onDetails={() => setActiveCategoryId(category.id)}
             />
           ))}
         </div>
 
-        {/* Desktop grid */}
         <motion.div
           className="hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-3 xl:gap-6"
           initial="hidden"
           animate={isInView ? "show" : "hidden"}
           variants={desktopGridVariants}
         >
-          {services.map((service, index) => (
-            <ServiceCard 
-              key={service.name} 
-              service={service} 
-              index={index} 
-              isDesktop={true} 
-              image={serviceImages[index] ?? serviceImages[0]}
+          {categories.map((category, index) => (
+            <ServiceCard
+              key={category.id}
+              category={category}
+              index={index}
+              isDesktop
+              detailsLabel={t.services.detailsCta}
+              reserveLabel={t.services.reserveCta}
+              onDetails={() => setActiveCategoryId(category.id)}
             />
           ))}
         </motion.div>
 
-        {/* Bottom CTA section */}
         <motion.div
           initial={isLg ? { opacity: 0, y: 28 } : { opacity: 0, y: 22, x: -12 }}
           whileInView={{ opacity: 1, y: 0, x: 0 }}
@@ -285,16 +428,28 @@ export function Services() {
           transition={{ duration: 0.8, ease: isLg ? cinematicEase : mobilePopEase, delay: 0.2 }}
           className={`mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12 ${sectionTitleInset}`}
         >
-          <p className="text-sm text-white/50 md:text-base">{t.services.cardStandardSub}</p>
+          <p className="text-sm text-white/50 md:text-base">{t.services.priceNote}</p>
           <span className="hidden h-1 w-1 rounded-full bg-white/20 md:block" />
           <a
             {...altegioBookingLink}
-            className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
+            className="cursor-pointer text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
             {t.services.reserve} &rarr;
           </a>
         </motion.div>
       </div>
+
+      <AnimatePresence mode="wait">
+        {activeCategory ? (
+          <ServiceCategoryModal
+            key={activeCategory.id}
+            category={activeCategory}
+            onClose={() => setActiveCategoryId(null)}
+            reserveLabel={t.services.reserveCta}
+            closeLabel={t.services.modalClose}
+          />
+        ) : null}
+      </AnimatePresence>
     </section>
   );
 }

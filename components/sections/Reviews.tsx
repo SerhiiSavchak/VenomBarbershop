@@ -86,6 +86,7 @@ export function Reviews() {
                   src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=88"
                   alt={t.reviews.featuredImageAlt}
                   fill
+                  sizes="(max-width: 768px) 100vw, 42vw"
                   className="object-cover brightness-[0.88] transition-all duration-700 group-hover:brightness-100 group-hover:scale-[1.02]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/50 to-[#080808] md:via-black/35" />

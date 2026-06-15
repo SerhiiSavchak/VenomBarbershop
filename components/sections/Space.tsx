@@ -110,6 +110,7 @@ export function Space() {
                     src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=88"
                     alt={t.space.imageChair}
                     fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
                     className="object-cover brightness-[0.9] contrast-[1.12] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
@@ -120,6 +121,7 @@ export function Space() {
                     src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=88"
                     alt={t.space.imageTools}
                     fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
                     className="object-cover brightness-[0.9] contrast-[1.1] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />

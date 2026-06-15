@@ -5,6 +5,21 @@ import { useEffect, useRef } from "react";
 /** Інтервал автопрокрутки для всіх snap-каруселей на сайті. */
 export const SLIDER_AUTOPLAY_INTERVAL_MS = 2000;
 
+/** Інтервал автопрокрутки для каруселі послуг (повільніший). */
+export const SERVICES_AUTOPLAY_INTERVAL_MS = 6000;
+
+/** Пауза після взаємодії користувача в каруселі послуг. */
+export const SERVICES_INTERACTION_PAUSE_MS = 12000;
+
+export type SnapCarouselAutoplayOptions = {
+  /** Затримка перед першим автопрокручуванням (мс). */
+  initialDelayMs?: number;
+  /** Інтервал між слайдами (мс). */
+  intervalMs?: number;
+  /** Пауза після свайпу / дотику перед відновленням автопрокрутки (мс). */
+  interactionPauseMs?: number;
+};
+
 /**
  * Плавно переходить до наступного слайда в горизонтальному контейнері з snap.
  * Пауза під час взаємодії (pointer) і коли блок поза екраном; вимкнено при prefers-reduced-motion.
@@ -13,7 +28,13 @@ export function useSnapCarouselAutoplay(
   container: HTMLElement | null,
   itemCount: number,
   enabled: boolean,
+  options: SnapCarouselAutoplayOptions = {},
 ) {
+  const {
+    initialDelayMs = 0,
+    intervalMs = SLIDER_AUTOPLAY_INTERVAL_MS,
+    interactionPauseMs = 600,
+  } = options;
   const pausedRef = useRef(false);
   const inViewRef = useRef(true);
 
@@ -31,18 +52,34 @@ export function useSnapCarouselAutoplay(
     );
     io.observe(el);
 
-    const pause = () => {
-      pausedRef.current = true;
-    };
-    const resumeSoon = () => {
-      window.setTimeout(() => {
-        pausedRef.current = false;
-      }, 600);
+    let resumeTimerId: number | undefined;
+
+    const clearResumeTimer = () => {
+      if (resumeTimerId !== undefined) {
+        window.clearTimeout(resumeTimerId);
+        resumeTimerId = undefined;
+      }
     };
 
-    el.addEventListener("pointerdown", pause);
-    el.addEventListener("pointerup", resumeSoon);
-    el.addEventListener("pointercancel", resumeSoon);
+    const pauseForInteraction = () => {
+      pausedRef.current = true;
+      clearResumeTimer();
+    };
+
+    const scheduleResumeAfterInteraction = () => {
+      clearResumeTimer();
+      resumeTimerId = window.setTimeout(() => {
+        pausedRef.current = false;
+        resumeTimerId = undefined;
+      }, interactionPauseMs);
+    };
+
+    el.addEventListener("pointerdown", pauseForInteraction);
+    el.addEventListener("pointerup", scheduleResumeAfterInteraction);
+    el.addEventListener("pointercancel", scheduleResumeAfterInteraction);
+    el.addEventListener("touchstart", pauseForInteraction, { passive: true });
+    el.addEventListener("touchend", scheduleResumeAfterInteraction, { passive: true });
+    el.addEventListener("touchcancel", scheduleResumeAfterInteraction, { passive: true });
 
     const tick = () => {
       if (pausedRef.current || !inViewRef.current) return;
@@ -69,13 +106,22 @@ export function useSnapCarouselAutoplay(
       el.scrollTo({ left: targetLeft, behavior: "smooth" });
     };
 
-    const id = window.setInterval(tick, SLIDER_AUTOPLAY_INTERVAL_MS);
+    let intervalId: number | undefined;
+    const startId = window.setTimeout(() => {
+      intervalId = window.setInterval(tick, intervalMs);
+    }, initialDelayMs);
+
     return () => {
-      window.clearInterval(id);
+      window.clearTimeout(startId);
+      clearResumeTimer();
+      if (intervalId !== undefined) window.clearInterval(intervalId);
       io.disconnect();
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("pointerup", resumeSoon);
-      el.removeEventListener("pointercancel", resumeSoon);
+      el.removeEventListener("pointerdown", pauseForInteraction);
+      el.removeEventListener("pointerup", scheduleResumeAfterInteraction);
+      el.removeEventListener("pointercancel", scheduleResumeAfterInteraction);
+      el.removeEventListener("touchstart", pauseForInteraction);
+      el.removeEventListener("touchend", scheduleResumeAfterInteraction);
+      el.removeEventListener("touchcancel", scheduleResumeAfterInteraction);
     };
-  }, [container, itemCount, enabled]);
+  }, [container, itemCount, enabled, initialDelayMs, intervalMs, interactionPauseMs]);
 }
