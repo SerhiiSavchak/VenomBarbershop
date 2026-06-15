@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { PageLoader } from "@/components/PageLoader";
 
 type PageIntroContextValue = {
-  /** true после завершения exit-анимации PageLoader */
+  /** true коли лоадер починає зникати — Hero стартує під оверлеєм */
   introDone: boolean;
 };
 
@@ -16,13 +16,13 @@ export function PageIntroProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (introDone) return;
-    const id = window.setTimeout(() => setIntroDone(true), 8000);
+    const id = window.setTimeout(() => setIntroDone(true), 4500);
     return () => window.clearTimeout(id);
   }, [introDone]);
 
   return (
     <PageIntroContext.Provider value={value}>
-      <PageLoader onIntroComplete={() => setIntroDone(true)} />
+      <PageLoader onIntroReady={() => setIntroDone(true)} />
       {children}
     </PageIntroContext.Provider>
   );

@@ -1,12 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
+import { useCallback, useLayoutEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const stepParentVariants = {
@@ -28,6 +32,43 @@ function stepItemVariants(lg: boolean) {
   };
 }
 
+const MARKER_ACTIVE_CLASSES = [
+  "border-[#E50914]",
+  "bg-[#E50914]",
+  "shadow-[0_0_16px_rgba(229,9,20,0.6)]",
+] as const;
+const MARKER_INACTIVE_CLASSES = ["border-white/20", "bg-[#0a0a0a]"] as const;
+
+const ACTIVATION_OFFSET = 16;
+const DEACTIVATION_OFFSET = 24;
+const SCRUB_LERP = 0.14;
+
+function getStepMarkerAnchor(stepEl: HTMLElement, timelineTop: number): number {
+  const badge = stepEl.querySelector<HTMLElement>("[data-process-marker-anchor]");
+  if (badge) {
+    const badgeRect = badge.getBoundingClientRect();
+    return badgeRect.top + badgeRect.height / 2 - timelineTop;
+  }
+
+  const stepRect = stepEl.getBoundingClientRect();
+  return stepRect.top + stepRect.height / 2 - timelineTop;
+}
+
+function setMarkerDomActive(marker: HTMLSpanElement, active: boolean) {
+  if (active) {
+    marker.classList.remove(...MARKER_INACTIVE_CLASSES);
+    marker.classList.add(...MARKER_ACTIVE_CLASSES);
+  } else {
+    marker.classList.remove(...MARKER_ACTIVE_CLASSES);
+    marker.classList.add(...MARKER_INACTIVE_CLASSES);
+  }
+}
+
+function setStepDomActive(step: HTMLDivElement, active: boolean) {
+  step.classList.toggle("opacity-100", active);
+  step.classList.toggle("opacity-60", !active);
+}
+
 export function Process() {
   const { t } = useI18n();
   const lg = useLgUp();
@@ -35,106 +76,185 @@ export function Process() {
   const n = steps.length;
 
   const sectionRef = useRef<HTMLElement>(null);
-  const railRef = useRef<HTMLDivElement>(null);
+  const timelineRef = useRef<HTMLDivElement>(null);
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const ratiosRef = useRef<number[]>([]);
+  const markerRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const progressLineRef = useRef<HTMLDivElement>(null);
 
-  const [active, setActive] = useState(0);
-  const [indicatorTop, setIndicatorTop] = useState(0);
-  const [dotTops, setDotTops] = useState<number[]>(() => new Array(n).fill(0));
-  const [lineFill, setLineFill] = useState(0);
+  const layoutRef = useRef({
+    markerTops: [] as number[],
+    lineTop: 0,
+    lineSpan: 0,
+  });
+  const activeMarkersRef = useRef<boolean[]>(new Array(n).fill(false));
 
-  // Smooth spring animation for the progress line
-  const smoothLineFill = useSpring(lineFill, { stiffness: 120, damping: 30 });
+  const measureLayout = useCallback(() => {
+    const timeline = timelineRef.current;
+    if (!timeline) return false;
 
-  const measureRail = useCallback(() => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const rb = rail.getBoundingClientRect();
-    const tops = stepRefs.current.slice(0, n).map((el) => {
-      if (!el) return 0;
-      const eb = el.getBoundingClientRect();
-      return eb.top + eb.height / 2 - rb.top;
+    const stepsReady = stepRefs.current.slice(0, n);
+    if (stepsReady.length < n || stepsReady.some((el) => !el)) return false;
+
+    const timelineRect = timeline.getBoundingClientRect();
+
+    stepsReady.forEach((stepEl, i) => {
+      const marker = markerRefs.current[i];
+      if (!stepEl || !marker) return;
+      const anchorTop = getStepMarkerAnchor(stepEl, timelineRect.top);
+      marker.style.top = `${anchorTop}px`;
     });
-    setDotTops(tops);
-    const safe = Math.max(0, Math.min(tops.length - 1, active));
-    setIndicatorTop(tops[safe] ?? 0);
-  }, [active, n]);
 
-  const updateLineFill = useCallback(() => {
-    const first = stepRefs.current[0];
-    const last = stepRefs.current[n - 1];
-    if (!first || !last) return;
-    const vh = typeof window !== "undefined" ? window.innerHeight : 800;
-    const anchor = vh * 0.42;
-    const fr = first.getBoundingClientRect();
-    const lr = last.getBoundingClientRect();
-    const start = fr.top + fr.height * 0.35;
-    const end = lr.top + lr.height * 0.35;
-    const span = end - start || 1;
-    const t = Math.max(0, Math.min(1, (anchor - start) / span));
-    setLineFill(t);
+    const markerCenters = markerRefs.current.slice(0, n).map((marker) => {
+      if (!marker) return 0;
+      const markerRect = marker.getBoundingClientRect();
+      return markerRect.top + markerRect.height / 2 - timelineRect.top;
+    });
+
+    const lineTop = markerCenters[0] ?? 0;
+    const lineSpan = Math.max(0, (markerCenters[n - 1] ?? lineTop) - lineTop);
+    if (lineSpan <= 0) return false;
+
+    layoutRef.current = { markerTops: markerCenters, lineTop, lineSpan };
+
+    if (trackRef.current) {
+      trackRef.current.style.top = `${lineTop}px`;
+      trackRef.current.style.height = `${lineSpan}px`;
+    }
+
+    return true;
   }, [n]);
+
+  const computeTargetProgress = useCallback(() => {
+    const timeline = timelineRef.current;
+    const { markerTops, lineSpan } = layoutRef.current;
+
+    if (!timeline || markerTops.length < n || lineSpan <= 0) return 0;
+
+    const timelineRect = timeline.getBoundingClientRect();
+    const viewportAnchor = window.innerHeight * 0.42;
+    const startY = timelineRect.top + (markerTops[0] ?? 0);
+    const endY = timelineRect.top + (markerTops[n - 1] ?? 0);
+    const scrollSpan = endY - startY || 1;
+
+    return Math.max(0, Math.min(1, (viewportAnchor - startY) / scrollSpan));
+  }, [n]);
+
+  const updateMarkerStates = useCallback(
+    (progress: number) => {
+      const { markerTops: tops, lineTop, lineSpan } = layoutRef.current;
+      if (tops.length < n || lineSpan <= 0) return;
+
+      const activationPad = ACTIVATION_OFFSET / lineSpan;
+      const deactivationPad = DEACTIVATION_OFFSET / lineSpan;
+      const active = activeMarkersRef.current;
+
+      for (let i = 0; i < n; i += 1) {
+        const markerProgress = ((tops[i] ?? 0) - lineTop) / lineSpan;
+        const wasActive = active[i] ?? false;
+        let isActive = wasActive;
+
+        if (wasActive) {
+          if (progress < markerProgress - deactivationPad) isActive = false;
+        } else if (progress >= markerProgress - activationPad) {
+          isActive = true;
+        }
+
+        if (isActive === wasActive) continue;
+
+        active[i] = isActive;
+
+        const marker = markerRefs.current[i];
+        if (marker) setMarkerDomActive(marker, isActive);
+
+        const step = stepRefs.current[i];
+        if (step) setStepDomActive(step, isActive);
+      }
+    },
+    [n],
+  );
+
+  const applySmoothedProgress = useCallback(
+    (progress: number) => {
+      const { lineSpan } = layoutRef.current;
+      if (lineSpan <= 0) return;
+
+      const clamped = Math.max(0, Math.min(1, progress));
+
+      if (progressLineRef.current) {
+        progressLineRef.current.style.height = `${clamped * 100}%`;
+      }
+
+      updateMarkerStates(clamped);
+    },
+    [updateMarkerStates],
+  );
 
   useLayoutEffect(() => {
-    measureRail();
-    updateLineFill();
-    const onScroll = () => {
-      measureRail();
-      updateLineFill();
+    let rafId = 0;
+    let targetProgress = 0;
+    let smoothProgress = 0;
+
+    activeMarkersRef.current = new Array(n).fill(false);
+
+    const scheduleTick = () => {
+      if (!rafId) rafId = requestAnimationFrame(tick);
     };
-    window.addEventListener("resize", onScroll);
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    const syncLayout = () => {
+      if (!measureLayout()) {
+        scheduleTick();
+        return false;
+      }
+      targetProgress = computeTargetProgress();
+      smoothProgress = targetProgress;
+      applySmoothedProgress(smoothProgress);
+      return true;
+    };
+
+    const tick = () => {
+      targetProgress = computeTargetProgress();
+      smoothProgress += (targetProgress - smoothProgress) * SCRUB_LERP;
+
+      if (Math.abs(targetProgress - smoothProgress) < 0.0008) {
+        smoothProgress = targetProgress;
+      }
+
+      applySmoothedProgress(smoothProgress);
+
+      if (Math.abs(targetProgress - smoothProgress) > 0.0008) {
+        rafId = requestAnimationFrame(tick);
+      } else {
+        rafId = 0;
+      }
+    };
+
+    syncLayout();
+    scheduleTick();
+
+    window.addEventListener("scroll", scheduleTick, { passive: true });
+    window.addEventListener("resize", syncLayout);
+
+    const stepsContainer = timelineRef.current?.parentElement;
+    const resizeObserver = new ResizeObserver(syncLayout);
+    if (sectionRef.current) resizeObserver.observe(sectionRef.current);
+    if (stepsContainer) resizeObserver.observe(stepsContainer);
+
     return () => {
-      window.removeEventListener("resize", onScroll);
-      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", scheduleTick);
+      window.removeEventListener("resize", syncLayout);
+      resizeObserver.disconnect();
     };
-  }, [measureRail, updateLineFill]);
-
-  useEffect(() => {
-    ratiosRef.current = Array.from({ length: n }, () => 0);
-    const els = stepRefs.current.slice(0, n).filter(Boolean) as HTMLDivElement[];
-    if (!els.length) return;
-
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          const idx = els.indexOf(e.target as HTMLDivElement);
-          if (idx >= 0) {
-            ratiosRef.current[idx] = e.intersectionRatio;
-          }
-        }
-        let best = -1;
-        let bestI = 0;
-        ratiosRef.current.forEach((r, i) => {
-          if (r > best) {
-            best = r;
-            bestI = i;
-          }
-        });
-        if (best > 0.08) setActive(bestI);
-      },
-      { threshold: [0, 0.08, 0.15, 0.25, 0.4, 0.55, 0.7, 0.85, 1], rootMargin: "-26% 0px -26% 0px" },
-    );
-
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, [n]);
-
-  const dotProgress = (i: number) => {
-    if (n <= 1) return lineFill;
-    return i / (n - 1);
-  };
-
-  const isDotFilled = (i: number) => dotProgress(i) <= lineFill + 0.04;
+  }, [applySmoothedProgress, computeTargetProgress, measureLayout, n, steps.length]);
 
   return (
-    <section ref={sectionRef} id="process" className="relative overflow-hidden bg-[#030303] py-24 md:py-32">
+    <section ref={sectionRef} id="process" className={`relative overflow-hidden bg-[#030303] ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_80%_20%,rgba(209,18,27,0.1)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_0%_80%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         {/* Section header */}
         <motion.div
           initial="hidden"
@@ -144,7 +264,7 @@ export function Process() {
         >
           <div className={sectionTitleInset}>
             <SectionEyebrow text={t.process.eyebrow} />
-            <motion.h2 
+            <motion.h2
               variants={sectionHeadingVariants}
               className="font-display text-4xl font-bold uppercase tracking-tight text-white md:text-5xl lg:text-6xl"
             >
@@ -172,7 +292,7 @@ export function Process() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/40" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_70%,rgba(209,18,27,0.2)_0%,transparent_50%)] mix-blend-screen" />
-            
+
             {/* Floating badge */}
             <div className="absolute bottom-6 left-6 right-6 z-[3] border border-white/[0.08] bg-black/70 p-4 backdrop-blur-md md:bottom-10 md:left-10 md:right-auto md:max-w-[280px]">
               <div className="flex items-center gap-3">
@@ -180,8 +300,8 @@ export function Process() {
                   <CheckCircle2 className="h-5 w-5 text-[#E50914]" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">Premium</p>
-                  <p className="mt-0.5 text-sm text-white/70">Якість без компромісів</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">{t.process.badgeEyebrow}</p>
+                  <p className="mt-0.5 text-sm text-white/70">{t.process.badgeText}</p>
                 </div>
               </div>
             </div>
@@ -198,54 +318,39 @@ export function Process() {
             >
               {/* Progress line rail */}
               <div
-                ref={railRef}
+                ref={timelineRef}
                 className="pointer-events-none absolute left-0 top-0 h-full w-10 lg:w-12"
                 aria-hidden
               >
-                {/* Background track */}
+                {/* Timeline track — clipped strictly between first and last marker */}
                 <div
-                  className="absolute left-[18px] top-8 bottom-8 w-[2px] overflow-hidden rounded-full bg-white/[0.08]"
-                  style={{ transform: "translateX(-50%)" }}
+                  ref={trackRef}
+                  className="absolute left-[18px] z-[1] w-[2px] -translate-x-1/2 overflow-hidden bg-white/[0.08]"
+                  style={{ top: 0, height: 0 }}
                 >
-                  {/* Filled progress */}
-                  <motion.div
-                    className="absolute left-0 top-0 w-full origin-top bg-gradient-to-b from-[#E50914] via-[#E50914] to-[#ff3d47]"
-                    style={{ height: "100%", scaleY: smoothLineFill }}
+                  <div
+                    ref={progressLineRef}
+                    className="absolute left-0 top-0 w-full bg-gradient-to-b from-[#E50914] via-[#E50914] to-[#ff3d47]"
+                    style={{ height: "0%" }}
                   />
                 </div>
 
-                {/* Animated glow along the line */}
-                <motion.div
-                  className="absolute left-[18px] w-4 h-8 -translate-x-1/2 rounded-full bg-[#E50914]/60 blur-md"
-                  style={{
-                    top: useTransform(smoothLineFill, [0, 1], ["32px", "calc(100% - 32px)"]),
-                  }}
+                {/* Tailwind scan anchor for marker active utilities */}
+                <span
+                  className="hidden border-[#E50914] bg-[#E50914] shadow-[0_0_16px_rgba(229,9,20,0.6)]"
+                  aria-hidden
                 />
 
-                {/* Step dots */}
-                {dotTops.map((top, i) =>
-                  i === active ? null : (
-                    <span
-                      key={steps[i]?.number ?? i}
-                      className={`absolute left-[18px] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-all duration-300 ${
-                        isDotFilled(i)
-                          ? "border-[#E50914] bg-[#E50914] shadow-[0_0_16px_rgba(229,9,20,0.6)]"
-                          : "border-white/20 bg-[#0a0a0a]"
-                      }`}
-                      style={{ top }}
-                    />
-                  ),
-                )}
-
-                {/* Active indicator (larger, animated) */}
-                <motion.span
-                  className="absolute left-[18px] z-[2] h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[#E50914] bg-[#E50914] shadow-[0_0_24px_rgba(229,9,20,0.75),0_0_48px_rgba(229,9,20,0.35)]"
-                  animate={{ top: indicatorTop }}
-                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                >
-                  {/* Inner pulse */}
-                  <span className="absolute inset-0 animate-ping rounded-full bg-[#E50914]/40" />
-                </motion.span>
+                {/* Step markers */}
+                {steps.map((step, i) => (
+                  <span
+                    key={step.number}
+                    ref={(el) => {
+                      markerRefs.current[i] = el;
+                    }}
+                    className="absolute left-[18px] z-[2] h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white/20 bg-[#0a0a0a] transition-[border-color,background-color,box-shadow,transform] duration-500 ease-out"
+                  />
+                ))}
               </div>
 
               {/* Step cards */}
@@ -256,22 +361,23 @@ export function Process() {
                     stepRefs.current[index] = el;
                   }}
                   variants={stepItemVariants(lg)}
-                  className={`group relative border-b border-white/[0.06] py-10 first:pt-0 lg:py-10 lg:pl-6 ${
-                    active === index ? "opacity-100" : "opacity-60"
-                  } transition-opacity duration-500`}
+                  className="group relative border-b border-white/[0.06] py-10 opacity-60 transition-opacity duration-500 first:pt-0 lg:py-10 lg:pl-6"
                 >
                   {/* Large watermark number */}
                   <span className="pointer-events-none absolute -left-2 top-4 select-none font-display text-[clamp(4rem,14vw,7rem)] font-bold leading-none text-white/[0.03] transition-colors duration-500 group-hover:text-[#E50914]/8 md:left-0 lg:-left-1">
                     {step.number}
                   </span>
-                  
+
                   <div className="relative flex min-w-0 flex-col gap-3 pl-4 md:pl-6 lg:pl-6">
                     {/* Step number badge */}
-                    <span className="mb-1 inline-flex w-max items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50">
+                    <span
+                      data-process-marker-anchor
+                      className="mb-1 inline-flex w-max items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50"
+                    >
                       <span className="h-1.5 w-1.5 rounded-full bg-[#E50914]" />
-                      Крок {step.number}
+                      {t.process.stepLabel} {step.number}
                     </span>
-                    
+
                     <h3 className="font-display text-xl font-bold uppercase tracking-wide text-white md:text-2xl">
                       {step.title}
                     </h3>
@@ -279,9 +385,6 @@ export function Process() {
                       {step.desc}
                     </p>
                   </div>
-
-                  {/* Hover accent */}
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] origin-top scale-y-0 bg-gradient-to-b from-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-y-100" />
                 </motion.div>
               ))}
             </motion.div>
@@ -296,15 +399,12 @@ export function Process() {
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:pt-12"
         >
-          <p className="text-sm text-white/50 md:text-base">Готовий почати свій візит?</p>
-          <a
-            href="#contact"
-            className="site-cta-primary"
-          >
+          <p className="text-sm text-white/50 md:text-base">{t.process.ctaLead}</p>
+          <SiteCta {...altegioBookingLink}>
             {t.contact.bookAppointment}
-          </a>
+          </SiteCta>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

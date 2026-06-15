@@ -1,3 +1,14 @@
+import {
+  SITE_ADDRESS_EN,
+  SITE_ADDRESS_UK,
+  SITE_GOOGLE_MAPS_OPEN_URL,
+  SITE_HOURS_EN,
+  SITE_HOURS_UK,
+  SITE_PHONE_DISPLAY,
+  SITE_PHONE_HREF,
+  siteGoogleMapsEmbedSrc,
+} from "./site-contact";
+
 export type Lang = "uk" | "en";
 
 export const STORAGE_KEY = "venom-lang";
@@ -32,11 +43,8 @@ export type Messages = {
   };
   footer: {
     copyright: string;
-    privacy: string;
-    terms: string;
     instagramAria: string;
     facebookAria: string;
-    twitterAria: string;
     navAria: string;
   };
   footerNav: Record<"services" | "about" | "team" | "gallery" | "reviews" | "contact", string>;
@@ -71,16 +79,23 @@ export type Messages = {
     sectionEyebrow: string;
     sectionTitle: string;
     sectionLead: string;
+    priceNote: string;
+    detailsCta: string;
+    reserveCta: string;
     reserve: string;
-    reserveShort: string;
-    cardStandard: string;
-    cardStandardSub: string;
-    items: {
+    modalClose: string;
+    categories: {
+      id: "haircuts" | "beard" | "combo" | "toning" | "care" | "hairTattoo";
       name: string;
-      tag: string;
-      duration: string;
       blurb: string;
-      price: string;
+      priceRange: string;
+      imageAlt: string;
+      items: {
+        name: string;
+        duration: string;
+        price: string;
+        blurb?: string;
+      }[];
     }[];
   };
   space: {
@@ -88,6 +103,10 @@ export type Messages = {
     title: string;
     body: string;
     cta: string;
+    features: string[];
+    statCount: string;
+    statLabel: string;
+    statCaption: string;
     imageMain: string;
     imageChair: string;
     imageTools: string;
@@ -96,6 +115,10 @@ export type Messages = {
     eyebrow: string;
     title: string;
     imageAlt: string;
+    badgeEyebrow: string;
+    badgeText: string;
+    stepLabel: string;
+    ctaLead: string;
     steps: { number: string; title: string; desc: string }[];
   };
   masters: {
@@ -103,16 +126,23 @@ export type Messages = {
     title: string;
     ctaLead: string;
     bookCtaAria: string;
-    items: { name: string; role: string }[];
+    items: { name: string; role: string; imageAlt: string }[];
   };
   gallery: {
     eyebrow: string;
     title: string;
+    lead: string;
+    ctaLead: string;
+    bookCta: string;
     imageAlt: (n: number) => string;
   };
   reviews: {
     eyebrow: string;
     title: string;
+    ratingLabel: string;
+    regularClient: string;
+    ctaLead: string;
+    bookCta: string;
     featuredImageAlt: string;
     items: { name: string; text: string }[];
   };
@@ -173,11 +203,8 @@ export const messages: Record<Lang, Messages> = {
     },
     footer: {
       copyright: "Усі права захищені.",
-      privacy: "Конфіденційність",
-      terms: "Умови",
-      instagramAria: "Instagram",
-      facebookAria: "Facebook",
-      twitterAria: "X (Twitter)",
+      instagramAria: "Instagram VENOM",
+      facebookAria: "Facebook VENOM",
       navAria: "Посилання в підвалі",
     },
     footerNav: {
@@ -241,45 +268,167 @@ export const messages: Record<Lang, Messages> = {
       sectionEyebrow: "НАШІ ПОСЛУГИ",
       sectionTitle: "Послуги",
       sectionLead: "Стрижка, борода та комплексний догляд — чітко, акуратно, без зайвого.",
-      reserve: "Обрати послугу",
-      reserveShort: "Обрати",
-      cardStandard: "Стандарт VENOM",
-      cardStandardSub: "Консультація включена · За потреби — гарячий рушник",
-      items: [
+      priceNote: "Ціна залежить від категорії майстра.",
+      detailsCta: "Детальніше",
+      reserveCta: "Записатися",
+      reserve: "Записатися онлайн",
+      modalClose: "Закрити",
+      categories: [
         {
-          name: "Стрижка",
-          tag: "Хіт",
-          duration: "45 хв",
-          blurb: "Класична або сучасна стрижка під форму голови та твій стиль.",
-          price: "1 450 ₴",
+          id: "haircuts",
+          name: "Чоловічі стрижки",
+          blurb: "Класика, фейд чи кроп — під форму голови та твій стиль.",
+          priceRange: "від 500 до 1 300 ₴",
+          imageAlt: "Барбер під час чоловічої стрижки",
+          items: [
+            {
+              name: "Стрижка машинкою",
+              duration: "30 хв",
+              price: "500–700 ₴",
+              blurb: "Акуратна стрижка з чітким контуром.",
+            },
+            {
+              name: "Стрижка ножицями",
+              duration: "45 хв",
+              price: "800–1 000 ₴",
+              blurb: "Точна робота з довжиною та текстурою.",
+            },
+            {
+              name: "Фейд / кроп",
+              duration: "45 хв",
+              price: "900–1 100 ₴",
+              blurb: "Плавні переходи та сучасна геометрія.",
+            },
+            {
+              name: "Стрижка + укладка",
+              duration: "50 хв",
+              price: "1 000–1 300 ₴",
+              blurb: "Фінішна укладка після стрижки.",
+            },
+          ],
         },
         {
-          name: "Борода",
-          tag: "Форма",
-          duration: "30 хв",
-          blurb: "Рівний контур, охайна довжина та охайний вигляд бороди.",
-          price: "1 150 ₴",
+          id: "beard",
+          name: "Борода та гоління",
+          blurb: "Контур, довжина та гоління — охайно й без зайвого.",
+          priceRange: "від 700 до 1 100 ₴",
+          imageAlt: "Моделювання бороди в барбершопі",
+          items: [
+            {
+              name: "Моделювання бороди",
+              duration: "30 хв",
+              price: "700–900 ₴",
+              blurb: "Форма, симетрія та акуратний контур.",
+            },
+            {
+              name: "Корекція бороди",
+              duration: "25 хв",
+              price: "700–850 ₴",
+              blurb: "Підтримка довжини та ліній.",
+            },
+            {
+              name: "Гоління небезпечною бритвою",
+              duration: "35 хв",
+              price: "900–1 100 ₴",
+              blurb: "Підготовка шкіри та гладкий фініш.",
+            },
+            {
+              name: "Борода + гоління шиї",
+              duration: "40 хв",
+              price: "950–1 100 ₴",
+              blurb: "Повний догляд зони бороди та шиї.",
+            },
+          ],
         },
         {
-          name: "Стрижка + борода",
-          tag: "Комплекс",
-          duration: "60 хв",
+          id: "combo",
+          name: "Комбо",
           blurb: "Повний апдейт образу за один візит — зручно і послідовно.",
-          price: "2 200 ₴",
+          priceRange: "від 1 550 до 2 200 ₴",
+          imageAlt: "Комплексний барберський сервіс",
+          items: [
+            {
+              name: "Стрижка + борода",
+              duration: "60 хв",
+              price: "1 550–1 800 ₴",
+              blurb: "Голова та борода в одному ритмі.",
+            },
+            {
+              name: "Стрижка + гоління",
+              duration: "65 хв",
+              price: "1 650–1 900 ₴",
+              blurb: "Стрижка з класичним голінням.",
+            },
+            {
+              name: "Повний догляд",
+              duration: "75 хв",
+              price: "1 900–2 200 ₴",
+              blurb: "Стрижка, борода та фінішний догляд.",
+            },
+          ],
         },
         {
-          name: "Гоління",
-          tag: "Бритва",
-          duration: "35 хв",
-          blurb: "Гоління небезпечною бритвою з підготовкою шкіри та охайним фінішем.",
-          price: "1 250 ₴",
+          id: "toning",
+          name: "Тонування",
+          blurb: "Рівний відтінок волосся чи бороди без різких переходів.",
+          priceRange: "від 600 до 750 ₴",
+          imageAlt: "Тонування волосся в барбершопі",
+          items: [
+            {
+              name: "Тонування волосся",
+              duration: "30 хв",
+              price: "600–700 ₴",
+              blurb: "Освіження кольору та глибини відтінку.",
+            },
+            {
+              name: "Тонування бороди",
+              duration: "25 хв",
+              price: "650–750 ₴",
+              blurb: "Рівномірний тон бороди під загальний образ.",
+            },
+          ],
         },
         {
-          name: "VIP-догляд",
-          tag: "VIP",
-          duration: "90 хв",
-          blurb: "Розширений сервіс: стрижка, борода та додатковий догляд за запитом.",
-          price: "2 800 ₴",
+          id: "care",
+          name: "Догляд",
+          blurb: "Укладка, корекція та фінішні штрихи після основної роботи.",
+          priceRange: "від 250 до 350 ₴",
+          imageAlt: "Фінішний догляд та укладка",
+          items: [
+            {
+              name: "Укладка",
+              duration: "15 хв",
+              price: "250–300 ₴",
+              blurb: "Фіксація форми після стрижки.",
+            },
+            {
+              name: "Воскова корекція",
+              duration: "20 хв",
+              price: "300–350 ₴",
+              blurb: "Точне прибирання зайвих волосків.",
+            },
+            {
+              name: "Догляд за волоссям",
+              duration: "25 хв",
+              price: "300–350 ₴",
+              blurb: "Живлення та фініш після основної послуги.",
+            },
+          ],
+        },
+        {
+          id: "hairTattoo",
+          name: "Хеір тату",
+          blurb: "Декоративний патерн машинкою — акуратний акцент у стрижці.",
+          priceRange: "300 ₴",
+          imageAlt: "Хеір тату машинкою",
+          items: [
+            {
+              name: "Хеір тату (патерн)",
+              duration: "20 хв",
+              price: "300 ₴",
+              blurb: "Геометричний або текстурний малюнок на волосся.",
+            },
+          ],
         },
       ],
     },
@@ -289,6 +438,15 @@ export const messages: Record<Lang, Messages> = {
       body:
         "Світлий охайний зал, зручне крісло, добра музика й увага до деталей — щоб тобі було легко розслабитись і зосередитись на результаті.",
       cta: "Записатися",
+      features: [
+        "Преміальне обладнання",
+        "Комфортна атмосфера",
+        "Приватність та увага",
+        "Чистота та стерильність",
+      ],
+      statCount: "4",
+      statLabel: "Робочих місць",
+      statCaption: "Повний комфорт",
       imageMain: "Зал барбершопу",
       imageChair: "Крісло",
       imageTools: "Інструменти",
@@ -297,6 +455,10 @@ export const messages: Record<Lang, Messages> = {
       eyebrow: "ЯК МИ ПРАЦЮЄМО",
       title: "Процес",
       imageAlt: "Барбер за роботою",
+      badgeEyebrow: "Premium",
+      badgeText: "Якість без компромісів",
+      stepLabel: "Крок",
+      ctaLead: "Готовий почати свій візит?",
       steps: [
         {
           number: "01",
@@ -327,20 +489,24 @@ export const messages: Record<Lang, Messages> = {
         "Хочеш до конкретного майстра? Запишись онлайн — підберемо час і послугу під твій графік.",
       bookCtaAria: "Записатися в барбершоп",
       items: [
-        { name: "Marcus Stone", role: "Барбер" },
-        { name: "David Chen", role: "Барбер" },
-        { name: "James Williams", role: "Барбер" },
-        { name: "Alex Rivera", role: "Барбер" },
+        { name: "Мирослав", role: "Експерт-власник", imageAlt: "Мирослав — експерт-власник" },
       ],
     },
     gallery: {
       eyebrow: "РОБОТИ",
       title: "Галерея",
+      lead: "Наші роботи говорять самі за себе",
+      ctaLead: "Хочеш так само?",
+      bookCta: "Записатися",
       imageAlt: (n) => `Фото роботи ${n}`,
     },
     reviews: {
       eyebrow: "ВІДГУКИ",
       title: "Що кажуть клієнти",
+      ratingLabel: "5.0 середня оцінка",
+      regularClient: "Постійний клієнт",
+      ctaLead: "Приєднуйся до задоволених клієнтів",
+      bookCta: "Записатися",
       featuredImageAlt: "Клієнт у барбершопі",
       items: [
         {
@@ -363,19 +529,18 @@ export const messages: Record<Lang, Messages> = {
       lead: "Обери онлайн-запис або зателефонуй — підкажемо час і послугу.",
       bookAppointment: "Записатися",
       callNow: "Подзвонити",
-      phoneHref: "tel:+15551234567",
+      phoneHref: SITE_PHONE_HREF,
       addressLabel: "Адреса",
       hoursLabel: "Години",
       phoneLabel: "Телефон",
       emailLabel: "Email",
-      address: "вул. Городоцька, 1, Львів",
-      hours: "Пн — Сб · 9:00 — 21:00\nНд · 10:00 — 18:00",
-      phone: "+1 (555) 123-4567",
+      address: SITE_ADDRESS_UK,
+      hours: SITE_HOURS_UK,
+      phone: SITE_PHONE_DISPLAY,
       email: "book@venombarbershop.com",
-      googleMapsEmbedSrc:
-        "https://www.google.com/maps?q=49.8414%2C24.0315&z=16&hl=uk&output=embed",
-      googleMapsOpenUrl: "https://www.google.com/maps?q=49.8414,24.0315&z=16&hl=uk",
-      mapIframeTitle: "Google Карта — Львів (замініть координати на адресу салону)",
+      googleMapsEmbedSrc: siteGoogleMapsEmbedSrc("uk"),
+      googleMapsOpenUrl: SITE_GOOGLE_MAPS_OPEN_URL,
+      mapIframeTitle: "Google Карта — VENOM Barbershop, Сокільники, Львів",
       openInGoogleMaps: "Відкрити в Google Картах",
     },
   },
@@ -397,7 +562,7 @@ export const messages: Record<Lang, Messages> = {
     },
     header: {
       bookNow: "Book now",
-      bookNowShort: "Book",
+      bookNowShort: "Book now",
       bookAppointment: "Book now",
       openMenu: "Open menu",
       closeMenu: "Close menu",
@@ -411,11 +576,8 @@ export const messages: Record<Lang, Messages> = {
     },
     footer: {
       copyright: "All rights reserved.",
-      privacy: "Privacy",
-      terms: "Terms",
-      instagramAria: "Instagram",
-      facebookAria: "Facebook",
-      twitterAria: "X (Twitter)",
+      instagramAria: "Instagram VENOM",
+      facebookAria: "Facebook VENOM",
       navAria: "Footer links",
     },
     footerNav: {
@@ -480,45 +642,167 @@ export const messages: Record<Lang, Messages> = {
       sectionTitle: "Services",
       sectionLead:
         "Haircuts, beard work, and full grooming — clean, neat, no fluff.",
-      reserve: "Choose service",
-      reserveShort: "Reserve",
-      cardStandard: "VENOM standard",
-      cardStandardSub: "Consultation included · Hot towel on request",
-      items: [
+      priceNote: "Price depends on the barber tier.",
+      detailsCta: "Details",
+      reserveCta: "Book now",
+      reserve: "Book online",
+      modalClose: "Close",
+      categories: [
         {
-          name: "Haircut",
-          tag: "Popular",
-          duration: "45 min",
-          blurb: "Classic or modern cut tailored to your head shape and style.",
-          price: "1 450 ₴",
+          id: "haircuts",
+          name: "Men's haircuts",
+          blurb: "Classic, fade, or crop — shaped to your head and style.",
+          priceRange: "from 500 to 1 300 ₴",
+          imageAlt: "Barber giving a men's haircut",
+          items: [
+            {
+              name: "Clipper cut",
+              duration: "30 min",
+              price: "500–700 ₴",
+              blurb: "Clean cut with a sharp outline.",
+            },
+            {
+              name: "Scissor cut",
+              duration: "45 min",
+              price: "800–1 000 ₴",
+              blurb: "Precise length and texture work.",
+            },
+            {
+              name: "Fade / crop",
+              duration: "45 min",
+              price: "900–1 100 ₴",
+              blurb: "Smooth transitions and modern geometry.",
+            },
+            {
+              name: "Cut + styling",
+              duration: "50 min",
+              price: "1 000–1 300 ₴",
+              blurb: "Finished styling after the cut.",
+            },
+          ],
         },
         {
-          name: "Beard",
-          tag: "Shape",
-          duration: "30 min",
-          blurb: "Sharp lines, tidy length, and a neat beard finish.",
-          price: "1 150 ₴",
+          id: "beard",
+          name: "Beard & shave",
+          blurb: "Lines, length, and shave — neat and to the point.",
+          priceRange: "from 700 to 1 100 ₴",
+          imageAlt: "Beard shaping at the barbershop",
+          items: [
+            {
+              name: "Beard sculpting",
+              duration: "30 min",
+              price: "700–900 ₴",
+              blurb: "Shape, symmetry, and clean lines.",
+            },
+            {
+              name: "Beard trim",
+              duration: "25 min",
+              price: "700–850 ₴",
+              blurb: "Length and line maintenance.",
+            },
+            {
+              name: "Straight-razor shave",
+              duration: "35 min",
+              price: "900–1 100 ₴",
+              blurb: "Skin prep and a smooth finish.",
+            },
+            {
+              name: "Beard + neck shave",
+              duration: "40 min",
+              price: "950–1 100 ₴",
+              blurb: "Full beard and neck area care.",
+            },
+          ],
         },
         {
-          name: "Haircut + beard",
-          tag: "Combo",
-          duration: "60 min",
+          id: "combo",
+          name: "Combo",
           blurb: "Full refresh in one visit — efficient and consistent.",
-          price: "2 200 ₴",
+          priceRange: "from 1 550 to 2 200 ₴",
+          imageAlt: "Full barber grooming service",
+          items: [
+            {
+              name: "Haircut + beard",
+              duration: "60 min",
+              price: "1 550–1 800 ₴",
+              blurb: "Head and beard in one rhythm.",
+            },
+            {
+              name: "Haircut + shave",
+              duration: "65 min",
+              price: "1 650–1 900 ₴",
+              blurb: "Cut paired with a classic shave.",
+            },
+            {
+              name: "Full grooming",
+              duration: "75 min",
+              price: "1 900–2 200 ₴",
+              blurb: "Cut, beard, and finishing care.",
+            },
+          ],
         },
         {
-          name: "Shave",
-          tag: "Razor",
-          duration: "35 min",
-          blurb: "Straight-razor shave with skin prep and a smooth finish.",
-          price: "1 250 ₴",
+          id: "toning",
+          name: "Toning",
+          blurb: "Even tone for hair or beard without harsh transitions.",
+          priceRange: "from 600 to 750 ₴",
+          imageAlt: "Hair toning at the barbershop",
+          items: [
+            {
+              name: "Hair toning",
+              duration: "30 min",
+              price: "600–700 ₴",
+              blurb: "Refreshed color depth and tone.",
+            },
+            {
+              name: "Beard toning",
+              duration: "25 min",
+              price: "650–750 ₴",
+              blurb: "Even beard tone for the full look.",
+            },
+          ],
         },
         {
-          name: "VIP grooming",
-          tag: "VIP",
-          duration: "90 min",
-          blurb: "Extended service: cut, beard, and extra care on request.",
-          price: "2 800 ₴",
+          id: "care",
+          name: "Care",
+          blurb: "Styling, corrections, and finishing touches after the main service.",
+          priceRange: "from 250 to 350 ₴",
+          imageAlt: "Finishing care and styling",
+          items: [
+            {
+              name: "Styling",
+              duration: "15 min",
+              price: "250–300 ₴",
+              blurb: "Shape hold after the cut.",
+            },
+            {
+              name: "Wax correction",
+              duration: "20 min",
+              price: "300–350 ₴",
+              blurb: "Precise removal of stray hairs.",
+            },
+            {
+              name: "Hair treatment",
+              duration: "25 min",
+              price: "300–350 ₴",
+              blurb: "Nourish and finish after the main service.",
+            },
+          ],
+        },
+        {
+          id: "hairTattoo",
+          name: "Hair tattoo",
+          blurb: "Decorative clipper pattern — a clean accent in the cut.",
+          priceRange: "300 ₴",
+          imageAlt: "Hair tattoo with clippers",
+          items: [
+            {
+              name: "Hair tattoo (pattern)",
+              duration: "20 min",
+              price: "300 ₴",
+              blurb: "Geometric or textured design in the hair.",
+            },
+          ],
         },
       ],
     },
@@ -528,6 +812,15 @@ export const messages: Record<Lang, Messages> = {
       body:
         "Bright, clean interiors, a comfortable chair, good music, and steady attention to detail — so you can relax and focus on the result.",
       cta: "Book now",
+      features: [
+        "Premium equipment",
+        "Comfortable atmosphere",
+        "Privacy and focus",
+        "Cleanliness and hygiene",
+      ],
+      statCount: "4",
+      statLabel: "Stations",
+      statCaption: "Full comfort",
       imageMain: "Shop floor",
       imageChair: "Chair detail",
       imageTools: "Tools",
@@ -536,6 +829,10 @@ export const messages: Record<Lang, Messages> = {
       eyebrow: "HOW WE WORK",
       title: "Process",
       imageAlt: "Barber at work",
+      badgeEyebrow: "Premium",
+      badgeText: "Quality without compromise",
+      stepLabel: "Step",
+      ctaLead: "Ready to start your visit?",
       steps: [
         {
           number: "01",
@@ -566,20 +863,24 @@ export const messages: Record<Lang, Messages> = {
         "Want a specific barber? Book online — we’ll align the time and service with your schedule.",
       bookCtaAria: "Book an appointment at the shop",
       items: [
-        { name: "Marcus Stone", role: "Barber" },
-        { name: "David Chen", role: "Barber" },
-        { name: "James Williams", role: "Barber" },
-        { name: "Alex Rivera", role: "Barber" },
+        { name: "Myroslav", role: "Expert-owner", imageAlt: "Myroslav — expert-owner" },
       ],
     },
     gallery: {
       eyebrow: "WORK",
       title: "Gallery",
+      lead: "Our work speaks for itself",
+      ctaLead: "Want the same result?",
+      bookCta: "Book now",
       imageAlt: (n) => `Gallery photo ${n}`,
     },
     reviews: {
       eyebrow: "REVIEWS",
       title: "What clients say",
+      ratingLabel: "5.0 average rating",
+      regularClient: "Regular client",
+      ctaLead: "Join our happy clients",
+      bookCta: "Book now",
       featuredImageAlt: "Client at the shop",
       items: [
         {
@@ -602,19 +903,18 @@ export const messages: Record<Lang, Messages> = {
       lead: "Book online or call — we’ll help with time and services.",
       bookAppointment: "Book now",
       callNow: "Call",
-      phoneHref: "tel:+15551234567",
+      phoneHref: SITE_PHONE_HREF,
       addressLabel: "Address",
       hoursLabel: "Hours",
       phoneLabel: "Phone",
       emailLabel: "Email",
-      address: "1 Halytska St., Lviv",
-      hours: "Mon — Sat · 9:00 — 21:00\nSun · 10:00 — 18:00",
-      phone: "+1 (555) 123-4567",
+      address: SITE_ADDRESS_EN,
+      hours: SITE_HOURS_EN,
+      phone: SITE_PHONE_DISPLAY,
       email: "book@venombarbershop.com",
-      googleMapsEmbedSrc:
-        "https://www.google.com/maps?q=49.8414%2C24.0315&z=16&hl=en&output=embed",
-      googleMapsOpenUrl: "https://www.google.com/maps?q=49.8414,24.0315&z=16&hl=en",
-      mapIframeTitle: "Google Map — Lviv (replace coordinates with your shop location)",
+      googleMapsEmbedSrc: siteGoogleMapsEmbedSrc("en"),
+      googleMapsOpenUrl: SITE_GOOGLE_MAPS_OPEN_URL,
+      mapIframeTitle: "Google Map — VENOM Barbershop, Sokilnyky, Lviv",
       openInGoogleMaps: "Open in Google Maps",
     },
   },

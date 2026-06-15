@@ -26,9 +26,12 @@ type I18nContextValue = {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
+const LOCALE_SWITCH_MS = 160;
+
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>(defaultLang);
   const [ready, setReady] = useState(false);
+  const [localeSwitching, setLocaleSwitching] = useState(false);
 
   useEffect(() => {
     try {
@@ -43,13 +46,21 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore */
-    }
-  }, []);
+    if (next === lang) return;
+
+    setLocaleSwitching(true);
+    window.setTimeout(() => {
+      setLangState(next);
+      try {
+        window.localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        /* ignore */
+      }
+      window.requestAnimationFrame(() => {
+        setLocaleSwitching(false);
+      });
+    }, LOCALE_SWITCH_MS);
+  }, [lang]);
 
   const t = useMemo(() => messages[lang], [lang]);
 
@@ -65,7 +76,17 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   return (
     <I18nContext.Provider value={value}>
-      <PageIntroProvider>{children}</PageIntroProvider>
+      <PageIntroProvider>
+        <div
+          className="min-h-screen transition-[opacity,transform] duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none"
+          style={{
+            opacity: localeSwitching ? 0.84 : 1,
+            transform: localeSwitching ? "translateY(3px)" : "translateY(0)",
+          }}
+        >
+          {children}
+        </div>
+      </PageIntroProvider>
     </I18nContext.Provider>
   );
 }

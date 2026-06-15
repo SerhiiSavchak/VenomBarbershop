@@ -4,8 +4,11 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Expand } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { altegioBookingLink } from "@/lib/altegio";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const galleryImages = [
@@ -47,12 +50,12 @@ export function Gallery() {
   const lg = useLgUp();
 
   return (
-    <section id="gallery" className="relative overflow-hidden bg-[#030303] py-24 md:py-32">
+    <section id="gallery" className={`relative overflow-hidden bg-[#030303] ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_20%_80%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_80%_20%,rgba(209,18,27,0.06)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         {/* Section header */}
         <motion.div
           initial="hidden"
@@ -70,7 +73,7 @@ export function Gallery() {
             </motion.h2>
           </div>
           <p className="max-w-sm text-sm leading-relaxed text-foreground-muted md:text-right md:text-base">
-            Наші роботи говорять самі за себе
+            {t.gallery.lead}
           </p>
         </motion.div>
 
@@ -136,15 +139,15 @@ export function Gallery() {
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >
-          <p className="text-sm text-white/50 md:text-base">Хочеш так само?</p>
+          <p className="text-sm text-white/50 md:text-base">{t.gallery.ctaLead}</p>
           <a
-            href="#contact"
+            {...altegioBookingLink}
             className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
-            Записатися на візит &rarr;
+            {t.gallery.bookCta} &rarr;
           </a>
         </motion.div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

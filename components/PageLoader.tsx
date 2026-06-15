@@ -1,35 +1,68 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
+const MIN_VISIBLE_MS = { desktop: 880, mobile: 1020 } as const;
+const EXIT_MS = { normal: 0.48, reduce: 0.24 } as const;
 
 type PageLoaderProps = {
-  /** Після повного зникнення оверлею (exit Framer) — для старту анімацій Hero тощо */
-  onIntroComplete?: () => void;
+  /** Коли лоадер починає зникати — старт анімацій Hero під оверлеєм */
+  onIntroReady?: () => void;
 };
 
-export function PageLoader({ onIntroComplete }: PageLoaderProps) {
+export function PageLoader({ onIntroReady }: PageLoaderProps) {
   const { t } = useI18n();
   const reduce = useReducedMotion() ?? false;
   const [show, setShow] = useState(true);
+  const [portalReady, setPortalReady] = useState(false);
+  const readyFired = useRef(false);
+  const mountedAt = useRef(0);
+
+  const fireReady = () => {
+    if (readyFired.current) return;
+    readyFired.current = true;
+    onIntroReady?.();
+  };
+
+  const hide = () => {
+    fireReady();
+    setShow(false);
+  };
 
   useEffect(() => {
+    mountedAt.current = performance.now();
+    setPortalReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!portalReady) return;
+
+    const minMs = window.matchMedia("(min-width: 1024px)").matches
+      ? MIN_VISIBLE_MS.desktop
+      : MIN_VISIBLE_MS.mobile;
+
+    const scheduleHide = () => {
+      const elapsed = performance.now() - mountedAt.current;
+      const wait = Math.max(0, minMs - elapsed);
+      return window.setTimeout(hide, wait);
+    };
+
     if (reduce) {
-      const id = window.setTimeout(() => setShow(false), 320);
+      const id = scheduleHide();
       return () => window.clearTimeout(id);
     }
 
-    const minMs = window.matchMedia("(min-width: 1024px)").matches ? 480 : 920;
-    const t0 = performance.now();
     let hideTimer = 0;
+    let cancelled = false;
 
     const done = () => {
-      const wait = Math.max(0, minMs - (performance.now() - t0));
-      hideTimer = window.setTimeout(() => setShow(false), wait);
+      if (cancelled) return;
+      hideTimer = scheduleHide();
     };
 
     if (document.readyState === "complete") {
@@ -39,13 +72,14 @@ export function PageLoader({ onIntroComplete }: PageLoaderProps) {
     }
 
     return () => {
+      cancelled = true;
       window.removeEventListener("load", done);
       if (hideTimer) window.clearTimeout(hideTimer);
     };
-  }, [reduce]);
+  }, [reduce, portalReady]);
 
-  return (
-    <AnimatePresence onExitComplete={onIntroComplete}>
+  const loader = (
+    <AnimatePresence>
       {show && (
         <motion.div
           key="venom-page-loader"
@@ -53,94 +87,64 @@ export function PageLoader({ onIntroComplete }: PageLoaderProps) {
           aria-live="polite"
           aria-busy="true"
           aria-label={t.meta.title}
-          className="fixed inset-0 z-[300] flex items-center justify-center overflow-hidden bg-[#020202]"
+          className="fixed inset-0 z-[500] flex items-center justify-center overflow-hidden bg-[#020202]"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduce ? 0.28 : 0.65, ease: easeOut }}
+          transition={{ duration: reduce ? EXIT_MS.reduce : EXIT_MS.normal, ease: easeOut }}
         >
-          {/* Layer A — conic wash + vignette */}
           <div
-            className="pointer-events-none absolute inset-[-40%] opacity-70"
-            style={{
-              background:
-                "conic-gradient(from 120deg at 50% 50%, rgba(229,9,20,0.45) 0deg, transparent 90deg, rgba(229,9,20,0.2) 180deg, transparent 270deg, rgba(229,9,20,0.35) 360deg)",
-              animation: reduce ? "none" : "venom-sweep 4.2s linear infinite",
-            }}
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_42%_at_50%_48%,rgba(229,9,20,0.1)_0%,transparent_68%)]"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_55%_50%_at_50%_50%,transparent_0%,rgba(0,0,0,0.88)_72%,#000_100%)]"
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_50%_50%,transparent_0%,rgba(0,0,0,0.55)_72%,#000_100%)]"
             aria-hidden
           />
 
-          {/* Layer B — three ring shells */}
-          <div className="pointer-events-none absolute flex h-[min(72vw,280px)] w-[min(72vw,280px)] items-center justify-center" aria-hidden>
-            <div
-              className="absolute inset-0 rounded-full border border-white/[0.07]"
-              style={{
-                animation: reduce ? "none" : "venom-orbit 5.5s linear infinite",
-              }}
-            />
-            <div
-              className="absolute inset-[10%] rounded-full border border-[#E50914]/25 shadow-[0_0_42px_-8px_rgba(229,9,20,0.55)]"
-              style={{
-                animation: reduce ? "none" : "venom-orbit-rev 3.8s linear infinite",
-              }}
-            />
-            <div
-              className="absolute inset-[22%] rounded-full border border-white/[0.12]"
-              style={{
-                animation: reduce ? "none" : "venom-orbit 2.6s linear infinite",
-              }}
-            />
-            <div
-              className="absolute inset-[34%] rounded-full bg-[radial-gradient(circle_at_50%_40%,rgba(229,9,20,0.2),transparent_62%)]"
-              style={{
-                animation: reduce ? "none" : "venom-breathe 2.4s ease-in-out infinite",
-              }}
-            />
-          </div>
-
-          {/* Layer C — logo stack + glass plate */}
-          <div className="relative z-[2] flex flex-col items-center gap-5 px-6">
+          <div className="relative z-[1] flex flex-col items-center gap-7 px-6">
             <motion.div
-              className="relative rounded-2xl border border-white/[0.1] bg-black/55 px-10 py-8 shadow-[0_0_0_1px_rgba(229,9,20,0.12),0_24px_80px_-24px_rgba(0,0,0,0.95),inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md"
-              initial={reduce ? undefined : { scale: 0.92, opacity: 0 }}
-              animate={reduce ? undefined : { scale: 1, opacity: 1 }}
-              transition={{ duration: 0.55, ease: easeOut, delay: 0.08 }}
+              className="relative"
+              initial={reduce ? false : { opacity: 0.92, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduce ? 0.2 : 0.36, ease: easeOut }}
             >
               <div
-                className="pointer-events-none absolute -inset-px rounded-2xl opacity-80"
-                style={{
-                  background:
-                    "linear-gradient(135deg, rgba(229,9,20,0.35) 0%, transparent 38%, transparent 62%, rgba(229,9,20,0.2) 100%)",
-                  mask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-                  WebkitMask: "linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)",
-                  maskComposite: "exclude",
-                  WebkitMaskComposite: "xor",
-                  padding: "1px",
-                }}
+                className="pointer-events-none absolute left-1/2 top-1/2 h-24 w-40 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#E50914]/20 blur-3xl"
+                style={{ animation: reduce ? "none" : "venom-loader-glow 2.4s ease-in-out infinite" }}
                 aria-hidden
               />
-              <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-b from-white/[0.05] to-transparent opacity-50" aria-hidden />
-              <div className="relative scale-[1.08]">
-                <BrandLogo asStatic wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
+              <div className="relative scale-[1.14]">
+                <BrandLogo
+                  asStatic
+                  emphasizeMobile
+                  wordmark={t.brand.wordmark}
+                  ariaLabel={t.header.logoAria}
+                  size="header"
+                />
               </div>
             </motion.div>
-            <div className="flex gap-1.5" aria-hidden>
-              {[0, 1, 2].map((i) => (
-                <span
-                  key={i}
-                  className="h-1 w-1 rounded-full bg-[#E50914]/70"
-                  style={{
-                    animation: reduce ? "none" : `venom-breathe 1.1s ease-in-out ${i * 0.18}s infinite`,
-                  }}
-                />
-              ))}
+
+            <div className="h-px w-[5.5rem] overflow-hidden rounded-full bg-white/[0.1]" aria-hidden>
+              <motion.div
+                className="h-full origin-left rounded-full bg-gradient-to-r from-[#E50914]/40 via-[#E50914] to-[#ff2a32]"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{
+                  duration: reduce ? 0.28 : 0.72,
+                  ease: easeOut,
+                  delay: reduce ? 0.05 : 0.1,
+                }}
+              />
             </div>
           </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
+
+  if (!portalReady || typeof document === "undefined") {
+    return loader;
+  }
+
+  return createPortal(loader, document.body);
 }

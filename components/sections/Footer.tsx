@@ -2,6 +2,9 @@
 
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { isSectionVisible } from "@/lib/site-sections";
+import { SITE_FACEBOOK_URL, SITE_INSTAGRAM_URL } from "@/lib/site-contact";
 
 const InstagramIcon = () => (
   <svg className="h-5 w-5 md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
@@ -15,12 +18,6 @@ const FacebookIcon = () => (
   </svg>
 );
 
-const TwitterIcon = () => (
-  <svg className="h-5 w-5 md:h-[22px] md:w-[22px]" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
-    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-  </svg>
-);
-
 export function Footer() {
   const { t } = useI18n();
 
@@ -28,14 +25,14 @@ export function Footer() {
     { label: t.footerNav.services, href: "#services" },
     { label: t.footerNav.about, href: "#about" },
     { label: t.footerNav.team, href: "#masters" },
-    { label: t.footerNav.gallery, href: "#gallery" },
+    ...(isSectionVisible("gallery") ? [{ label: t.footerNav.gallery, href: "#gallery" as const }] : []),
     { label: t.footerNav.reviews, href: "#reviews" },
     { label: t.footerNav.contact, href: "#contact" },
   ];
 
   return (
     <footer className="relative border-t border-white/5 bg-black">
-      <div className="mx-auto max-w-[1440px] px-4 py-7 md:px-8 md:py-10">
+      <SiteContainer className="py-7 md:py-10">
         <div className="flex flex-col items-center justify-between gap-7 md:flex-row md:gap-8">
           <BrandLogo href="#hero" wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="footer" />
 
@@ -53,43 +50,32 @@ export function Footer() {
 
           <div className="flex items-center gap-3 md:gap-3.5">
             <a
-              href="#"
+              href={SITE_INSTAGRAM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="social-link"
               aria-label={t.footer.instagramAria}
             >
               <InstagramIcon />
             </a>
             <a
-              href="#"
+              href={SITE_FACEBOOK_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="social-link"
               aria-label={t.footer.facebookAria}
             >
               <FacebookIcon />
             </a>
-            <a
-              href="#"
-              className="social-link"
-              aria-label={t.footer.twitterAria}
-            >
-              <TwitterIcon />
-            </a>
           </div>
         </div>
 
-        <div className="mt-7 flex flex-col items-center justify-between gap-3.5 border-t border-white/5 pt-5 md:mt-8 md:flex-row md:pt-6">
-          <p className="text-center text-[11px] uppercase tracking-[0.12em] text-foreground-muted md:text-left md:text-xs">
+        <div className="mt-7 border-t border-white/5 pt-5 md:mt-8 md:pt-6">
+          <p className="text-center text-[11px] uppercase tracking-[0.12em] text-foreground-muted md:text-xs">
             &copy; {new Date().getFullYear()} {t.brand.wordmark} Barbershop. {t.footer.copyright}
           </p>
-          <div className="flex gap-5 md:gap-6">
-            <a href="#" className="text-[11px] uppercase tracking-[0.12em] text-foreground-muted transition-colors hover:text-white md:text-xs">
-              {t.footer.privacy}
-            </a>
-            <a href="#" className="text-[11px] uppercase tracking-[0.12em] text-foreground-muted transition-colors hover:text-white md:text-xs">
-              {t.footer.terms}
-            </a>
-          </div>
         </div>
-      </div>
+      </SiteContainer>
     </footer>
   );
 }

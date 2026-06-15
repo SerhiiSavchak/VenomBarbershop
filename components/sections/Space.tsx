@@ -4,28 +4,26 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
-
-const featuresList = [
-  "Преміальне обладнання",
-  "Комфортна атмосфера",
-  "Приватність та увага",
-  "Чистота та стерильність",
-];
 
 export function Space() {
   const { t } = useI18n();
   const lg = useLgUp();
+  const featuresList = t.space.features;
 
   return (
-    <section id="space" className="relative overflow-hidden bg-black">
+    <section id="space" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_20%_80%,rgba(209,18,27,0.12)_0%,transparent_55%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_40%_at_90%_20%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[1600px] px-6 py-24 md:px-10 md:py-32 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         <div className="grid gap-12 lg:grid-cols-12 lg:items-center lg:gap-8">
           {/* Text content */}
           <motion.div
@@ -47,7 +45,7 @@ export function Space() {
             <ul className="mt-8 space-y-3 md:mt-10">
               {featuresList.map((feature, index) => (
                 <motion.li
-                  key={feature}
+                  key={`${feature}-${index}`}
                   initial={lg ? { opacity: 0, x: -20 } : { opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, x: 0, y: 0 }}
                   viewport={{ once: false, amount: 0.2 }}
@@ -62,12 +60,9 @@ export function Space() {
               ))}
             </ul>
 
-            <a
-              href="#contact"
-              className="site-cta-outline mt-10"
-            >
+            <SiteCta {...altegioBookingLink} className="mt-10">
               {t.space.cta}
-            </a>
+            </SiteCta>
           </motion.div>
 
           {/* Images grid */}
@@ -109,6 +104,7 @@ export function Space() {
                     src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=88"
                     alt={t.space.imageChair}
                     fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
                     className="object-cover brightness-[0.9] contrast-[1.12] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
@@ -119,6 +115,7 @@ export function Space() {
                     src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=88"
                     alt={t.space.imageTools}
                     fill
+                    sizes="(max-width: 640px) 100vw, 25vw"
                     className="object-cover brightness-[0.9] contrast-[1.1] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
@@ -136,17 +133,17 @@ export function Space() {
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E50914]/30 bg-[#E50914]/10">
-                  <span className="font-display text-lg font-bold text-[#E50914]">4</span>
+                  <span className="font-display text-lg font-bold text-[#E50914]">{t.space.statCount}</span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">Робочих місць</p>
-                  <p className="mt-0.5 text-sm text-white/70">Повний комфорт</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">{t.space.statLabel}</p>
+                  <p className="mt-0.5 text-sm text-white/70">{t.space.statCaption}</p>
                 </div>
               </div>
             </motion.div>
           </motion.div>
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }

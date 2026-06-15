@@ -2,16 +2,17 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import {
   cinematicEase,
   mobilePopEase,
   revealLiftEnter,
-  revealLiftInitial,
   sectionTitleInset,
 } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteCta } from "@/components/ui/SiteCta";
+import { SiteContainer } from "@/components/ui/SiteContainer";
+import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
 const ABOUT_IMAGE_MAIN = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1400&q=88";
@@ -44,12 +45,12 @@ export function About() {
   const lg = useLgUp();
 
   return (
-    <section id="about" className="relative overflow-x-hidden bg-[#030303] py-24 md:py-32">
+    <section id="about" className={`relative overflow-x-hidden bg-[#030303] ${siteSectionYClass}`}>
       {/* Background gradients */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_42%_at_88%_35%,rgba(229,9,20,0.1)_0%,transparent_58%)]" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_10%_70%,rgba(229,9,20,0.06)_0%,transparent_50%)]" />
 
-      <div className="relative z-[2] mx-auto max-w-[min(100%,1720px)] px-6 md:px-10 lg:px-14">
+      <SiteContainer className="relative z-[2]">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-start lg:gap-12 xl:gap-16">
           {/* Left content column */}
           <div className={`flex flex-col lg:col-span-5 ${sectionTitleInset}`}>
@@ -106,8 +107,6 @@ export function About() {
                       {p.body}
                     </p>
                   </div>
-                  {/* Hover accent */}
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] origin-top scale-y-0 bg-gradient-to-b from-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-y-100" />
                 </motion.div>
               ))}
             </motion.div>
@@ -120,15 +119,15 @@ export function About() {
               transition={{ duration: 0.72, ease: lg ? cinematicEase : mobilePopEase, delay: 0.35 }}
               className="mt-12"
             >
-              <a
+              <SiteCta
                 href="#process"
-                className="group site-cta-outline inline-flex items-center gap-2"
+                variant="outline"
+                showArrow
                 aria-label={a.ctaAria}
               >
                 <span className="md:hidden">{a.ctaShort}</span>
                 <span className="hidden md:inline">{a.cta}</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </SiteCta>
             </motion.div>
           </div>
 
@@ -211,7 +210,7 @@ export function About() {
             </div>
           </div>
         </div>
-      </div>
+      </SiteContainer>
     </section>
   );
 }
