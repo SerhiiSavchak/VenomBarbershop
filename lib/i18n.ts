@@ -120,7 +120,7 @@ export type Messages = {
     title: string;
     ctaLead: string;
     bookCtaAria: string;
-    items: { name: string; role: string }[];
+    items: { name: string; role: string; imageAlt: string }[];
   };
   gallery: {
     eyebrow: string;
@@ -465,10 +465,7 @@ export const messages: Record<Lang, Messages> = {
         "Хочеш до конкретного майстра? Запишись онлайн — підберемо час і послугу під твій графік.",
       bookCtaAria: "Записатися в барбершоп",
       items: [
-        { name: "Marcus Stone", role: "Барбер" },
-        { name: "David Chen", role: "Барбер" },
-        { name: "James Williams", role: "Барбер" },
-        { name: "Alex Rivera", role: "Барбер" },
+        { name: "Мирослав", role: "Експерт-власник", imageAlt: "Мирослав — експерт-власник" },
       ],
     },
     gallery: {
@@ -824,10 +821,7 @@ export const messages: Record<Lang, Messages> = {
         "Want a specific barber? Book online — we’ll align the time and service with your schedule.",
       bookCtaAria: "Book an appointment at the shop",
       items: [
-        { name: "Marcus Stone", role: "Barber" },
-        { name: "David Chen", role: "Barber" },
-        { name: "James Williams", role: "Barber" },
-        { name: "Alex Rivera", role: "Barber" },
+        { name: "Myroslav", role: "Expert-owner", imageAlt: "Myroslav — expert-owner" },
       ],
     },
     gallery: {
