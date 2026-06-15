@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { altegioBookingLink } from "@/lib/altegio";

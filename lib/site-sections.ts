@@ -1,4 +1,4 @@
-/** Секции, которые временно скрыты с главной (компоненты остаются в проекте). */
+/** Sections temporarily hidden on the homepage (components remain in the project). */
 export const hiddenSections = {
   gallery: true,
   space: true,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Clock, X } from "lucide-react";
@@ -24,6 +25,7 @@ import {
   SERVICE_CATEGORY_IMAGES,
 } from "@/lib/service-categories";
 import { formatPriceDisplay } from "@/lib/format-price";
+import { lockBodyScroll } from "@/lib/body-scroll-lock";
 import type { Messages } from "@/lib/i18n";
 
 type ServiceCategory = Messages["services"]["categories"][number];
@@ -181,28 +183,31 @@ function ServiceCategoryModal({
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
   const belowMd = useBelowMd();
+  const [isClosing, setIsClosing] = useState(false);
   const modalImageFocus = getServiceCategoryImageFocus(category.id, !belowMd);
+
+  const requestClose = useCallback(() => {
+    setIsClosing(true);
+    onClose();
+  }, [onClose]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") requestClose();
     },
-    [onClose],
+    [requestClose],
   );
 
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     panelRef.current?.focus();
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = prevOverflow;
     };
   }, [handleKeyDown]);
 
-  return (
+  const modal = (
     <motion.div
       role="dialog"
       aria-modal="true"
@@ -211,7 +216,11 @@ function ServiceCategoryModal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35, ease: cinematicEase }}
-      className="fixed inset-0 z-[70] flex items-center justify-center px-5 py-8 sm:px-6 sm:py-10"
+      className={`fixed inset-0 z-[100] flex items-center justify-center overscroll-none p-3 sm:p-6${isClosing ? " pointer-events-none" : ""}`}
+      style={{
+        paddingTop: "max(0.75rem, env(safe-area-inset-top, 0px))",
+        paddingBottom: "max(0.75rem, env(safe-area-inset-bottom, 0px))",
+      }}
     >
       <motion.button
         type="button"
@@ -221,7 +230,7 @@ function ServiceCategoryModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.4, ease: cinematicEase }}
-        onClick={onClose}
+        onClick={requestClose}
       />
 
       <motion.div
@@ -231,7 +240,7 @@ function ServiceCategoryModal({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 32, scale: 0.95 }}
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-[1] flex max-h-[85vh] w-full max-w-[min(100%,20.5rem)] cursor-default flex-col overflow-hidden rounded-sm border border-white/[0.08] bg-gradient-to-b from-[#0c0c0c] to-black shadow-[0_24px_80px_-20px_rgba(0,0,0,0.9)] md:max-w-[min(90vw,52rem)]"
+        className="relative z-[1] flex w-[calc(100vw-24px)] max-h-[min(88dvh,calc(100dvh-1.5rem))] cursor-default flex-col overflow-hidden rounded-sm border border-white/[0.08] bg-gradient-to-b from-[#0c0c0c] to-black shadow-[0_24px_80px_-20px_rgba(0,0,0,0.9)] md:max-h-[85vh] md:w-full md:max-w-[min(90vw,52rem)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E50914]/75 to-transparent" aria-hidden />
@@ -254,7 +263,7 @@ function ServiceCategoryModal({
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/20" />
           <button
             type="button"
-            onClick={onClose}
+            onClick={requestClose}
             className="absolute right-3 top-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-sm border border-white/15 bg-black/60 text-white backdrop-blur-sm transition-colors hover:border-[#E50914]/50 hover:text-[#E50914]"
             aria-label={closeLabel}
           >
@@ -318,6 +327,12 @@ function ServiceCategoryModal({
       </motion.div>
     </motion.div>
   );
+
+  if (typeof document === "undefined") {
+    return null;
+  }
+
+  return createPortal(modal, document.body);
 }
 
 export function Services() {
@@ -332,6 +347,11 @@ export function Services() {
 
   const activeCategory =
     categories.find((category) => category.id === activeCategoryId) ?? null;
+
+  useEffect(() => {
+    if (!activeCategoryId) return;
+    return lockBodyScroll();
+  }, [activeCategoryId]);
 
   useSnapCarouselAutoplay(servicesRail, categories.length, belowMd, {
     intervalMs: SERVICES_AUTOPLAY_INTERVAL_MS,

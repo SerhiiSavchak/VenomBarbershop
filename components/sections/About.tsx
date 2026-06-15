@@ -7,7 +7,6 @@ import {
   cinematicEase,
   mobilePopEase,
   revealLiftEnter,
-  revealLiftInitial,
   sectionTitleInset,
 } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";

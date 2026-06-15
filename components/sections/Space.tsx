@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
