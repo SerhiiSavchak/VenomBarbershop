@@ -122,7 +122,7 @@ function HeroPhotoShine({ reducedMotion, introDone }: { reducedMotion: boolean; 
       initial={{ x: "-55%", skewX: -14 }}
       animate={introDone ? { x: "165%", skewX: -14 } : { x: "-55%", skewX: -14 }}
       transition={
-        introDone ? { duration: 1.35, ease: [0.2, 0.85, 0.15, 1], delay: 0.22 } : { duration: 0 }
+        introDone ? { duration: 1.35, ease: [0.2, 0.85, 0.15, 1], delay: 0.08 } : { duration: 0 }
       }
     />
   );
@@ -233,7 +233,7 @@ export function Hero() {
     : {
         initial: { x: "-103%", opacity: 1 },
         animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.88, ease: cinematicEase, delay: 0.06 },
+        transition: { duration: 0.88, ease: cinematicEase, delay: 0 },
       };
 
   const barberMotion = reduce
@@ -241,7 +241,7 @@ export function Hero() {
     : {
         initial: { x: "103%", opacity: 1 },
         animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.88, ease: cinematicEase, delay: 0.16 },
+        transition: { duration: 0.88, ease: cinematicEase, delay: 0.1 },
       };
 
   const descMotion = reduce

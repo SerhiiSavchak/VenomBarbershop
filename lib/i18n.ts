@@ -103,6 +103,10 @@ export type Messages = {
     title: string;
     body: string;
     cta: string;
+    features: string[];
+    statCount: string;
+    statLabel: string;
+    statCaption: string;
     imageMain: string;
     imageChair: string;
     imageTools: string;
@@ -111,6 +115,10 @@ export type Messages = {
     eyebrow: string;
     title: string;
     imageAlt: string;
+    badgeEyebrow: string;
+    badgeText: string;
+    stepLabel: string;
+    ctaLead: string;
     steps: { number: string; title: string; desc: string }[];
   };
   masters: {
@@ -123,11 +131,18 @@ export type Messages = {
   gallery: {
     eyebrow: string;
     title: string;
+    lead: string;
+    ctaLead: string;
+    bookCta: string;
     imageAlt: (n: number) => string;
   };
   reviews: {
     eyebrow: string;
     title: string;
+    ratingLabel: string;
+    regularClient: string;
+    ctaLead: string;
+    bookCta: string;
     featuredImageAlt: string;
     items: { name: string; text: string }[];
   };
@@ -423,6 +438,15 @@ export const messages: Record<Lang, Messages> = {
       body:
         "Світлий охайний зал, зручне крісло, добра музика й увага до деталей — щоб тобі було легко розслабитись і зосередитись на результаті.",
       cta: "Записатися",
+      features: [
+        "Преміальне обладнання",
+        "Комфортна атмосфера",
+        "Приватність та увага",
+        "Чистота та стерильність",
+      ],
+      statCount: "4",
+      statLabel: "Робочих місць",
+      statCaption: "Повний комфорт",
       imageMain: "Зал барбершопу",
       imageChair: "Крісло",
       imageTools: "Інструменти",
@@ -431,6 +455,10 @@ export const messages: Record<Lang, Messages> = {
       eyebrow: "ЯК МИ ПРАЦЮЄМО",
       title: "Процес",
       imageAlt: "Барбер за роботою",
+      badgeEyebrow: "Premium",
+      badgeText: "Якість без компромісів",
+      stepLabel: "Крок",
+      ctaLead: "Готовий почати свій візит?",
       steps: [
         {
           number: "01",
@@ -467,11 +495,18 @@ export const messages: Record<Lang, Messages> = {
     gallery: {
       eyebrow: "РОБОТИ",
       title: "Галерея",
+      lead: "Наші роботи говорять самі за себе",
+      ctaLead: "Хочеш так само?",
+      bookCta: "Записатися",
       imageAlt: (n) => `Фото роботи ${n}`,
     },
     reviews: {
       eyebrow: "ВІДГУКИ",
       title: "Що кажуть клієнти",
+      ratingLabel: "5.0 середня оцінка",
+      regularClient: "Постійний клієнт",
+      ctaLead: "Приєднуйся до задоволених клієнтів",
+      bookCta: "Записатися",
       featuredImageAlt: "Клієнт у барбершопі",
       items: [
         {
@@ -527,7 +562,7 @@ export const messages: Record<Lang, Messages> = {
     },
     header: {
       bookNow: "Book now",
-      bookNowShort: "Book",
+      bookNowShort: "Book now",
       bookAppointment: "Book now",
       openMenu: "Open menu",
       closeMenu: "Close menu",
@@ -777,6 +812,15 @@ export const messages: Record<Lang, Messages> = {
       body:
         "Bright, clean interiors, a comfortable chair, good music, and steady attention to detail — so you can relax and focus on the result.",
       cta: "Book now",
+      features: [
+        "Premium equipment",
+        "Comfortable atmosphere",
+        "Privacy and focus",
+        "Cleanliness and hygiene",
+      ],
+      statCount: "4",
+      statLabel: "Stations",
+      statCaption: "Full comfort",
       imageMain: "Shop floor",
       imageChair: "Chair detail",
       imageTools: "Tools",
@@ -785,6 +829,10 @@ export const messages: Record<Lang, Messages> = {
       eyebrow: "HOW WE WORK",
       title: "Process",
       imageAlt: "Barber at work",
+      badgeEyebrow: "Premium",
+      badgeText: "Quality without compromise",
+      stepLabel: "Step",
+      ctaLead: "Ready to start your visit?",
       steps: [
         {
           number: "01",
@@ -821,11 +869,18 @@ export const messages: Record<Lang, Messages> = {
     gallery: {
       eyebrow: "WORK",
       title: "Gallery",
+      lead: "Our work speaks for itself",
+      ctaLead: "Want the same result?",
+      bookCta: "Book now",
       imageAlt: (n) => `Gallery photo ${n}`,
     },
     reviews: {
       eyebrow: "REVIEWS",
       title: "What clients say",
+      ratingLabel: "5.0 average rating",
+      regularClient: "Regular client",
+      ctaLead: "Join our happy clients",
+      bookCta: "Book now",
       featuredImageAlt: "Client at the shop",
       items: [
         {

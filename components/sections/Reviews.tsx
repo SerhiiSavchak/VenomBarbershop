@@ -62,7 +62,7 @@ export function Reviews() {
                 <Star key={i} className="h-4 w-4 fill-[#E50914] text-[#E50914]" aria-hidden />
               ))}
             </div>
-            <span className="text-sm text-white/60">5.0 середня оцінка</span>
+            <span className="text-sm text-white/60">{t.reviews.ratingLabel}</span>
           </div>
         </motion.div>
 
@@ -84,13 +84,15 @@ export function Reviews() {
             <div className="grid md:grid-cols-12">
               {/* Image side */}
               <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-auto md:min-h-[380px]">
-                <Image
-                  src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=88"
-                  alt={t.reviews.featuredImageAlt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 42vw"
-                  className="object-cover brightness-[0.88] transition-[filter,transform] duration-700 will-change-transform group-hover:scale-[1.03] group-hover:brightness-100"
-                />
+                <div className="absolute inset-0 origin-center scale-100 transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]">
+                  <Image
+                    src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=88"
+                    alt={t.reviews.featuredImageAlt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 42vw"
+                    className="object-cover brightness-[0.88] transition-[filter] duration-700 ease-out group-hover:brightness-100"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/50 to-[#080808] md:via-black/35" />
                 
                 {/* Quote icon */}
@@ -123,7 +125,7 @@ export function Reviews() {
                   <div>
                     <p className="text-sm font-semibold text-white">{reviews[0]?.name}</p>
                     <p className="mt-0.5 text-[11px] font-medium uppercase tracking-[0.2em] text-foreground-muted">
-                      Постійний клієнт
+                      {t.reviews.regularClient}
                     </p>
                   </div>
                 </div>
@@ -189,12 +191,12 @@ export function Reviews() {
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.15 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >
-          <p className="text-sm text-white/50 md:text-base">Приєднуйся до задоволених клієнтів</p>
+          <p className="text-sm text-white/50 md:text-base">{t.reviews.ctaLead}</p>
           <a
             {...altegioBookingLink}
             className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
-            Записатися зараз &rarr;
+            {t.reviews.bookCta} &rarr;
           </a>
         </motion.div>
       </SiteContainer>

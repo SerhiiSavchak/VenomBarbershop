@@ -717,7 +717,7 @@ select,
 .site-cta-outline.site-cta--compact {
   width: max-content;
   max-width: 100%;
-  min-width: 0;
+  min-width: 9.25rem;
   min-height: 46px;
   padding: 0.6rem 1.1rem;
   letter-spacing: 0.14em;
@@ -770,36 +770,13 @@ select,
    PAGE LOADER ANIMATIONS
    ======================================== */
 
-@keyframes venom-orbit {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes venom-orbit-rev {
-  to {
-    transform: rotate(-360deg);
-  }
-}
-
-@keyframes venom-breathe {
+@keyframes venom-loader-glow {
   0%,
   100% {
-    opacity: 0.35;
-    transform: scale(0.96);
+    opacity: 0.5;
   }
   50% {
-    opacity: 0.95;
-    transform: scale(1.04);
-  }
-}
-
-@keyframes venom-sweep {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+    opacity: 0.88;
   }
 }
 

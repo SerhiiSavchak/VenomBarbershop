@@ -73,7 +73,7 @@ export function Gallery() {
             </motion.h2>
           </div>
           <p className="max-w-sm text-sm leading-relaxed text-foreground-muted md:text-right md:text-base">
-            Наші роботи говорять самі за себе
+            {t.gallery.lead}
           </p>
         </motion.div>
 
@@ -139,12 +139,12 @@ export function Gallery() {
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >
-          <p className="text-sm text-white/50 md:text-base">Хочеш так само?</p>
+          <p className="text-sm text-white/50 md:text-base">{t.gallery.ctaLead}</p>
           <a
             {...altegioBookingLink}
             className="text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
-            Записатися на візит &rarr;
+            {t.gallery.bookCta} &rarr;
           </a>
         </motion.div>
       </SiteContainer>

@@ -172,7 +172,7 @@ export function Masters() {
               {t.contact.bookAppointment}
             </SiteCta>
             <SiteCta href="#services" variant="outline" showArrow className="sm:min-w-[10rem]">
-              {t.hero.ctaSecondary}
+              {t.hero.ctaSecondaryShort}
             </SiteCta>
           </div>
         </motion.div>

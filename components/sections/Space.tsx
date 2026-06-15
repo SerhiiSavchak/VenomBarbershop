@@ -12,16 +12,10 @@ import { SiteContainer } from "@/components/ui/SiteContainer";
 import { siteSectionYClass } from "@/lib/site-layout";
 import { useLgUp } from "@/lib/useLgUp";
 
-const featuresList = [
-  "Преміальне обладнання",
-  "Комфортна атмосфера",
-  "Приватність та увага",
-  "Чистота та стерильність",
-];
-
 export function Space() {
   const { t } = useI18n();
   const lg = useLgUp();
+  const featuresList = t.space.features;
 
   return (
     <section id="space" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
@@ -51,7 +45,7 @@ export function Space() {
             <ul className="mt-8 space-y-3 md:mt-10">
               {featuresList.map((feature, index) => (
                 <motion.li
-                  key={feature}
+                  key={`${feature}-${index}`}
                   initial={lg ? { opacity: 0, x: -20 } : { opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, x: 0, y: 0 }}
                   viewport={{ once: false, amount: 0.2 }}
@@ -139,11 +133,11 @@ export function Space() {
             >
               <div className="flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#E50914]/30 bg-[#E50914]/10">
-                  <span className="font-display text-lg font-bold text-[#E50914]">4</span>
+                  <span className="font-display text-lg font-bold text-[#E50914]">{t.space.statCount}</span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">Робочих місць</p>
-                  <p className="mt-0.5 text-sm text-white/70">Повний комфорт</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">{t.space.statLabel}</p>
+                  <p className="mt-0.5 text-sm text-white/70">{t.space.statCaption}</p>
                 </div>
               </div>
             </motion.div>

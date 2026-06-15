@@ -300,8 +300,8 @@ export function Process() {
                   <CheckCircle2 className="h-5 w-5 text-[#E50914]" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">Premium</p>
-                  <p className="mt-0.5 text-sm text-white/70">Якість без компромісів</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#E50914]">{t.process.badgeEyebrow}</p>
+                  <p className="mt-0.5 text-sm text-white/70">{t.process.badgeText}</p>
                 </div>
               </div>
             </div>
@@ -375,7 +375,7 @@ export function Process() {
                       className="mb-1 inline-flex w-max items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-white/50"
                     >
                       <span className="h-1.5 w-1.5 rounded-full bg-[#E50914]" />
-                      Крок {step.number}
+                      {t.process.stepLabel} {step.number}
                     </span>
 
                     <h3 className="font-display text-xl font-bold uppercase tracking-wide text-white md:text-2xl">
@@ -399,7 +399,7 @@ export function Process() {
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:pt-12"
         >
-          <p className="text-sm text-white/50 md:text-base">Готовий почати свій візит?</p>
+          <p className="text-sm text-white/50 md:text-base">{t.process.ctaLead}</p>
           <SiteCta {...altegioBookingLink}>
             {t.contact.bookAppointment}
           </SiteCta>

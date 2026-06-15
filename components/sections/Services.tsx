@@ -23,6 +23,7 @@ import {
   getServiceCategoryImageFocus,
   SERVICE_CATEGORY_IMAGES,
 } from "@/lib/service-categories";
+import { formatPriceDisplay } from "@/lib/format-price";
 import type { Messages } from "@/lib/i18n";
 
 type ServiceCategory = Messages["services"]["categories"][number];
@@ -99,8 +100,8 @@ function ServiceCardContent({
           </p>
         </div>
 
-        <p className="mt-2.5 font-display text-2xl font-bold tracking-tight text-white md:mt-3 md:text-3xl">
-          {category.priceRange}
+        <p className="mt-2.5 min-h-[1.75rem] font-display text-2xl font-bold tracking-tight text-white md:mt-3 md:min-h-[2rem] md:text-3xl">
+          {formatPriceDisplay(category.priceRange)}
         </p>
 
         <div className="mt-3 h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10 md:mt-3.5" />
@@ -279,7 +280,7 @@ function ServiceCategoryModal({
               {category.blurb}
             </p>
             <p className="mt-2 font-display text-lg font-bold text-[#E50914] md:text-xl">
-              {category.priceRange}
+              {formatPriceDisplay(category.priceRange)}
             </p>
           </div>
 
@@ -294,7 +295,7 @@ function ServiceCategoryModal({
                     {item.name}
                   </p>
                   <p className="shrink-0 whitespace-nowrap font-display text-[13px] font-bold text-white md:text-lg">
-                    {item.price}
+                    {formatPriceDisplay(item.price)}
                   </p>
                 </div>
                 {item.blurb ? (
@@ -434,7 +435,7 @@ export function Services() {
             {...altegioBookingLink}
             className="cursor-pointer text-sm font-semibold text-[#E50914] transition-colors hover:text-white md:text-base"
           >
-            {t.services.reserve} &rarr;
+            {t.services.reserveCta} &rarr;
           </a>
         </motion.div>
       </SiteContainer>
