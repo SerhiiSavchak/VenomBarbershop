@@ -1,15 +1,18 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Calendar } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { useLgUp } from "@/lib/useLgUp";
 import { altegioBookingLink } from "@/lib/altegio";
 import { MASTER_PHOTO_SRC } from "@/lib/masters";
+import type { Messages } from "@/lib/i18n";
+
+type MasterItem = Messages["masters"]["items"][number];
 
 function cardVariants(lg: boolean) {
   return {
@@ -28,15 +31,87 @@ function cardVariants(lg: boolean) {
   };
 }
 
-const tapSpring = { type: "spring" as const, stiffness: 520, damping: 32 };
+function isInteractiveCardTarget(target: EventTarget | null): boolean {
+  return Boolean((target as HTMLElement | null)?.closest("a, button"));
+}
+
+function MasterCard({
+  master,
+  isActive,
+  onTouchActivate,
+  lg,
+  bookLabel,
+}: {
+  master: MasterItem;
+  isActive: boolean;
+  onTouchActivate: (cardId: string) => void;
+  lg: boolean;
+  bookLabel: string;
+}) {
+  const handlePointerUp = (event: React.PointerEvent<HTMLElement>) => {
+    if (event.pointerType === "mouse") return;
+    if (isInteractiveCardTarget(event.target)) return;
+    onTouchActivate(master.name);
+  };
+
+  return (
+    <motion.article
+      variants={cardVariants(lg)}
+      initial="hidden"
+      whileInView="show"
+      exit="exit"
+      viewport={{ once: false, amount: 0.2 }}
+      onPointerUp={handlePointerUp}
+      className={`group relative w-full max-w-[380px] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] to-[#030303] transition-all duration-500 ease-out md:max-w-[420px] md:hover:border-[#E50914]/40 [.is-active]:border-[#E50914]/40${isActive ? " is-active" : ""}`}
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-[.is-active]:opacity-100" />
+
+      <div className="relative aspect-[3/4.2] overflow-hidden">
+        <Image
+          src={MASTER_PHOTO_SRC}
+          alt={master.imageAlt}
+          fill
+          sizes="(max-width:768px) 90vw, 420px"
+          className="object-cover object-top grayscale transition-all duration-700 ease-out will-change-transform group-hover:scale-[1.04] group-hover:grayscale-0 group-[.is-active]:scale-[1.04] group-[.is-active]:grayscale-0"
+          priority
+        />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 ease-out group-hover:bg-accent-red/12 group-[.is-active]:bg-accent-red/12" />
+      </div>
+
+      <div className="absolute inset-x-0 bottom-0 z-[3] flex flex-col gap-4 bg-gradient-to-t from-black via-black/95 to-transparent p-5 pt-12 md:p-6 md:pt-16">
+        <div>
+          <p className="font-display text-xl font-bold uppercase leading-none tracking-tight text-white drop-shadow-md md:text-2xl">
+            {master.name}
+          </p>
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#E50914] md:text-[11px]">
+            {master.role}
+          </p>
+        </div>
+
+        <SiteCta {...altegioBookingLink} size="compact" className="w-full">
+          {bookLabel}
+        </SiteCta>
+      </div>
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100 group-[.is-active]:scale-x-100" />
+    </motion.article>
+  );
+}
 
 export function Masters() {
   const { t } = useI18n();
   const lg = useLgUp();
   const sectionRef = useRef<HTMLElement>(null);
-  const master = t.masters.items[0];
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const masters = t.masters.items;
 
-  if (!master) return null;
+  const handleTouchActivate = useCallback((cardId: string) => {
+    setActiveCardId(cardId);
+  }, []);
+
+  if (masters.length === 0) return null;
 
   return (
     <section ref={sectionRef} id="masters" className="relative overflow-hidden bg-black py-24 md:py-32">
@@ -65,53 +140,17 @@ export function Masters() {
           </motion.h2>
         </motion.div>
 
-        <div className="flex justify-start">
-          <motion.article
-            variants={cardVariants(lg)}
-            initial="hidden"
-            whileInView="show"
-            exit="exit"
-            viewport={{ once: false, amount: 0.2 }}
-            className="group relative w-full max-w-[380px] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] to-[#030303] transition-all duration-500 ease-out md:max-w-[420px] md:hover:border-[#E50914]/40"
-          >
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
-            <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-
-            <div className="relative aspect-[3/4.2] overflow-hidden">
-              <Image
-                src={MASTER_PHOTO_SRC}
-                alt={master.imageAlt}
-                fill
-                sizes="(max-width:768px) 90vw, 420px"
-                className="object-cover object-top grayscale transition-all duration-700 ease-out will-change-transform group-hover:scale-[1.04] group-hover:grayscale-0"
-                priority
-              />
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-              <div className="pointer-events-none absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 ease-out group-hover:bg-accent-red/12" />
-            </div>
-
-            <div className="absolute inset-x-0 bottom-0 z-[3] flex flex-col gap-4 bg-gradient-to-t from-black via-black/95 to-transparent p-5 pt-12 md:p-6 md:pt-16">
-              <div>
-                <p className="font-display text-xl font-bold uppercase leading-none tracking-tight text-white drop-shadow-md md:text-2xl">
-                  {master.name}
-                </p>
-                <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#E50914] md:text-[11px]">
-                  {master.role}
-                </p>
-              </div>
-
-              <a
-                {...altegioBookingLink}
-                className="group/btn relative flex w-full items-center justify-center gap-2 overflow-hidden border border-white/15 bg-white/[0.03] px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] text-white/90 backdrop-blur-sm transition-all duration-300 hover:border-[#E50914] hover:bg-[#E50914] hover:text-white md:text-[11px]"
-              >
-                <span className="pointer-events-none absolute inset-0 -translate-x-full skew-x-[-14deg] bg-gradient-to-r from-transparent via-white/15 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full" />
-                <Calendar className="relative h-3.5 w-3.5" strokeWidth={2} aria-hidden />
-                <span className="relative">{t.contact.bookAppointment}</span>
-              </a>
-            </div>
-
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100" />
-          </motion.article>
+        <div className="flex justify-start gap-4">
+          {masters.map((master) => (
+            <MasterCard
+              key={master.name}
+              master={master}
+              isActive={activeCardId === master.name}
+              onTouchActivate={handleTouchActivate}
+              lg={lg}
+              bookLabel={t.contact.bookAppointment}
+            />
+          ))}
         </div>
 
         <motion.div
@@ -123,19 +162,16 @@ export function Masters() {
         >
           <p className="max-w-xl text-sm leading-relaxed text-foreground-muted md:text-base">{t.masters.ctaLead}</p>
           <div className="flex w-full shrink-0 flex-col gap-3 sm:ml-auto sm:w-auto sm:flex-row sm:items-stretch sm:justify-end sm:gap-3">
-            <motion.a
+            <SiteCta
               {...altegioBookingLink}
               aria-label={t.masters.bookCtaAria}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={tapSpring}
-              className="site-cta-primary sm:min-w-[12.5rem]"
+              className="sm:min-w-[12.5rem]"
             >
               {t.contact.bookAppointment}
-            </motion.a>
-            <a href="#services" className="site-cta-outline sm:min-w-[10rem]">
+            </SiteCta>
+            <SiteCta href="#services" variant="outline" showArrow className="sm:min-w-[10rem]">
               {t.hero.ctaSecondary}
-            </a>
+            </SiteCta>
           </div>
         </motion.div>
       </div>

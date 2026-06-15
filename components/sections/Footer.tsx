@@ -69,18 +69,10 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-7 flex flex-col items-center justify-between gap-3.5 border-t border-white/5 pt-5 md:mt-8 md:flex-row md:pt-6">
-          <p className="text-center text-[11px] uppercase tracking-[0.12em] text-foreground-muted md:text-left md:text-xs">
+        <div className="mt-7 border-t border-white/5 pt-5 md:mt-8 md:pt-6">
+          <p className="text-center text-[11px] uppercase tracking-[0.12em] text-foreground-muted md:text-xs">
             &copy; {new Date().getFullYear()} {t.brand.wordmark} Barbershop. {t.footer.copyright}
           </p>
-          <div className="flex gap-5 md:gap-6">
-            <a href="#" className="text-[11px] uppercase tracking-[0.12em] text-foreground-muted transition-colors hover:text-white md:text-xs">
-              {t.footer.privacy}
-            </a>
-            <a href="#" className="text-[11px] uppercase tracking-[0.12em] text-foreground-muted transition-colors hover:text-white md:text-xs">
-              {t.footer.terms}
-            </a>
-          </div>
         </div>
       </div>
     </footer>

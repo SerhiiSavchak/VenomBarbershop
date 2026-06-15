@@ -43,8 +43,6 @@ export type Messages = {
   };
   footer: {
     copyright: string;
-    privacy: string;
-    terms: string;
     instagramAria: string;
     facebookAria: string;
     navAria: string;
@@ -190,8 +188,6 @@ export const messages: Record<Lang, Messages> = {
     },
     footer: {
       copyright: "Усі права захищені.",
-      privacy: "Конфіденційність",
-      terms: "Умови",
       instagramAria: "Instagram VENOM",
       facebookAria: "Facebook VENOM",
       navAria: "Посилання в підвалі",
@@ -545,8 +541,6 @@ export const messages: Record<Lang, Messages> = {
     },
     footer: {
       copyright: "All rights reserved.",
-      privacy: "Privacy",
-      terms: "Terms",
       instagramAria: "Instagram VENOM",
       facebookAria: "Facebook VENOM",
       navAria: "Footer links",

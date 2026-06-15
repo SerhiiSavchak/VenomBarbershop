@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import { Award, Calendar, ChevronRight, Clock, Scissors, Users } from "lucide-react";
+import { Award, ChevronRight, Clock, Scissors, Users } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { usePageIntro } from "@/components/providers/PageIntroProvider";
@@ -319,9 +319,8 @@ export function Hero() {
                       <a
                         {...altegioBookingLink}
                         aria-label={hero.primaryCtaAria}
-                        className="hero-copy hero-cta hero-cta--primary group"
+                        className="hero-copy hero-cta hero-cta--primary"
                       >
-                        <Calendar className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
                         <span className="hero-cta-text">{hero.ctaPrimary}</span>
                       </a>
                       <a

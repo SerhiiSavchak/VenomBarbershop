@@ -7,6 +7,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, revealLiftInitial, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { useLgUp } from "@/lib/useLgUp";
 
 const featuresList = [
@@ -63,12 +64,9 @@ export function Space() {
               ))}
             </ul>
 
-            <a
-              {...altegioBookingLink}
-              className="site-cta-outline mt-10"
-            >
+            <SiteCta {...altegioBookingLink} className="mt-10">
               {t.space.cta}
-            </a>
+            </SiteCta>
           </motion.div>
 
           {/* Images grid */}

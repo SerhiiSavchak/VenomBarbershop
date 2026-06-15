@@ -11,6 +11,7 @@ import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
 import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
 import {
   SERVICES_AUTOPLAY_INTERVAL_MS,
   SERVICES_INTERACTION_PAUSE_MS,
@@ -306,12 +307,9 @@ function ServiceCategoryModal({
           </ul>
 
           <div className="shrink-0 border-t border-white/[0.06] p-4 md:p-6">
-            <a
-              {...altegioBookingLink}
-              className="flex w-full cursor-pointer items-center justify-center rounded-sm bg-[#E50914] px-5 py-3 text-[11px] font-bold uppercase tracking-[0.16em] text-white shadow-[0_8px_24px_-8px_rgba(229,9,20,0.5)] transition-shadow hover:shadow-[0_12px_32px_-8px_rgba(229,9,20,0.65)] md:text-xs"
-            >
+            <SiteCta {...altegioBookingLink} className="w-full">
               {reserveLabel}
-            </a>
+            </SiteCta>
           </div>
         </motion.div>
       </motion.div>

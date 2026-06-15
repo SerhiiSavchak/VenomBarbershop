@@ -1,10 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, MapPin, Clock, Phone, Calendar, ArrowRight } from "lucide-react";
+import { ExternalLink, MapPin, Clock, Phone } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { altegioBookingLink } from "@/lib/altegio";
 import { useLgUp } from "@/lib/useLgUp";
 
@@ -59,21 +60,19 @@ export function Contact() {
           <p className="mt-10 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">{c.lead}</p>
 
           <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-stretch lg:justify-start">
-            <a
+            <SiteCta
               {...altegioBookingLink}
-              className="group site-cta-primary order-1 w-full sm:order-1 sm:w-auto"
+              className="order-1 w-full sm:order-1 sm:w-auto"
             >
-              <Calendar className="h-4 w-4" strokeWidth={2} aria-hidden />
-              <span>{c.bookAppointment}</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" aria-hidden />
-            </a>
-            <a
+              {c.bookAppointment}
+            </SiteCta>
+            <SiteCta
               href={c.phoneHref}
-              className="site-cta-outline order-2 w-full sm:order-2 sm:w-auto"
+              variant="outline"
+              className="order-2 w-full sm:order-2 sm:w-auto"
             >
-              <Phone className="h-4 w-4" strokeWidth={2} aria-hidden />
-              <span>{c.callNow}</span>
-            </a>
+              {c.callNow}
+            </SiteCta>
           </div>
         </motion.div>
 

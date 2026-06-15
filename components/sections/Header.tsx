@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
 import type { Lang } from "@/lib/i18n";
 import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { cinematicEase, mobilePopEase } from "@/lib/motion";
 import { isSectionVisible } from "@/lib/site-sections";
 
@@ -171,10 +172,10 @@ export function Header() {
             </div>
 
             <div className="hidden items-center lg:flex">
-              <a {...altegioBookingLink} className="site-cta-primary">
+              <SiteCta {...altegioBookingLink} size="compact">
                 <span className="xl:hidden">{t.header.bookNowShort}</span>
                 <span className="hidden xl:inline">{t.header.bookNow}</span>
-              </a>
+              </SiteCta>
             </div>
 
             <button
@@ -295,13 +296,13 @@ export function Header() {
                       {t.header.langEn}
                     </button>
                   </div>
-                  <a
+                  <SiteCta
                     {...altegioBookingLink}
                     onClick={closeMenu}
-                    className="site-cta-primary w-full max-w-sm justify-center text-center"
+                    className="w-full max-w-sm justify-center text-center"
                   >
                     {t.header.bookNowShort}
-                  </a>
+                  </SiteCta>
                 </div>
               </div>
             </motion.div>

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import {
   cinematicEase,
@@ -12,6 +11,7 @@ import {
   sectionTitleInset,
 } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { useLgUp } from "@/lib/useLgUp";
 
 const ABOUT_IMAGE_MAIN = "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1400&q=88";
@@ -120,15 +120,15 @@ export function About() {
               transition={{ duration: 0.72, ease: lg ? cinematicEase : mobilePopEase, delay: 0.35 }}
               className="mt-12"
             >
-              <a
+              <SiteCta
                 href="#process"
-                className="group site-cta-outline inline-flex items-center gap-2"
+                variant="outline"
+                showArrow
                 aria-label={a.ctaAria}
               >
                 <span className="md:hidden">{a.ctaShort}</span>
                 <span className="hidden md:inline">{a.cta}</span>
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
+              </SiteCta>
             </motion.div>
           </div>
 

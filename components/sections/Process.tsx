@@ -8,6 +8,7 @@ import { useI18n } from "@/components/providers/I18nProvider";
 import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
+import { SiteCta } from "@/components/ui/SiteCta";
 import { useLgUp } from "@/lib/useLgUp";
 
 const stepParentVariants = {
@@ -400,9 +401,9 @@ export function Process() {
           className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:pt-12"
         >
           <p className="text-sm text-white/50 md:text-base">Готовий почати свій візит?</p>
-          <a {...altegioBookingLink} className="site-cta-primary">
+          <SiteCta {...altegioBookingLink}>
             {t.contact.bookAppointment}
-          </a>
+          </SiteCta>
         </motion.div>
       </div>
     </section>
