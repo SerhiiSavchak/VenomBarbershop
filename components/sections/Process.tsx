@@ -385,9 +385,6 @@ export function Process() {
                       {step.desc}
                     </p>
                   </div>
-
-                  {/* Hover accent */}
-                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[2px] origin-top scale-y-0 bg-gradient-to-b from-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-y-100" />
                 </motion.div>
               ))}
             </motion.div>

@@ -83,13 +83,13 @@ export function Reviews() {
 
             <div className="grid md:grid-cols-12">
               {/* Image side */}
-              <div className="relative aspect-[4/5] md:col-span-5 md:aspect-auto md:min-h-[380px]">
+              <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-auto md:min-h-[380px]">
                 <Image
                   src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&q=88"
                   alt={t.reviews.featuredImageAlt}
                   fill
                   sizes="(max-width: 768px) 100vw, 42vw"
-                  className="object-cover brightness-[0.88] transition-all duration-700 group-hover:brightness-100 group-hover:scale-[1.02]"
+                  className="object-cover brightness-[0.88] transition-[filter,transform] duration-700 will-change-transform group-hover:scale-[1.03] group-hover:brightness-100"
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/50 to-[#080808] md:via-black/35" />
                 
