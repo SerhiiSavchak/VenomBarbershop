@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -12,6 +12,7 @@ import { cinematicEase, mobilePopEase } from "@/lib/motion";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { siteContainerClass } from "@/lib/site-layout";
 import { isSectionVisible } from "@/lib/site-sections";
+import { lockBodyScroll } from "@/lib/body-scroll-lock";
 
 const menuListVariants = {
   hidden: { opacity: 0 },
@@ -32,7 +33,6 @@ const menuItemVariants = {
 
 export function Header() {
   const { lang, setLang, t } = useI18n();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
@@ -46,43 +46,9 @@ export function Header() {
   ];
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (isMobileMenuOpen) return;
-      setIsScrolled(window.scrollY > 40);
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isMobileMenuOpen]);
-
-  useLayoutEffect(() => {
     if (!isMobileMenuOpen) return;
 
-    const html = document.documentElement;
-    const body = document.body;
-    const scrollY = window.scrollY;
-
-    const prev = {
-      htmlOverflow: html.style.overflow,
-      htmlOverscroll: html.style.overscrollBehavior,
-      bodyPosition: body.style.position,
-      bodyTop: body.style.top,
-      bodyLeft: body.style.left,
-      bodyRight: body.style.right,
-      bodyWidth: body.style.width,
-      bodyTouchAction: body.style.touchAction,
-    };
-
-    /* Не чіпаємо scrollbar-gutter і не додаємо padding-right — з `scrollbar-gutter: stable` у globals це часто дає подвійний зсув. */
-    html.style.overscrollBehavior = "none";
-    html.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.top = `-${scrollY}px`;
-    body.style.left = "0";
-    body.style.right = "0";
-    body.style.width = "100%";
-    body.style.touchAction = "none";
-
+    const releaseScrollLock = lockBodyScroll();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsMobileMenuOpen(false);
     };
@@ -90,21 +56,29 @@ export function Header() {
 
     return () => {
       window.removeEventListener("keydown", onKey);
-      html.style.overflow = prev.htmlOverflow;
-      html.style.overscrollBehavior = prev.htmlOverscroll;
-      body.style.position = prev.bodyPosition;
-      body.style.top = prev.bodyTop;
-      body.style.left = prev.bodyLeft;
-      body.style.right = prev.bodyRight;
-      body.style.width = prev.bodyWidth;
-      body.style.touchAction = prev.bodyTouchAction;
-      /* html { scroll-behavior: smooth } інакше дає «проскрол» при scrollTo після unlock */
-      const prevScrollBehavior = html.style.scrollBehavior;
-      html.style.scrollBehavior = "auto";
-      window.scrollTo(0, scrollY);
-      html.style.scrollBehavior = prevScrollBehavior;
-      queueMicrotask(() => setIsScrolled(window.scrollY > 40));
+      releaseScrollLock();
     };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) return;
+    const hasActiveDialog = Boolean(document.querySelector('[role="dialog"][aria-modal="true"]'));
+    if (hasActiveDialog || document.body.style.position !== "fixed") return;
+
+    const html = document.documentElement;
+    const lockedTop = Number.parseInt(document.body.style.top || "0", 10);
+    const restoreY = Number.isNaN(lockedTop) ? window.scrollY : Math.abs(lockedTop);
+
+    html.style.overflow = "";
+    html.style.overscrollBehavior = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.body.style.touchAction = "";
+    document.body.style.overflow = "";
+    window.scrollTo(0, restoreY);
   }, [isMobileMenuOpen]);
 
   const switchLang = (next: Lang) => setLang(next);
@@ -112,20 +86,22 @@ export function Header() {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.95, ease: cinematicEase }}
-        className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
-          /* Мобілка: один стиль завжди — зміна padding/blur від scroll або lock не рухає шапку. */
-          "max-lg:border-white/[0.06] max-lg:bg-black/92 max-lg:backdrop-blur-xl max-lg:transition-[background-color,border-color] max-lg:duration-500 max-lg:motion-reduce:transition-none " +
-          /* Десктоп: компактність від скролу + анімація padding. */
-          (isScrolled
-            ? "lg:border-white/[0.06] lg:bg-black/92 lg:py-3.5 lg:backdrop-blur-xl lg:md:py-4 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none"
-            : "lg:border-black/40 lg:bg-black/75 lg:py-5 lg:backdrop-blur-md lg:md:py-6 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none")
-        }`}
+      <header
+        className="fixed left-0 right-0 top-0 z-[999] border-b border-white/[0.12] bg-black shadow-[0_10px_36px_-20px_rgba(0,0,0,0.9)]"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 2147483647,
+          display: "block",
+          visibility: "visible",
+          opacity: 1,
+          transform: "none",
+          pointerEvents: "auto",
+        }}
       >
-        <SiteContainer className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] lg:py-0">
+        <SiteContainer className="relative z-[1] flex items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] lg:min-h-[84px] lg:py-4">
           <div className="min-w-0 shrink">
             <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
           </div>
@@ -190,7 +166,7 @@ export function Header() {
             </button>
           </div>
         </SiteContainer>
-      </motion.header>
+      </header>
 
       <AnimatePresence>
         {isMobileMenuOpen && (
