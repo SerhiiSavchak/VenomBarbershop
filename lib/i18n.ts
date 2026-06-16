@@ -268,7 +268,7 @@ export const messages: Record<Lang, Messages> = {
       sectionEyebrow: "НАШІ ПОСЛУГИ",
       sectionTitle: "Послуги",
       sectionLead: "Стрижка, борода та комплексний догляд — чітко, акуратно, без зайвого.",
-      priceNote: "Ціна залежить від категорії майстра.",
+      priceNote: "Ціна залежить від категорії майстра",
       detailsCta: "Детальніше",
       reserveCta: "Записатися",
       reserve: "Записатися онлайн",
@@ -624,7 +624,7 @@ export const messages: Record<Lang, Messages> = {
       sectionTitle: "Services",
       sectionLead:
         "Haircuts, beard work, and full grooming — clean, neat, no fluff.",
-      priceNote: "Price depends on the barber tier.",
+      priceNote: "Price depends on the barber tier",
       detailsCta: "Details",
       reserveCta: "Book now",
       reserve: "Book online",
