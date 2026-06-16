@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect, useLayoutEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
+import { usePageIntro } from "@/components/providers/PageIntroProvider";
 import type { Lang } from "@/lib/i18n";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
@@ -32,8 +34,14 @@ const menuItemVariants = {
 
 export function Header() {
   const { lang, setLang, t } = useI18n();
+  const { introDone } = usePageIntro();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [menuPortalReady, setMenuPortalReady] = useState(false);
+
+  useLayoutEffect(() => {
+    setMenuPortalReady(true);
+  }, []);
 
   const navLinks = [
     { href: "#about", label: t.nav.about },
@@ -110,20 +118,142 @@ export function Header() {
   const switchLang = (next: Lang) => setLang(next);
   const closeMenu = () => setIsMobileMenuOpen(false);
 
+  const mobileMenu = (
+    <AnimatePresence>
+      {isMobileMenuOpen && (
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t.header.navMobileAria}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.28 }}
+          className="fixed inset-0 z-[200] flex items-stretch justify-center lg:hidden"
+        >
+          <motion.button
+            type="button"
+            aria-label={t.header.closeMenuBackdrop}
+            className="absolute inset-0 z-0 bg-black/88 backdrop-blur-md"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeMenu}
+          />
+
+          <motion.div
+            className="relative z-[1] flex min-h-[100svh] w-full cursor-default flex-col bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: cinematicEase }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E50914]/75 to-transparent"
+              aria-hidden
+            />
+            <div className="pointer-events-none absolute inset-x-0 top-24 h-40 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(229,9,20,0.12)_0%,transparent_72%)]" aria-hidden />
+
+            <div className={`flex max-lg:min-h-[64px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 pb-3 pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:pb-3.5 sm:pt-[max(0.55rem,env(safe-area-inset-top,0px))] ${siteContainerClass}`}>
+              <div className="min-w-0 shrink" onClick={closeMenu}>
+                <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
+              </div>
+              <button
+                type="button"
+                onClick={closeMenu}
+                className="flex h-16 w-16 min-h-[64px] min-w-[64px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 touch-manipulation [-webkit-tap-highlight-color:transparent]"
+                aria-label={t.header.closeMenu}
+              >
+                <X className="h-8 w-8" strokeWidth={2.1} />
+              </button>
+            </div>
+
+            <motion.nav
+              className="flex min-h-0 flex-1 flex-col items-center justify-center gap-0 overflow-y-auto px-6 py-8"
+              variants={menuListVariants}
+              initial="hidden"
+              animate="show"
+              aria-label={t.header.navMobileAria}
+            >
+              {navLinks.map((link) => (
+                <motion.a
+                  key={link.href}
+                  href={link.href}
+                  variants={menuItemVariants}
+                  onClick={closeMenu}
+                  className="group relative block w-full max-w-sm py-3.5 text-center font-display text-[1.375rem] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:text-[#E50914] sm:text-2xl sm:tracking-[0.14em]"
+                >
+                  <span className="relative z-[1] inline-block">{link.label}</span>
+                  <span
+                    className="pointer-events-none absolute inset-x-6 bottom-0 h-px origin-center scale-x-75 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent group-last:hidden"
+                    aria-hidden
+                  />
+                </motion.a>
+              ))}
+            </motion.nav>
+
+            <div className="shrink-0 border-t border-white/[0.08] bg-black/50 px-5 py-6 backdrop-blur-sm sm:px-8 sm:py-7">
+              <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-5">
+                <div
+                  className="flex items-center gap-1 rounded-full border border-white/[0.12] bg-black/60 p-1"
+                  role="group"
+                  aria-label={t.header.langSwitcherAria}
+                >
+                  <button
+                    type="button"
+                    aria-pressed={lang === "uk"}
+                    onClick={() => switchLang("uk")}
+                    className={`min-h-[40px] min-w-[3.25rem] rounded-full px-3 text-[11px] font-bold uppercase tracking-[0.14em] transition-all ${
+                      lang === "uk"
+                        ? "bg-[#E50914] text-white shadow-[0_0_24px_-4px_rgba(229,9,20,0.55)]"
+                        : "text-white/55 hover:text-white/85"
+                    }`}
+                  >
+                    {t.header.langUk}
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={lang === "en"}
+                    onClick={() => switchLang("en")}
+                    className={`min-h-[40px] min-w-[3.25rem] rounded-full px-3 text-[11px] font-bold uppercase tracking-[0.14em] transition-all ${
+                      lang === "en"
+                        ? "bg-[#E50914] text-white shadow-[0_0_24px_-4px_rgba(229,9,20,0.55)]"
+                        : "text-white/55 hover:text-white/85"
+                    }`}
+                  >
+                    {t.header.langEn}
+                  </button>
+                </div>
+                <SiteCta
+                  {...altegioBookingLink}
+                  onClick={closeMenu}
+                  className="w-full max-w-sm justify-center text-center"
+                >
+                  {t.header.bookNowShort}
+                </SiteCta>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <>
       <motion.header
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.95, ease: cinematicEase }}
-        className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
-          /* Мобілка: один стиль завжди — зміна padding/blur від scroll або lock не рухає шапку. */
-          "max-lg:border-white/[0.06] max-lg:bg-black/92 max-lg:backdrop-blur-xl max-lg:transition-[background-color,border-color] max-lg:duration-500 max-lg:motion-reduce:transition-none " +
-          /* Десктоп: компактність від скролу + анімація padding. */
-          (isScrolled
-            ? "lg:border-white/[0.06] lg:bg-black/92 lg:py-3.5 lg:backdrop-blur-xl lg:md:py-4 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none"
-            : "lg:border-black/40 lg:bg-black/75 lg:py-5 lg:backdrop-blur-md lg:md:py-6 lg:transition-[padding-top,padding-bottom,background-color,border-color] lg:duration-500 lg:motion-reduce:transition-none")
-        }`}
+        initial={false}
+        animate={introDone ? { y: 0, opacity: 1 } : { y: 0, opacity: 0 }}
+        transition={{ duration: 0.3, ease: cinematicEase }}
+        aria-hidden={!introDone}
+        className={`fixed left-0 right-0 top-0 z-[100] isolate border-b transition-[background-color,border-color,backdrop-filter,box-shadow] duration-300 motion-reduce:transition-none ${
+          !introDone ? "pointer-events-none" : ""
+        } ${
+          isScrolled
+            ? "border-white/[0.06] bg-black/88 backdrop-blur-xl"
+            : "border-transparent bg-black/35 backdrop-blur-[6px] lg:bg-black/28"
+        } lg:py-5 lg:md:py-6`}
       >
         <SiteContainer className="flex items-center justify-between gap-3 sm:gap-4 md:gap-5 lg:gap-7 max-lg:min-h-[64px] max-lg:pb-3 max-lg:pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:max-lg:pb-3.5 sm:max-lg:pt-[max(0.55rem,env(safe-area-inset-top,0px))] lg:py-0">
           <div className="min-w-0 shrink">
@@ -192,125 +322,7 @@ export function Header() {
         </SiteContainer>
       </motion.header>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label={t.header.navMobileAria}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.28 }}
-            className="fixed inset-0 z-[60] flex items-stretch justify-center lg:hidden"
-          >
-            <motion.button
-              type="button"
-              aria-label={t.header.closeMenuBackdrop}
-              className="absolute inset-0 z-0 bg-black/88 backdrop-blur-md"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeMenu}
-            />
-
-            <motion.div
-              className="relative z-[1] flex min-h-[100svh] w-full cursor-default flex-col bg-gradient-to-b from-[#0a0a0a] via-[#050505] to-black"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: cinematicEase }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div
-                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#E50914]/75 to-transparent"
-                aria-hidden
-              />
-              <div className="pointer-events-none absolute inset-x-0 top-24 h-40 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(229,9,20,0.12)_0%,transparent_72%)]" aria-hidden />
-
-              <div className={`flex max-lg:min-h-[64px] items-center justify-between gap-3 border-b border-white/[0.07] bg-black/30 pb-3 pt-[max(0.35rem,env(safe-area-inset-top,0px))] sm:pb-3.5 sm:pt-[max(0.55rem,env(safe-area-inset-top,0px))] ${siteContainerClass}`}>
-                <div className="min-w-0 shrink" onClick={closeMenu}>
-                  <BrandLogo emphasizeMobile wordmark={t.brand.wordmark} ariaLabel={t.header.logoAria} size="header" />
-                </div>
-                <button
-                  type="button"
-                  onClick={closeMenu}
-                  className="flex h-16 w-16 min-h-[64px] min-w-[64px] shrink-0 items-center justify-center rounded-2xl text-white transition-colors hover:text-[#E50914] active:opacity-80 touch-manipulation [-webkit-tap-highlight-color:transparent]"
-                  aria-label={t.header.closeMenu}
-                >
-                  <X className="h-8 w-8" strokeWidth={2.1} />
-                </button>
-              </div>
-
-              <motion.nav
-                className="flex min-h-0 flex-1 flex-col items-center justify-center gap-0 overflow-y-auto px-6 py-8"
-                variants={menuListVariants}
-                initial="hidden"
-                animate="show"
-                aria-label={t.header.navMobileAria}
-              >
-                {navLinks.map((link) => (
-                  <motion.a
-                    key={link.href}
-                    href={link.href}
-                    variants={menuItemVariants}
-                    onClick={closeMenu}
-                    className="group relative block w-full max-w-sm py-3.5 text-center font-display text-[1.375rem] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-300 hover:text-[#E50914] sm:text-2xl sm:tracking-[0.14em]"
-                  >
-                    <span className="relative z-[1] inline-block">{link.label}</span>
-                    <span
-                      className="pointer-events-none absolute inset-x-6 bottom-0 h-px origin-center scale-x-75 bg-gradient-to-r from-transparent via-white/[0.12] to-transparent group-last:hidden"
-                      aria-hidden
-                    />
-                  </motion.a>
-                ))}
-              </motion.nav>
-
-              <div className="shrink-0 border-t border-white/[0.08] bg-black/50 px-5 py-6 backdrop-blur-sm sm:px-8 sm:py-7">
-                <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-5">
-                  <div
-                    className="flex items-center gap-1 rounded-full border border-white/[0.12] bg-black/60 p-1"
-                    role="group"
-                    aria-label={t.header.langSwitcherAria}
-                  >
-                    <button
-                      type="button"
-                      aria-pressed={lang === "uk"}
-                      onClick={() => switchLang("uk")}
-                      className={`min-h-[40px] min-w-[3.25rem] rounded-full px-3 text-[11px] font-bold uppercase tracking-[0.14em] transition-all ${
-                        lang === "uk"
-                          ? "bg-[#E50914] text-white shadow-[0_0_24px_-4px_rgba(229,9,20,0.55)]"
-                          : "text-white/55 hover:text-white/85"
-                      }`}
-                    >
-                      {t.header.langUk}
-                    </button>
-                    <button
-                      type="button"
-                      aria-pressed={lang === "en"}
-                      onClick={() => switchLang("en")}
-                      className={`min-h-[40px] min-w-[3.25rem] rounded-full px-3 text-[11px] font-bold uppercase tracking-[0.14em] transition-all ${
-                        lang === "en"
-                          ? "bg-[#E50914] text-white shadow-[0_0_24px_-4px_rgba(229,9,20,0.55)]"
-                          : "text-white/55 hover:text-white/85"
-                      }`}
-                    >
-                      {t.header.langEn}
-                    </button>
-                  </div>
-                  <SiteCta
-                    {...altegioBookingLink}
-                    onClick={closeMenu}
-                    className="w-full max-w-sm justify-center text-center"
-                  >
-                    {t.header.bookNowShort}
-                  </SiteCta>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {menuPortalReady && typeof document !== "undefined" ? createPortal(mobileMenu, document.body) : null}
     </>
   );
 }

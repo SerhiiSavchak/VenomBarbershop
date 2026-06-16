@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -34,7 +34,7 @@ export function PageLoader({ onIntroReady }: PageLoaderProps) {
     setShow(false);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     mountedAt.current = performance.now();
     setPortalReady(true);
   }, []);
@@ -87,7 +87,7 @@ export function PageLoader({ onIntroReady }: PageLoaderProps) {
           aria-live="polite"
           aria-busy="true"
           aria-label={t.meta.title}
-          className="fixed inset-0 z-[500] flex items-center justify-center overflow-hidden bg-[#020202]"
+          className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#020202]"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: reduce ? EXIT_MS.reduce : EXIT_MS.normal, ease: easeOut }}

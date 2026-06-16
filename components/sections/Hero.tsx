@@ -13,21 +13,21 @@ import { SiteContainer } from "@/components/ui/SiteContainer";
 import { useLgUp } from "@/lib/useLgUp";
 
 const LEFT_READABILITY_DESKTOP =
-  "linear-gradient(90deg, #000 0%, rgba(0,0,0,.72) 28%, rgba(0,0,0,.22) 52%, transparent 76%)";
+  "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.52) 26%, rgba(0,0,0,0.22) 48%, rgba(0,0,0,0.06) 62%, transparent 78%)";
 
 const BOTTOM_VIGNETTE_DESKTOP =
-  "linear-gradient(0deg, rgba(0,0,0,.52) 0%, rgba(0,0,0,.18) 38%, transparent 68%)";
+  "linear-gradient(0deg, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 36%, transparent 62%)";
 
-const MOBILE_TOP_READABILITY =
-  "linear-gradient(180deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.42) 38%, transparent 72%)";
+const MOBILE_HEADER_SCRIM =
+  "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.18) 18%, transparent 34%)";
 
-const MOBILE_BOTTOM_READABILITY =
-  "linear-gradient(0deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.4) 42%, transparent 74%)";
+const MOBILE_CONTENT_SCRIM =
+  "linear-gradient(180deg, transparent 18%, rgba(0,0,0,0.28) 42%, rgba(0,0,0,0.62) 66%, rgba(0,0,0,0.86) 100%)";
 
-const RED_AMBIENT =
-  "radial-gradient(ellipse 72% 58% at 72% 42%, rgba(229,9,20,0.14) 0%, transparent 58%)";
+const MOBILE_TEXT_ZONE_SCRIM =
+  "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.78) 100%)";
 
-const HERO_DESKTOP = "/symbiote/hero-desktop.png";
+const HERO_DESKTOP = "/symbiote/hero-desktop.webp";
 const HERO_MOBILE = "/symbiote/hero-mobile.png";
 
 const statIcons = [Users, Award, Scissors, Clock] as const;
@@ -129,66 +129,56 @@ function HeroPhotoShine({ reducedMotion, introDone }: { reducedMotion: boolean; 
 }
 
 function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: boolean; introDone: boolean }) {
-  const photoInitial = reducedMotion
-    ? { opacity: 0.85 }
-    : { scale: 1.09, x: "3.5%", rotate: 0.35, opacity: 1 };
-  const photoAnimate = reducedMotion ? { opacity: 1 } : { scale: 1, x: 0, rotate: 0, opacity: 1 };
+  const photoInitial = reducedMotion ? { opacity: 0.92 } : { opacity: 0.97 };
+  const photoAnimate = { opacity: 1 };
   const photoTransition = reducedMotion
     ? { duration: 0.35 }
-    : { duration: 1.12, ease: cinematicEase, delay: 0 };
+    : { duration: 0.9, ease: cinematicEase, delay: 0 };
 
   return (
-    <div className="absolute inset-0 z-[1] hidden overflow-hidden lg:block">
-      <div className="absolute inset-y-0 right-0 z-[1] h-full w-[72vw] overflow-hidden">
-        <motion.div
-          className="absolute inset-0 bg-black"
-          initial={photoInitial}
-          animate={introDone ? photoAnimate : photoInitial}
-          transition={introDone ? photoTransition : { duration: 0 }}
-        >
-          <OptimizedImage
-            src={HERO_DESKTOP}
-            alt=""
-            fill
-            priority
-            quality={88}
-            sizes="72vw"
-            className="h-full w-full object-cover object-center opacity-100"
-          />
-          <HeroPhotoShine reducedMotion={reducedMotion} introDone={introDone} />
-        </motion.div>
-      </div>
-
-      <div
-        className="pointer-events-none absolute inset-0 z-[2] bg-transparent"
-        style={{ background: RED_AMBIENT }}
-        aria-hidden
-      />
-
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 z-[3] w-[min(46vw,620px)] max-w-[92vw] bg-transparent"
-        aria-hidden
+    <div className="absolute inset-0 z-[1] hidden overflow-hidden lg:block" aria-hidden>
+      <motion.div
+        className="absolute inset-0 bg-black"
+        initial={photoInitial}
+        animate={introDone ? photoAnimate : photoInitial}
+        transition={introDone ? photoTransition : { duration: 0 }}
       >
-        <div className="pointer-events-none absolute inset-0 bg-transparent" style={{ background: LEFT_READABILITY_DESKTOP }} aria-hidden />
-      </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[min(48vh,460px)] bg-transparent" aria-hidden>
-        <div className="pointer-events-none absolute inset-0 bg-transparent" style={{ background: BOTTOM_VIGNETTE_DESKTOP }} aria-hidden />
-      </div>
+        <OptimizedImage
+          src={HERO_DESKTOP}
+          alt=""
+          fill
+          priority
+          fadeIn={false}
+          quality={90}
+          sizes="100vw"
+          className="h-full w-full object-cover object-[52%_center] opacity-100"
+        />
+        <HeroPhotoShine reducedMotion={reducedMotion} introDone={introDone} />
+      </motion.div>
+
+      <div
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{ background: LEFT_READABILITY_DESKTOP }}
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[min(40vh,380px)]"
+        style={{ background: BOTTOM_VIGNETTE_DESKTOP }}
+      />
     </div>
   );
 }
 
 function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boolean; introDone: boolean }) {
   const photoInitial = reducedMotion
-    ? { opacity: 0.88 }
-    : { scale: 1.15, y: "8%", opacity: 1 };
+    ? { opacity: 0.92 }
+    : { scale: 1.05, y: "2%", opacity: 1 };
   const photoAnimate = reducedMotion ? { opacity: 1 } : { scale: 1, y: 0, opacity: 1 };
   const photoTransition = reducedMotion
     ? { duration: 0.35 }
-    : { duration: 1.22, ease: mobilePopEase, delay: 0.04 };
+    : { duration: 1.1, ease: mobilePopEase, delay: 0.04 };
 
   return (
-    <div className="absolute inset-0 z-[1] overflow-hidden lg:hidden">
+    <div className="absolute inset-0 z-[1] overflow-hidden lg:hidden" aria-hidden>
       <motion.div
         className="absolute inset-0 z-[1] overflow-hidden bg-black"
         initial={photoInitial}
@@ -200,19 +190,26 @@ function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boo
           alt=""
           fill
           priority
-          quality={88}
+          fadeIn={false}
+          quality={92}
           sizes="100vw"
-          className="object-cover object-[50%_26%] opacity-100"
+          className="object-cover object-[50%_40%] opacity-100"
         />
         <HeroPhotoShine reducedMotion={reducedMotion} introDone={introDone} />
       </motion.div>
 
-      <div className="pointer-events-none absolute inset-0 z-[2] bg-transparent" style={{ background: RED_AMBIENT }} aria-hidden />
-
-      <div className="pointer-events-none absolute inset-0 z-[3] bg-transparent" aria-hidden>
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-transparent" style={{ background: MOBILE_TOP_READABILITY }} aria-hidden />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%] bg-transparent" style={{ background: MOBILE_BOTTOM_READABILITY }} aria-hidden />
-      </div>
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 z-[2] h-[28%]"
+        style={{ background: MOBILE_HEADER_SCRIM }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-[2]"
+        style={{ background: MOBILE_CONTENT_SCRIM }}
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[68%]"
+        style={{ background: MOBILE_TEXT_ZONE_SCRIM }}
+      />
     </div>
   );
 }
@@ -282,61 +279,50 @@ export function Hero() {
       <HeroBackgroundDesktop reducedMotion={reduce} introDone={introDone} />
 
       <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
-        <SiteContainer className="relative z-[10] flex flex-1 flex-col pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(10.25rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 max-lg:-translate-y-2 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:self-start">
-            <div className="block lg:table-row-group">
-              <div className="block lg:table-row">
-                <div className="block lg:table-cell lg:align-top lg:p-0">
-                  <div className="hero-display mb-4 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] lg:mb-6 lg:w-max lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
-                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
-                      <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
-                        VENOM
-                      </motion.span>
-                    </div>
-                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
-                      <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
-                        BARBERSHOP
-                      </motion.span>
-                    </div>
-                  </div>
-                </div>
+        <SiteContainer className="relative z-[10] flex flex-1 flex-col max-lg:min-h-0 max-lg:justify-end max-lg:pb-10 max-lg:pt-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
+          <div className="flex w-full max-w-[640px] flex-col max-lg:mt-auto max-lg:pb-1 lg:max-w-[min(36rem,calc(100vw-5rem))] lg:self-start">
+            <div className="hero-display mb-3 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] max-lg:[text-shadow:0_2px_18px_rgba(0,0,0,0.45)] lg:mb-5 lg:w-max lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
+              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
+                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
+                  VENOM
+                </motion.span>
               </div>
-              <div className="block lg:table-row">
-                <div className="block lg:table-cell lg:align-top lg:p-0">
-                  <div className="flex w-full min-h-0 max-w-full flex-1 flex-col gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
-                    <motion.p
-                      className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:text-[15px] lg:leading-[1.72]"
-                      {...gateIntro(introDone, descMotion)}
-                    >
-                      {hero.description}
-                    </motion.p>
-
-                    <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[min(26dvh,220px)] max-lg:flex-1 max-lg:basis-0" aria-hidden />
-
-                    <motion.div
-                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0"
-                      {...gateIntro(introDone, ctaGroupMotion)}
-                    >
-                      <a
-                        {...altegioBookingLink}
-                        aria-label={hero.primaryCtaAria}
-                        className="hero-copy hero-cta hero-cta--primary"
-                      >
-                        <span className="hero-cta-text">{hero.ctaPrimary}</span>
-                      </a>
-                      <a
-                        href="#services"
-                        aria-label={hero.secondaryCtaAria}
-                        title={hero.ctaSecondary}
-                        className="hero-copy hero-cta hero-cta--secondary group"
-                      >
-                        <span className="hero-cta-text">{hero.ctaSecondaryShort}</span>
-                        <ChevronRight className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
-                      </a>
-                    </motion.div>
-                  </div>
-                </div>
+              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
+                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
+                  BARBERSHOP
+                </motion.span>
               </div>
+            </div>
+
+            <div className="flex w-full min-h-0 max-w-full flex-col max-lg:gap-4 lg:gap-8">
+              <motion.p
+                className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white [overflow-wrap:anywhere] text-pretty max-lg:max-w-[22rem] max-lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.65),0_2px_32px_rgba(0,0,0,0.42)] lg:max-w-none lg:text-[15px] lg:leading-[1.72] lg:text-white/88 lg:[text-shadow:none]"
+                {...gateIntro(introDone, descMotion)}
+              >
+                {hero.description}
+              </motion.p>
+
+              <motion.div
+                className="hero-cta-group m-0 w-full max-w-full shrink-0 max-lg:pt-0 lg:mt-0"
+                {...gateIntro(introDone, ctaGroupMotion)}
+              >
+                <a
+                  {...altegioBookingLink}
+                  aria-label={hero.primaryCtaAria}
+                  className="hero-copy hero-cta hero-cta--primary"
+                >
+                  <span className="hero-cta-text">{hero.ctaPrimary}</span>
+                </a>
+                <a
+                  href="#services"
+                  aria-label={hero.secondaryCtaAria}
+                  title={hero.ctaSecondary}
+                  className="hero-copy hero-cta hero-cta--secondary group"
+                >
+                  <span className="hero-cta-text">{hero.ctaSecondaryShort}</span>
+                  <ChevronRight className="hero-cta-icon h-4 w-4 shrink-0" strokeWidth={2.25} aria-hidden />
+                </a>
+              </motion.div>
             </div>
           </div>
         </SiteContainer>
