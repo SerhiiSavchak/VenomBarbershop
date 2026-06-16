@@ -81,7 +81,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
           className="min-h-screen transition-[opacity,transform] duration-[220ms] ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none motion-reduce:transform-none"
           style={{
             opacity: localeSwitching ? 0.84 : 1,
-            transform: localeSwitching ? "translateY(3px)" : "translateY(0)",
+            transform: localeSwitching ? "translateY(3px)" : undefined,
           }}
         >
           {children}

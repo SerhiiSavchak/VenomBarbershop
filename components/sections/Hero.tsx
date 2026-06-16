@@ -22,10 +22,13 @@ const TOP_READABILITY_DESKTOP =
   "linear-gradient(180deg, rgba(0,0,0,0.64) 0%, rgba(0,0,0,0.24) 52%, rgba(0,0,0,0) 100%)";
 
 const MOBILE_TOP_READABILITY =
-  "linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.62) 32%, rgba(0,0,0,0.18) 58%, rgba(0,0,0,0) 82%)";
+  "linear-gradient(180deg, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.76) 34%, rgba(0,0,0,0.34) 62%, rgba(0,0,0,0.08) 82%, rgba(0,0,0,0) 100%)";
 
 const MOBILE_BOTTOM_READABILITY =
   "linear-gradient(180deg, rgba(0,0,0,0) 48%, rgba(0,0,0,0.55) 72%, rgba(0,0,0,0.88) 100%)";
+
+const MOBILE_LEFT_READABILITY =
+  "linear-gradient(90deg, rgba(0,0,0,0.46) 0%, rgba(0,0,0,0.3) 46%, rgba(0,0,0,0.08) 78%, rgba(0,0,0,0) 100%)";
 
 const HERO_DESKTOP = "/symbiote/hero-desktop.webp";
 const HERO_MOBILE = "/symbiote/hero-mobile.webp";
@@ -164,6 +167,7 @@ function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boo
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-[3] bg-transparent" aria-hidden>
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-[74%] bg-transparent" style={{ background: MOBILE_LEFT_READABILITY }} aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[52%] bg-transparent" style={{ background: MOBILE_TOP_READABILITY }} aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%] bg-transparent" style={{ background: MOBILE_BOTTOM_READABILITY }} aria-hidden />
       </div>
@@ -207,8 +211,8 @@ export function Hero() {
           transition: { duration: 0.82, ease: cinematicEase, delay: 0.34 },
         }
       : {
-          initial: { opacity: 0, y: 28, x: -12 },
-          animate: { opacity: 1, y: 0, x: 0 },
+          initial: { opacity: 0, y: 28 },
+          animate: { opacity: 1, y: 0 },
           transition: { duration: 0.82, ease: mobilePopEase, delay: 0.4 },
         };
 
@@ -236,18 +240,18 @@ export function Hero() {
       <HeroBackgroundDesktop reducedMotion={reduce} introDone={introDone} />
 
       <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
-        <SiteContainer className="relative z-[10] flex flex-1 flex-col pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(10.25rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 max-lg:-translate-y-2 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:self-start">
+        <SiteContainer className="relative z-[10] flex flex-1 flex-col pb-6 max-lg:min-h-0 max-lg:flex-1 max-lg:justify-start max-lg:pt-[calc(11.1rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
+          <div className="my-auto flex w-full max-w-[640px] flex-col pb-1 max-lg:mb-0 max-lg:my-0 max-lg:min-h-0 max-lg:flex-1 lg:my-0 lg:table lg:w-auto lg:max-w-[min(54rem,calc(100vw-4.5rem))] lg:flex-none lg:border-separate lg:border-spacing-0 lg:translate-y-0 lg:pb-0 lg:relative lg:self-start">
             <div className="block lg:table-row-group">
               <div className="block lg:table-row">
                 <div className="block lg:table-cell lg:align-top lg:p-0">
-                  <div className="hero-display mb-4 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] lg:mb-6 lg:w-max lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
+                  <div className="hero-display mb-4 flex w-full min-w-0 max-w-full shrink-0 self-start flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] lg:mb-6 lg:w-full lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
                     <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
                       <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
                         VENOM
                       </motion.span>
                     </div>
-                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
+                    <div className="overflow-x-clip overflow-y-visible pb-[0.06em] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
                       <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
                         BARBERSHOP
                       </motion.span>
@@ -257,18 +261,18 @@ export function Hero() {
               </div>
               <div className="block lg:table-row">
                 <div className="block lg:table-cell lg:align-top lg:p-0">
-                  <div className="flex w-full min-h-0 max-w-full flex-1 flex-col gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
+                  <div className="flex w-full min-h-0 max-w-full flex-1 flex-col items-start gap-8 max-lg:flex-1 max-lg:gap-0 lg:flex-none lg:gap-9">
                     <motion.p
-                      className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white/88 [overflow-wrap:anywhere] text-pretty max-lg:-mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:text-[15px] lg:leading-[1.72]"
+                      className="hero-copy m-0 w-full max-w-xl shrink-0 self-start text-[15px] font-medium leading-[1.6] text-white/90 [overflow-wrap:anywhere] text-pretty [text-shadow:0_2px_12px_rgba(0,0,0,0.5)] max-lg:mt-1 max-lg:max-w-xl lg:mt-0 lg:max-w-none lg:text-[15px] lg:leading-[1.72] lg:[text-shadow:none]"
                       {...gateIntro(introDone, descMotion)}
                     >
                       {hero.description}
                     </motion.p>
 
-                    <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[min(26dvh,220px)] max-lg:flex-1 max-lg:basis-0" aria-hidden />
+                    <div className="hidden w-full min-h-0 max-lg:flex max-lg:min-h-[clamp(72px,12dvh,120px)]" aria-hidden />
 
                     <motion.div
-                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 max-lg:pt-2 lg:mt-0"
+                      className="hero-cta-group m-0 mt-auto w-full max-w-full shrink-0 self-start max-lg:mt-6 max-lg:pt-2 lg:mt-0"
                       {...gateIntro(introDone, ctaGroupMotion)}
                     >
                       <a
