@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { usePageIntro } from "@/components/providers/PageIntroProvider";
 import type { Lang } from "@/lib/i18n";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
@@ -33,7 +32,6 @@ const menuItemVariants = {
 
 export function Header() {
   const { lang, setLang, t } = useI18n();
-  const { introDone } = usePageIntro();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -115,13 +113,10 @@ export function Header() {
   return (
     <>
       <motion.header
-        initial={false}
-        animate={introDone ? { y: 0, opacity: 1 } : { y: -20, opacity: 0 }}
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.95, ease: cinematicEase }}
-        aria-hidden={!introDone}
         className={`fixed left-0 right-0 top-0 z-50 isolate border-b ${
-          !introDone ? "pointer-events-none" : ""
-        } ${
           /* Мобілка: один стиль завжди — зміна padding/blur від scroll або lock не рухає шапку. */
           "max-lg:border-white/[0.06] max-lg:bg-black/92 max-lg:backdrop-blur-xl max-lg:transition-[background-color,border-color] max-lg:duration-500 max-lg:motion-reduce:transition-none " +
           /* Десктоп: компактність від скролу + анімація padding. */
