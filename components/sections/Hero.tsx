@@ -280,21 +280,21 @@ export function Hero() {
 
       <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
         <SiteContainer className="relative z-[10] flex flex-1 flex-col max-lg:min-h-0 max-lg:justify-end max-lg:pb-10 max-lg:pt-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="flex w-full max-w-[640px] flex-col max-lg:mt-auto max-lg:pb-1 lg:max-w-[min(36rem,calc(100vw-5rem))] lg:self-start">
-            <div className="hero-display mb-3 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] max-lg:[text-shadow:0_2px_18px_rgba(0,0,0,0.45)] lg:mb-5 lg:w-max lg:max-w-full lg:text-[clamp(88px,6.9vw,140px)]">
-              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
-                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-[#E50914] lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
+          <div className="flex w-full max-w-[640px] flex-col items-start max-lg:mt-auto max-lg:pb-1 lg:w-full lg:max-w-[36rem] lg:self-start">
+            <div className="hero-display mb-3 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] max-lg:[text-shadow:0_2px_18px_rgba(0,0,0,0.45)] lg:mb-5 lg:text-[clamp(88px,6.9vw,140px)]">
+              <div className="w-full overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
+                <motion.span className="block w-full max-w-full font-normal leading-[0.92] text-[#E50914] lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
                   VENOM
                 </motion.span>
               </div>
-              <div className="overflow-x-clip overflow-y-visible pb-[0.06em] pr-[2px] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
-                <motion.span className="block w-max max-w-full font-normal leading-[0.92] text-white lg:max-w-none lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
+              <div className="w-full overflow-x-clip overflow-y-visible pb-[0.06em] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
+                <motion.span className="block w-full max-w-full font-normal leading-[0.92] text-white lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
                   BARBERSHOP
                 </motion.span>
               </div>
             </div>
 
-            <div className="flex w-full min-h-0 max-w-full flex-col max-lg:gap-4 lg:gap-8">
+            <div className="flex w-full min-h-0 max-w-full flex-col items-start max-lg:gap-4 lg:gap-8">
               <motion.p
                 className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white [overflow-wrap:anywhere] text-pretty max-lg:max-w-[22rem] max-lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.65),0_2px_32px_rgba(0,0,0,0.42)] lg:max-w-none lg:text-[15px] lg:leading-[1.72] lg:text-white/88 lg:[text-shadow:none]"
                 {...gateIntro(introDone, descMotion)}
