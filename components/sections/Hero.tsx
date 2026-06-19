@@ -11,6 +11,7 @@ import { cinematicEase, mobilePopEase } from "@/lib/motion";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { useLgUp } from "@/lib/useLgUp";
+import { useStableViewportHeight } from "@/lib/useStableViewportHeight";
 
 const LEFT_READABILITY_DESKTOP =
   "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.52) 26%, rgba(0,0,0,0.22) 48%, rgba(0,0,0,0.06) 62%, transparent 78%)";
@@ -222,6 +223,7 @@ export function Hero() {
   const statsInView = useInView(statsRef, { once: true, amount: 0.08, margin: "0px 0px 120px 0px" });
   const isLg = useLgUp();
   const reduce = useReducedMotion() ?? false;
+  useStableViewportHeight();
 
   const statsStarted = introDone && (isLg || statsInView);
 
@@ -242,11 +244,11 @@ export function Hero() {
       };
 
   const descMotion = reduce
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.45, delay: 0.38 } }
+    ? { initial: { opacity: 0, x: 0 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.45, delay: 0.38 } }
     : isLg
       ? {
-          initial: { opacity: 0, y: 22 },
-          animate: { opacity: 1, y: 0 },
+          initial: { opacity: 0, y: 22, x: 0 },
+          animate: { opacity: 1, y: 0, x: 0 },
           transition: { duration: 0.82, ease: cinematicEase, delay: 0.34 },
         }
       : {
@@ -268,35 +270,45 @@ export function Hero() {
       : { initial: { opacity: 0, y: 48 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.72, duration: 0.88, ease: mobilePopEase } };
 
   const statItemInitial = reduce
-    ? { opacity: 0 }
+    ? { opacity: 0, x: 0 }
     : isLg
-      ? { opacity: 0, y: 14 }
+      ? { opacity: 0, y: 14, x: 0 }
       : { opacity: 0, y: 22, x: -10 };
 
   return (
-    <section id="hero" className="relative flex min-h-[100dvh] w-full flex-col bg-black max-lg:overflow-hidden lg:block lg:overflow-visible">
+    <section
+      id="hero"
+      className="hero-mobile-viewport relative flex w-full flex-col bg-black max-lg:overflow-x-clip max-lg:overflow-y-visible lg:block lg:min-h-[100dvh] lg:overflow-visible"
+    >
       <HeroBackgroundMobile reducedMotion={reduce} introDone={introDone} />
       <HeroBackgroundDesktop reducedMotion={reduce} introDone={introDone} />
 
-      <div className="relative flex flex-1 flex-col lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
-        <SiteContainer className="relative z-[10] flex flex-1 flex-col max-lg:min-h-0 max-lg:justify-end max-lg:pb-10 max-lg:pt-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
-          <div className="flex w-full max-w-[640px] flex-col items-start max-lg:mt-auto max-lg:pb-1 lg:w-full lg:max-w-[36rem] lg:self-start">
-            <div className="hero-display mb-3 flex w-full min-w-0 max-w-full shrink-0 flex-col gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] max-lg:[text-shadow:0_2px_18px_rgba(0,0,0,0.45)] lg:mb-5 lg:text-[clamp(88px,6.9vw,140px)]">
-              <div className="w-full overflow-x-clip overflow-y-visible pb-[0.06em] lg:overflow-x-visible">
-                <motion.span className="block w-full max-w-full font-normal leading-[0.92] text-[#E50914] lg:leading-[0.9]" {...gateIntro(introDone, venomMotion)}>
+      <div className="relative flex flex-1 flex-col max-lg:min-h-[calc(var(--app-vh,1vh)*100)] max-lg:min-h-[100svh] max-lg:min-h-[100dvh] lg:absolute lg:inset-0 lg:max-h-[100dvh] lg:min-h-[100dvh] lg:flex-none">
+        <SiteContainer className="relative z-[10] flex flex-1 flex-col max-lg:justify-end max-lg:pb-10 max-lg:pt-[calc(var(--mobile-header-height)+0.375rem)] lg:h-full lg:min-h-0 lg:flex-1 lg:flex-col lg:justify-center lg:pb-[6.75rem] lg:pt-[calc(5.75rem+env(safe-area-inset-top,0px))]">
+          <div className="hero-content flex w-full max-w-[640px] flex-col items-start max-lg:mt-auto max-lg:shrink-0 max-lg:pb-1 lg:w-full lg:max-w-[36rem] lg:self-start">
+            <div className="hero-display mb-3 flex w-full min-w-0 max-w-full shrink-0 flex-col items-start gap-0 uppercase tracking-[0.01em] text-[clamp(58px,16vw,86px)] max-lg:[text-shadow:0_2px_18px_rgba(0,0,0,0.45)] lg:mb-5 lg:text-[clamp(88px,6.9vw,140px)]">
+              <div className="hero-title-reveal w-full lg:overflow-visible">
+                <motion.span
+                  className="block w-full max-w-full text-left font-normal leading-[0.96] text-[#E50914] lg:leading-[0.9]"
+                  {...gateIntro(introDone, venomMotion)}
+                >
                   VENOM
                 </motion.span>
               </div>
-              <div className="w-full overflow-x-clip overflow-y-visible pb-[0.06em] [-webkit-font-smoothing:antialiased] lg:overflow-x-visible">
-                <motion.span className="block w-full max-w-full font-normal leading-[0.92] text-white lg:leading-[0.9]" {...gateIntro(introDone, barberMotion)}>
+              <div className="hero-title-reveal w-full [-webkit-font-smoothing:antialiased] lg:overflow-visible">
+                <motion.span
+                  className="block w-full max-w-full text-left font-normal leading-[0.96] text-white lg:leading-[0.9]"
+                  {...gateIntro(introDone, barberMotion)}
+                >
                   BARBERSHOP
                 </motion.span>
               </div>
             </div>
 
-            <div className="flex w-full min-h-0 max-w-full flex-col items-start max-lg:gap-4 lg:gap-8">
+            <div className="flex w-full max-w-full flex-col items-start max-lg:shrink-0 max-lg:gap-4 lg:min-h-0 lg:gap-8">
               <motion.p
-                className="hero-copy m-0 w-full max-w-xl shrink-0 text-[15px] font-medium leading-[1.6] text-white [overflow-wrap:anywhere] text-pretty max-lg:max-w-[22rem] max-lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.65),0_2px_32px_rgba(0,0,0,0.42)] lg:max-w-none lg:text-[15px] lg:leading-[1.72] lg:text-white/88 lg:[text-shadow:none]"
+                key={isLg ? "hero-desc-lg" : "hero-desc-sm"}
+                className="hero-copy m-0 w-full max-w-xl shrink-0 text-left text-[15px] font-medium leading-[1.6] text-white [overflow-wrap:anywhere] text-pretty max-lg:max-w-[22rem] max-lg:[text-shadow:0_1px_14px_rgba(0,0,0,0.65),0_2px_32px_rgba(0,0,0,0.42)] lg:max-w-none lg:text-[15px] lg:leading-[1.72] lg:text-white/88 lg:[text-shadow:none]"
                 {...gateIntro(introDone, descMotion)}
               >
                 {hero.description}

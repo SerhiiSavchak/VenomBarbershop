@@ -13,6 +13,11 @@
   --accent-red-deep: #6a0a10;
   
   --radius: 0.5rem;
+
+  /* Stable mobile viewport unit (synced from JS); 1vh fallback until hydrated */
+  --app-vh: 1vh;
+  /* Matches fixed mobile header: min row + pb + pt (see Header.tsx) */
+  --mobile-header-height: calc(5.125rem + env(safe-area-inset-top, 0px));
 }
 
 @theme inline {
@@ -619,6 +624,29 @@ select,
 @media (min-width: 1024px) {
   .hero-display {
     line-height: 0.9;
+  }
+}
+
+/* Mobile hero — stable viewport + title safety (Telegram / iOS WebView) */
+@media (max-width: 1023px) {
+  .hero-mobile-viewport {
+    min-height: calc(var(--app-vh, 1vh) * 100);
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+
+  .hero-display {
+    line-height: 0.96;
+  }
+
+  /*
+   * Horizontal slide-in mask: use overflow-hidden with internal padding so ascenders
+   * are not clipped (overflow-x: clip + overflow-y: visible coerces y to auto in WebKit).
+   */
+  .hero-title-reveal {
+    overflow: hidden;
+    padding-top: 0.1em;
+    padding-bottom: 0.06em;
   }
 }
 
