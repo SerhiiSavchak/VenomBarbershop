@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
@@ -79,13 +79,15 @@ export function Space() {
                 {/* Top glossy rim */}
                 <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
                 
-                <Image
-                  src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=88"
-                  alt={t.space.imageMain}
-                  fill
-                  sizes="(max-width:1024px) 100vw, 55vw"
-                  className="object-cover brightness-[0.92] contrast-[1.1] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.03] fine-group-hover:brightness-100"
-                />
+                <div className="absolute inset-0 origin-center transition-transform duration-700 ease-out fine-group-hover:scale-[1.03]">
+                  <Image
+                    src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1200&q=88"
+                    alt={t.space.imageMain}
+                    fill
+                    sizes="(max-width:1024px) 100vw, 55vw"
+                    className="object-cover brightness-[0.92] contrast-[1.1] transition-[filter] duration-700 fine-group-hover:brightness-100"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,rgba(209,18,27,0.25)_0%,transparent_50%)] mix-blend-screen" />
 
@@ -100,24 +102,28 @@ export function Space() {
               <div className="flex flex-col gap-3 sm:col-span-2 sm:gap-4">
                 <div className="group relative aspect-[4/3] flex-1 overflow-hidden border border-white/[0.06]">
                   <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-                  <Image
-                    src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=88"
-                    alt={t.space.imageChair}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 25vw"
-                    className="object-cover brightness-[0.9] contrast-[1.12] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.05] fine-group-hover:brightness-100"
-                  />
+                  <div className="absolute inset-0 origin-center transition-transform duration-700 ease-out fine-group-hover:scale-[1.05]">
+                    <Image
+                      src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=800&q=88"
+                      alt={t.space.imageChair}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 25vw"
+                      className="object-cover brightness-[0.9] contrast-[1.12] transition-[filter] duration-700 fine-group-hover:brightness-100"
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
                 </div>
                 <div className="group relative aspect-[4/3] flex-1 overflow-hidden border border-white/[0.06]">
                   <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
-                  <Image
-                    src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=88"
-                    alt={t.space.imageTools}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 25vw"
-                    className="object-cover brightness-[0.9] contrast-[1.1] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.05] fine-group-hover:brightness-100"
-                  />
+                  <div className="absolute inset-0 origin-center transition-transform duration-700 ease-out fine-group-hover:scale-[1.05]">
+                    <Image
+                      src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=800&q=88"
+                      alt={t.space.imageTools}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 25vw"
+                      className="object-cover brightness-[0.9] contrast-[1.1] transition-[filter] duration-700 fine-group-hover:brightness-100"
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
                 </div>
               </div>

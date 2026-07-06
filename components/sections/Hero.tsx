@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Award, ChevronRight, Clock, Scissors, Users } from "lucide-react";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
@@ -12,6 +12,7 @@ import { altegioBookingLink } from "@/lib/altegio";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { useLgUp } from "@/lib/useLgUp";
 import { useStableViewportHeight } from "@/lib/useStableViewportHeight";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
 const LEFT_READABILITY_DESKTOP =
   "linear-gradient(90deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.52) 26%, rgba(0,0,0,0.22) 48%, rgba(0,0,0,0.06) 62%, transparent 78%)";
@@ -130,7 +131,7 @@ function HeroPhotoShine({ reducedMotion, introDone }: { reducedMotion: boolean; 
 }
 
 function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: boolean; introDone: boolean }) {
-  const photoInitial = reducedMotion ? { opacity: 0.92 } : { opacity: 0.97 };
+  const photoInitial = { opacity: 0.97 };
   const photoAnimate = { opacity: 1 };
   const photoTransition = reducedMotion
     ? { duration: 0.35 }
@@ -151,7 +152,7 @@ function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: bo
           priority
           fadeIn={false}
           quality={90}
-          sizes="100vw"
+          sizes="(max-width: 1023px) 1px, 100vw"
           className="h-full w-full object-cover object-[52%_center] opacity-100"
         />
         <HeroPhotoShine reducedMotion={reducedMotion} introDone={introDone} />
@@ -170,12 +171,12 @@ function HeroBackgroundDesktop({ reducedMotion, introDone }: { reducedMotion: bo
 }
 
 function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boolean; introDone: boolean }) {
-  const photoInitial = reducedMotion
-    ? { opacity: 0.92 }
-    : { scale: 1.05, y: "2%", opacity: 1 };
-  const photoAnimate = reducedMotion ? { opacity: 1 } : { scale: 1, y: 0, opacity: 1 };
+  /* Форма анімації не залежить від reducedMotion (hydration/flip-safe):
+     ціль завжди нейтральна, reduce лише робить трансформи миттєвими. */
+  const photoInitial = { scale: 1.05, y: "2%", opacity: 0.96 };
+  const photoAnimate = { scale: 1, y: 0, opacity: 1 };
   const photoTransition = reducedMotion
-    ? { duration: 0.35 }
+    ? { scale: { duration: 0 }, y: { duration: 0 }, opacity: { duration: 0.35 } }
     : { duration: 1.1, ease: mobilePopEase, delay: 0.04 };
 
   return (
@@ -193,7 +194,7 @@ function HeroBackgroundMobile({ reducedMotion, introDone }: { reducedMotion: boo
           priority
           fadeIn={false}
           quality={92}
-          sizes="100vw"
+          sizes="(min-width: 1024px) 1px, 100vw"
           className="object-cover object-[50%_40%] opacity-100"
         />
         <HeroPhotoShine reducedMotion={reducedMotion} introDone={introDone} />
@@ -222,58 +223,69 @@ export function Hero() {
   const statsRef = useRef(null);
   const statsInView = useInView(statsRef, { once: true, amount: 0.08, margin: "0px 0px 120px 0px" });
   const isLg = useLgUp();
-  const reduce = useReducedMotion() ?? false;
+  const reduce = useReducedMotionSafe();
   useStableViewportHeight();
 
   const statsStarted = introDone && (isLg || statsInView);
 
-  const venomMotion = reduce
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.2 } }
-    : {
-        initial: { x: "-103%", opacity: 1 },
-        animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.88, ease: cinematicEase, delay: 0 },
-      };
+  /* reduce впливає лише на transition (трансформи миттєво, opacity — фейдом).
+     initial/animate однакові за формою — безпечно і для гідратації,
+     і для перемикання reduce після монтування. */
+  const instantTransforms = {
+    x: { duration: 0 },
+    y: { duration: 0 },
+    scale: { duration: 0 },
+  } as const;
 
-  const barberMotion = reduce
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.32 } }
-    : {
-        initial: { x: "103%", opacity: 1 },
-        animate: { x: 0, opacity: 1 },
-        transition: { duration: 0.88, ease: cinematicEase, delay: 0.1 },
-      };
+  const reduceFade = (duration: number, delay: number) => ({
+    ...instantTransforms,
+    opacity: { duration, delay },
+    default: { duration: 0 },
+  });
 
-  const descMotion = reduce
-    ? { initial: { opacity: 0, x: 0 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.45, delay: 0.38 } }
-    : isLg
-      ? {
-          initial: { opacity: 0, y: 22, x: 0 },
-          animate: { opacity: 1, y: 0, x: 0 },
-          transition: { duration: 0.82, ease: cinematicEase, delay: 0.34 },
-        }
-      : {
-          initial: { opacity: 0, y: 28, x: -12 },
-          animate: { opacity: 1, y: 0, x: 0 },
-          transition: { duration: 0.82, ease: mobilePopEase, delay: 0.4 },
-        };
+  const venomMotion = {
+    initial: { x: "-103%", opacity: 1 },
+    animate: { x: 0, opacity: 1 },
+    transition: reduce
+      ? reduceFade(0.3, 0.1)
+      : { duration: 0.88, ease: cinematicEase, delay: 0 },
+  };
 
-  const ctaGroupMotion = reduce
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.4, delay: 0.35 } }
-    : isLg
-      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.34, ease: cinematicEase } }
-      : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.5, delay: 0.38, ease: mobilePopEase } };
+  const barberMotion = {
+    initial: { x: "103%", opacity: 1 },
+    animate: { x: 0, opacity: 1 },
+    transition: reduce
+      ? reduceFade(0.3, 0.16)
+      : { duration: 0.88, ease: cinematicEase, delay: 0.1 },
+  };
 
-  const statsStripMotion = reduce
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 0.5, duration: 0.4 } }
-    : isLg
-      ? { initial: { opacity: 0, y: 28 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.62, duration: 0.88, ease: cinematicEase } }
-      : { initial: { opacity: 0, y: 48 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.72, duration: 0.88, ease: mobilePopEase } };
+  const descMotion = {
+    initial: isLg ? { opacity: 0, y: 22, x: 0 } : { opacity: 0, y: 28, x: -12 },
+    animate: { opacity: 1, y: 0, x: 0 },
+    transition: reduce
+      ? reduceFade(0.45, 0.24)
+      : { duration: 0.82, ease: isLg ? cinematicEase : mobilePopEase, delay: isLg ? 0.34 : 0.4 },
+  };
 
-  const statItemInitial = reduce
-    ? { opacity: 0, x: 0 }
-    : isLg
-      ? { opacity: 0, y: 14, x: 0 }
-      : { opacity: 0, y: 22, x: -10 };
+  const ctaGroupMotion = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: reduce
+      ? { duration: 0.4, delay: 0.3 }
+      : { duration: 0.5, delay: isLg ? 0.34 : 0.38, ease: isLg ? cinematicEase : mobilePopEase },
+  };
+
+  const statsStripMotion = {
+    initial: isLg ? { opacity: 0, y: 28 } : { opacity: 0, y: 48 },
+    animate: { opacity: 1, y: 0 },
+    transition: reduce
+      ? reduceFade(0.4, 0.35)
+      : { delay: isLg ? 0.62 : 0.72, duration: 0.88, ease: isLg ? cinematicEase : mobilePopEase },
+  };
+
+  const statItemInitial = isLg
+    ? { opacity: 0, y: 14, x: 0 }
+    : { opacity: 0, y: 22, x: -10 };
 
   return (
     <section
@@ -352,11 +364,17 @@ export function Hero() {
                   key={stat.label}
                   initial={statItemInitial}
                   animate={introDone ? { opacity: 1, y: 0, x: 0 } : statItemInitial}
-                  transition={{
-                    delay: introDone ? (isLg ? 0.68 : 0.78) + index * (isLg ? 0.05 : 0.07) : 0,
-                    duration: introDone ? (reduce ? 0.35 : 0.72) : 0,
-                    ease: isLg ? cinematicEase : mobilePopEase,
-                  }}
+                  transition={
+                    !introDone
+                      ? { duration: 0 }
+                      : reduce
+                        ? reduceFade(0.35, 0.4 + index * 0.05)
+                        : {
+                            delay: (isLg ? 0.68 : 0.78) + index * (isLg ? 0.05 : 0.07),
+                            duration: 0.72,
+                            ease: isLg ? cinematicEase : mobilePopEase,
+                          }
+                  }
                   className="flex min-h-[4.25rem] items-center justify-center gap-3 px-2 py-1 sm:min-h-0 sm:gap-3.5 sm:px-6 md:px-8 lg:min-h-[88px] lg:px-10"
                 >
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E50914] bg-black md:h-10 md:w-10">

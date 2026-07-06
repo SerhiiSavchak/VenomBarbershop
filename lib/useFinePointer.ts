@@ -1,20 +1,24 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const FINE_POINTER_MQ = "(hover: hover) and (pointer: fine)";
 
+function subscribe(onStoreChange: () => void) {
+  const mq = window.matchMedia(FINE_POINTER_MQ);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getSnapshot() {
+  return window.matchMedia(FINE_POINTER_MQ).matches;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 /** true, если устройство поддерживает точный hover (мышь / трекпад). */
 export function useFinePointer(): boolean {
-  const [fine, setFine] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia(FINE_POINTER_MQ);
-    const sync = () => setFine(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  return fine;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

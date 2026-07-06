@@ -2,9 +2,10 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useI18n } from "@/components/providers/I18nProvider";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 const MIN_VISIBLE_MS = { desktop: 880, mobile: 1020 } as const;
@@ -17,7 +18,7 @@ type PageLoaderProps = {
 
 export function PageLoader({ onIntroReady }: PageLoaderProps) {
   const { t } = useI18n();
-  const reduce = useReducedMotion() ?? false;
+  const reduce = useReducedMotionSafe();
   const [show, setShow] = useState(true);
   const [portalReady, setPortalReady] = useState(false);
   const readyFired = useRef(false);

@@ -92,6 +92,13 @@ select,
   scrollbar-width: none;
 }
 
+/* Горизонтальні snap-рейки на мобільному: інерція iOS, без scroll chaining по X */
+.mobile-snap-rail {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+}
+
 /* ========================================
    SOCIAL LINKS
    ======================================== */
@@ -687,18 +694,8 @@ select,
 
 /* ========================================
    REDUCED MOTION
-   ======================================== */
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  
-  html {
-    scroll-behavior: auto;
-  }
-}
+   ========================================
+   Сайт свідомо ігнорує prefers-reduced-motion для ховерів/переходів
+   (див. HONOR_REDUCED_MOTION у lib/useReducedMotionSafe.ts).
+   Раніше глобальне правило `* { transition-duration: 0.01ms }` робило
+   всі hover-анімації миттєвими у користувачів із системним флагом. */

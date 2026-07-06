@@ -68,22 +68,17 @@ function ServiceCardContent({
 
   return (
     <>
-      <button
-        type="button"
-        onClick={onDetails}
-        aria-label={`${detailsLabel}: ${category.name}`}
-        className="absolute inset-0 z-[5] cursor-pointer"
-      />
-
       <div className="pointer-events-none absolute inset-0">
-        <OptimizedImage
-          src={image}
-          alt={category.imageAlt}
-          fill
-          quality={80}
-          sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
-          className={`${imageFocus} object-cover transition-transform duration-700 ease-out fine-pointer:will-change-transform fine-group-hover:scale-110`}
-        />
+        <div className="absolute inset-0 origin-center transition-transform duration-700 ease-out fine-group-hover:scale-110">
+          <OptimizedImage
+            src={image}
+            alt={category.imageAlt}
+            fill
+            quality={80}
+            sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
+            className={`${imageFocus} object-cover`}
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
         <div className="absolute inset-0 bg-[#E50914]/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-[#E50914]/20" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 fine-group-hover:scale-x-100" />
@@ -109,7 +104,14 @@ function ServiceCardContent({
         <div className="mt-3 h-px bg-gradient-to-r from-white/10 via-white/20 to-white/10 md:mt-3.5" />
 
         <div className="service-card-cta-row relative z-20 mt-3 flex flex-col gap-2.5 pointer-events-none sm:flex-row md:mt-3.5">
-          <span className="service-card-cta service-card-cta--outline">{detailsLabel}</span>
+          <button
+            type="button"
+            onClick={onDetails}
+            aria-label={`${detailsLabel}: ${category.name}`}
+            className="service-card-cta service-card-cta--outline pointer-events-auto touch-manipulation"
+          >
+            {detailsLabel}
+          </button>
           <a
             {...altegioBookingLink}
             className="service-card-cta service-card-cta--primary pointer-events-auto"
@@ -415,7 +417,7 @@ export function Services() {
 
         <div
           ref={setServicesRail}
-          className="flex touch-pan-y gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
+          className="mobile-snap-rail flex touch-manipulation gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
         >
           {categories.map((category, index) => (
             <ServiceCard

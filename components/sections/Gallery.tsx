@@ -96,13 +96,15 @@ export function Gallery() {
               
               {/* Image container */}
               <div className="relative h-full w-full">
-                <Image
-                  src={src}
-                  alt={t.gallery.imageAlt(index + 1)}
-                  fill
-                  sizes="(max-width:768px) 50vw, 33vw"
-                  className="object-cover brightness-[0.92] contrast-[1.08] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.06] fine-group-hover:brightness-100"
-                />
+                <div className="absolute inset-0 origin-center transition-transform duration-700 ease-out fine-group-hover:scale-[1.06]">
+                  <Image
+                    src={src}
+                    alt={t.gallery.imageAlt(index + 1)}
+                    fill
+                    sizes="(max-width:768px) 50vw, 33vw"
+                    className="object-cover brightness-[0.92] contrast-[1.08] transition-[filter] duration-700 fine-group-hover:brightness-100"
+                  />
+                </div>
                 
                 {/* Overlay gradients */}
                 <div className="absolute inset-0 bg-black/40 transition-colors duration-500 fine-group-hover:bg-black/10" />

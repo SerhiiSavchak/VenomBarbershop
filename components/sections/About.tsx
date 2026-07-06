@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
 import {
@@ -11,6 +11,7 @@ import {
   sectionViewport,
 } from "@/lib/motion";
 import { useFinePointer } from "@/lib/useFinePointer";
+import { useReducedMotionSafe } from "@/lib/useReducedMotionSafe";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
 import { SiteContainer } from "@/components/ui/SiteContainer";
@@ -72,7 +73,7 @@ function AboutCollageTile({
   sizes: string;
   imageClassName: string;
 }) {
-  const reduce = useReducedMotion() ?? false;
+  const reduce = useReducedMotionSafe();
   const finePointer = useFinePointer();
 
   return (

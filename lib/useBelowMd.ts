@@ -1,18 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-/** true, якщо в’юпорт вужчий за Tailwind `md` (768px) — мобільні горизонтальні рейки. */
+const BELOW_MD_MQ = "(max-width: 767px)";
+
+function subscribe(onStoreChange: () => void) {
+  const mq = window.matchMedia(BELOW_MD_MQ);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getSnapshot() {
+  return window.matchMedia(BELOW_MD_MQ).matches;
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
+/**
+ * true, якщо в’юпорт вужчий за Tailwind `md` (768px) — мобільні горизонтальні рейки.
+ * Hydration-safe через useSyncExternalStore.
+ */
 export function useBelowMd(): boolean {
-  const [v, setV] = useState(false);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const sync = () => setV(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  return v;
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
