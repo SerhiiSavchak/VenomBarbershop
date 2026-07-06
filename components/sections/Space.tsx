@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
@@ -29,7 +29,7 @@ export function Space() {
           <motion.div
             initial="hidden"
             whileInView="show"
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={sectionViewport(lg)}
             className={`lg:col-span-5 ${sectionTitleInset}`}
           >
             <SectionEyebrow text={t.space.eyebrow} />
@@ -48,7 +48,7 @@ export function Space() {
                   key={`${feature}-${index}`}
                   initial={lg ? { opacity: 0, x: -20 } : { opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  viewport={{ once: false, amount: 0.2 }}
+                  viewport={sectionViewport(lg)}
                   transition={{ duration: 0.5, ease: cinematicEase, delay: 0.2 + index * 0.08 }}
                   className="flex items-center gap-3"
                 >
@@ -67,9 +67,9 @@ export function Space() {
 
           {/* Images grid */}
           <motion.div
-            initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, scale: 1.07, y: 20 }}
+            initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={sectionViewport(lg)}
             transition={{ duration: 1.1, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative lg:col-span-7"
           >
@@ -84,7 +84,7 @@ export function Space() {
                   alt={t.space.imageMain}
                   fill
                   sizes="(max-width:1024px) 100vw, 55vw"
-                  className="object-cover brightness-[0.92] contrast-[1.1] transition-all duration-700 group-hover:scale-[1.03] group-hover:brightness-100"
+                  className="object-cover brightness-[0.92] contrast-[1.1] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.03] fine-group-hover:brightness-100"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-transparent" />
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_80%,rgba(209,18,27,0.25)_0%,transparent_50%)] mix-blend-screen" />
@@ -105,7 +105,7 @@ export function Space() {
                     alt={t.space.imageChair}
                     fill
                     sizes="(max-width: 640px) 100vw, 25vw"
-                    className="object-cover brightness-[0.9] contrast-[1.12] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
+                    className="object-cover brightness-[0.9] contrast-[1.12] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.05] fine-group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
                 </div>
@@ -116,7 +116,7 @@ export function Space() {
                     alt={t.space.imageTools}
                     fill
                     sizes="(max-width: 640px) 100vw, 25vw"
-                    className="object-cover brightness-[0.9] contrast-[1.1] transition-all duration-700 group-hover:scale-[1.05] group-hover:brightness-100"
+                    className="object-cover brightness-[0.9] contrast-[1.1] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.05] fine-group-hover:brightness-100"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 to-transparent" />
                 </div>
@@ -127,7 +127,7 @@ export function Space() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               transition={{ duration: 0.7, ease: cinematicEase, delay: 0.3 }}
               className="absolute -bottom-4 -left-4 z-10 border border-white/[0.08] bg-black/80 p-4 backdrop-blur-md md:-bottom-6 md:-left-6 md:p-5"
             >

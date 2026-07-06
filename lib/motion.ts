@@ -6,5 +6,10 @@ export const mobilePopEase = [0.22, 1, 0.28, 1] as const;
 
 export const revealLiftEnter = { opacity: 1, y: 0, x: 0 };
 
+/** whileInView: на мобиле — once, на desktop — повтор при скролле. */
+export function sectionViewport(lg: boolean, amount = 0.2) {
+  return { once: !lg, amount } as const;
+}
+
 /** Shared horizontal inset for section eyebrow + title (same across pages). */
 export const sectionTitleInset = "pl-2 md:pl-3 lg:pl-4";

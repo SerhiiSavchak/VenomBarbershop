@@ -7,7 +7,7 @@ import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { Clock, X } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
-import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { useBelowMd } from "@/lib/useBelowMd";
 import { useLgUp } from "@/lib/useLgUp";
 import { useHorizontalRailVerticalWheelPassthrough } from "@/lib/useHorizontalRailVerticalWheelPassthrough";
@@ -82,11 +82,11 @@ function ServiceCardContent({
           fill
           quality={80}
           sizes={isDesktop ? "(max-width:1024px) 50vw, 33vw" : "85vw"}
-          className={`${imageFocus} object-cover transition-transform duration-700 ease-out will-change-transform group-hover:scale-110`}
+          className={`${imageFocus} object-cover transition-transform duration-700 ease-out fine-pointer:will-change-transform fine-group-hover:scale-110`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30" />
         <div className="absolute inset-0 bg-[#E50914]/0 mix-blend-multiply transition-colors duration-500 group-hover:bg-[#E50914]/20" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 fine-group-hover:scale-x-100" />
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
@@ -342,7 +342,7 @@ export function Services() {
   const [servicesRail, setServicesRail] = useState<HTMLDivElement | null>(null);
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: false, amount: 0.1 });
+  const isInView = useInView(sectionRef, { once: !belowMd, amount: 0.1 });
   const categories = t.services.categories;
 
   const activeCategory =
@@ -367,10 +367,17 @@ export function Services() {
 
   return (
     <section ref={sectionRef} id="services" className={`relative overflow-hidden bg-black ${siteSectionYClass}`}>
-      <motion.div className="pointer-events-none absolute inset-0" style={{ y: bgY }}>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
-      </motion.div>
+      {belowMd ? (
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
+        </div>
+      ) : (
+        <motion.div className="pointer-events-none absolute inset-0" style={{ y: bgY }}>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_50%_0%,rgba(209,18,27,0.12)_0%,transparent_50%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_100%,rgba(209,18,27,0.08)_0%,transparent_50%)]" />
+        </motion.div>
+      )}
 
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
         <span className="select-none font-display text-[20vw] font-black uppercase leading-none tracking-tighter text-white/[0.015] md:text-[15vw]">
@@ -382,7 +389,7 @@ export function Services() {
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(!belowMd)}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
@@ -398,7 +405,7 @@ export function Services() {
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.3 }}
+            viewport={sectionViewport(!belowMd, 0.3)}
             transition={{ duration: 0.6, ease: cinematicEase, delay: 0.4 }}
             className="max-w-sm text-sm leading-relaxed text-foreground-muted md:text-right md:text-base"
           >
@@ -408,7 +415,7 @@ export function Services() {
 
         <div
           ref={setServicesRail}
-          className="flex gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
+          className="flex touch-pan-y gap-4 overflow-x-auto overflow-y-hidden overscroll-x-contain px-1 pb-8 scrollbar-hide snap-x snap-mandatory md:hidden"
         >
           {categories.map((category, index) => (
             <ServiceCard
@@ -445,7 +452,7 @@ export function Services() {
         <motion.div
           initial={isLg ? { opacity: 0, y: 28 } : { opacity: 0, y: 22, x: -12 }}
           whileInView={{ opacity: 1, y: 0, x: 0 }}
-          viewport={{ once: false, amount: 0.5 }}
+          viewport={sectionViewport(!belowMd, 0.5)}
           transition={{ duration: 0.8, ease: isLg ? cinematicEase : mobilePopEase, delay: 0.2 }}
           className={`mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12 ${sectionTitleInset}`}
         >

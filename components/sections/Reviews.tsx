@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Star, Quote } from "lucide-react";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { altegioBookingLink } from "@/lib/altegio";
@@ -44,7 +44,7 @@ export function Reviews() {
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
@@ -71,7 +71,7 @@ export function Reviews() {
           <motion.div
             initial={lg ? { opacity: 0, y: 40, x: 0 } : { opacity: 0, y: 28, x: -16 }}
             whileInView={revealLiftEnter}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={sectionViewport(lg)}
             transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
             className="group relative overflow-hidden border border-white/[0.08] bg-gradient-to-br from-[#0a0a0a] to-[#050505]"
           >
@@ -79,19 +79,19 @@ export function Reviews() {
             <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
             
             {/* Hover glow */}
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(229,9,20,0.08)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(229,9,20,0.08)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 fine-group-hover:opacity-100" />
 
             <div className="grid md:grid-cols-12">
               {/* Image side */}
               <div className="relative aspect-[4/5] overflow-hidden md:col-span-5 md:aspect-auto md:min-h-[380px]">
-                <div className="absolute inset-0 origin-center scale-100 transition-transform duration-700 ease-out will-change-transform group-hover:scale-[1.04]">
+                <div className="absolute inset-0 origin-center scale-100 transition-transform duration-700 ease-out fine-pointer:will-change-transform fine-group-hover:scale-[1.04]">
                   <OptimizedImage
                     src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=800&q=75"
                     alt={t.reviews.featuredImageAlt}
                     fill
                     sizes="(max-width: 768px) 100vw, 42vw"
                     quality={80}
-                    className="object-cover brightness-[0.88] transition-[filter] duration-700 ease-out group-hover:brightness-100"
+                    className="object-cover brightness-[0.88] transition-[filter] duration-700 ease-out fine-group-hover:brightness-100"
                   />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/50 to-[#080808] md:via-black/35" />
@@ -140,7 +140,7 @@ export function Reviews() {
             variants={reviewCardVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={sectionViewport(lg)}
           >
             {reviews.slice(1).map((review, index) => (
               <motion.div
@@ -152,7 +152,7 @@ export function Reviews() {
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
                 
                 {/* Hover glow */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.06)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.06)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 fine-group-hover:opacity-100" />
 
                 {/* Quote icon */}
                 <Quote className="mb-4 h-6 w-6 text-[#E50914]/40" strokeWidth={1.5} />
@@ -178,7 +178,7 @@ export function Reviews() {
                 </div>
 
                 {/* Bottom accent line */}
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914]/60 to-transparent transition-transform duration-500 group-hover:scale-x-100" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914]/60 to-transparent transition-transform duration-500 fine-group-hover:scale-x-100" />
               </motion.div>
             ))}
           </motion.div>
@@ -188,7 +188,7 @@ export function Reviews() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.15 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >

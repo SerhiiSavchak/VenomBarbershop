@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink, MapPin, Clock, Phone } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
 import { SiteContainer } from "@/components/ui/SiteContainer";
@@ -49,7 +49,7 @@ export function Contact() {
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={sectionViewport(lg, 0.15)}
           className={`max-w-5xl ${sectionTitleInset}`}
         >
           <SectionEyebrow text={c.eyebrow} className="mb-6" />
@@ -81,7 +81,7 @@ export function Contact() {
         <motion.div
           initial={lg ? { opacity: 0, y: 32, x: 0 } : { opacity: 0, y: 26, x: -14 }}
           whileInView={revealLiftEnter}
-          viewport={{ once: false, amount: 0.15 }}
+          viewport={sectionViewport(lg, 0.15)}
           transition={{ duration: 0.85, ease: lg ? cinematicEase : mobilePopEase }}
           className="mt-24 grid min-w-0 gap-10 border-t border-white/[0.08] pt-16 lg:grid-cols-12 lg:items-center lg:gap-12"
         >
@@ -90,7 +90,7 @@ export function Contact() {
             variants={contactCardVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: false, amount: 0.15 }}
+            viewport={sectionViewport(lg, 0.15)}
           >
             {rows.map((row) => {
               const content = (

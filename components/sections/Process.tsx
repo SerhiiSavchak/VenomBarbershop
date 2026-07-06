@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { altegioBookingLink } from "@/lib/altegio";
 import { SiteCta } from "@/components/ui/SiteCta";
@@ -259,7 +259,7 @@ export function Process() {
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           className="mb-12 flex flex-col gap-4 md:mb-14 md:flex-row md:items-end md:justify-between lg:mb-16"
         >
           <div className={sectionTitleInset}>
@@ -277,9 +277,9 @@ export function Process() {
         <div className="grid gap-8 lg:grid-cols-12 lg:items-stretch lg:gap-0">
           {/* Left image */}
           <motion.div
-            initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, scale: 1.09, y: 22 }}
+            initial={lg ? { opacity: 0, scale: 1.06, y: 0 } : { opacity: 0, y: 22 }}
             whileInView={{ opacity: 1, scale: 1, y: 0 }}
-            viewport={{ once: false, amount: 0.2 }}
+            viewport={sectionViewport(lg)}
             transition={{ duration: 1.1, ease: lg ? cinematicEase : mobilePopEase }}
             className="relative aspect-[3/4] max-h-[min(78vh,720px)] min-h-[min(52vh,420px)] overflow-hidden border border-white/[0.06] lg:col-span-6 lg:aspect-[4/5] lg:max-h-[min(82vh,760px)] lg:min-h-[min(58vh,600px)]"
           >
@@ -313,7 +313,7 @@ export function Process() {
               className="relative flex w-full min-w-0 flex-1 flex-col justify-center pl-10 md:pl-8 lg:min-h-full lg:pl-3 xl:pl-4"
               initial="hidden"
               whileInView="show"
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               variants={stepParentVariants}
             >
               {/* Progress line rail */}
@@ -364,7 +364,7 @@ export function Process() {
                   className="group relative border-b border-white/[0.06] py-10 opacity-60 transition-opacity duration-500 first:pt-0 lg:py-10 lg:pl-6"
                 >
                   {/* Large watermark number */}
-                  <span className="pointer-events-none absolute -left-2 top-4 select-none font-display text-[clamp(4rem,14vw,7rem)] font-bold leading-none text-white/[0.03] transition-colors duration-500 group-hover:text-[#E50914]/8 md:left-0 lg:-left-1">
+                  <span className="pointer-events-none absolute -left-2 top-4 select-none font-display text-[clamp(4rem,14vw,7rem)] font-bold leading-none text-white/[0.03] transition-colors duration-500 fine-group-hover:text-[#E50914]/8 md:left-0 lg:-left-1">
                     {step.number}
                   </span>
 
@@ -395,7 +395,7 @@ export function Process() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-14 flex flex-col items-center justify-center gap-4 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:pt-12"
         >

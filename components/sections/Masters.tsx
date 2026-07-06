@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { ImageHoverZoom } from "@/components/ui/ImageHoverZoom";
 import { OptimizedImage } from "@/components/ui/OptimizedImage";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
 import { SiteContainer } from "@/components/ui/SiteContainer";
@@ -63,12 +63,12 @@ function MasterCard({
       initial="hidden"
       whileInView="show"
       exit="exit"
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={sectionViewport(lg)}
       onPointerUp={handlePointerUp}
-      className={`group relative w-full max-w-[380px] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] to-[#030303] transition-all duration-500 ease-out md:max-w-[420px] md:hover:border-[#E50914]/40 [.is-active]:border-[#E50914]/40${isActive ? " is-active" : ""}`}
+      className={`group relative w-full max-w-[380px] overflow-hidden border border-white/[0.06] bg-gradient-to-b from-[#0a0a0a] to-[#030303] transition-[border-color,box-shadow] duration-500 ease-out md:max-w-[420px] fine-group-hover:border-[#E50914]/40 [.is-active]:border-[#E50914]/40${isActive ? " is-active" : ""}`}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.1] to-transparent" />
-      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-[.is-active]:opacity-100" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_top,rgba(229,9,20,0.1)_0%,transparent_60%)] opacity-0 transition-opacity duration-500 fine-group-hover:opacity-100 group-[.is-active]:opacity-100" />
 
       <div className="relative aspect-[3/4.2] overflow-hidden">
         <ImageHoverZoom active={isActive}>
@@ -79,11 +79,11 @@ function MasterCard({
             fadeIn={false}
             sizes="(max-width:768px) 90vw, 420px"
             quality={85}
-            className="hover-filter-img object-cover object-[center_18%] grayscale group-hover:grayscale-0 group-[.is-active]:grayscale-0"
+            className="hover-filter-img object-cover object-[center_18%] grayscale fine-group-hover:grayscale-0 group-[.is-active]:grayscale-0"
           />
         </ImageHoverZoom>
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 ease-out group-hover:bg-accent-red/12 group-[.is-active]:bg-accent-red/12" />
+        <div className="pointer-events-none absolute inset-0 bg-accent-red/0 mix-blend-multiply transition-colors duration-500 ease-out fine-group-hover:bg-accent-red/12 group-[.is-active]:bg-accent-red/12" />
       </div>
 
       <div className="absolute inset-x-0 bottom-0 z-[3] flex flex-col gap-4 bg-gradient-to-t from-black via-black/95 to-transparent p-5 pt-12 md:p-6 md:pt-16">
@@ -101,7 +101,7 @@ function MasterCard({
         </SiteCta>
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100 group-[.is-active]:scale-x-100" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 fine-group-hover:scale-x-100 group-[.is-active]:scale-x-100" />
     </motion.article>
   );
 }
@@ -135,7 +135,7 @@ export function Masters() {
           className={`mb-14 ${sectionTitleInset}`}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.3 }}
+          viewport={sectionViewport(lg, 0.3)}
         >
           <SectionEyebrow text={t.masters.eyebrow} />
           <motion.h2
@@ -162,7 +162,7 @@ export function Masters() {
         <motion.div
           initial={lg ? { opacity: 0, y: 28, x: 0 } : { opacity: 0, y: 36, x: -14 }}
           whileInView={{ opacity: 1, y: 0, x: 0 }}
-          viewport={{ once: false, amount: 0.5 }}
+          viewport={sectionViewport(lg, 0.5)}
           transition={{ duration: 0.8, ease: lg ? cinematicEase : mobilePopEase, delay: 0.08 }}
           className={`mt-14 flex flex-col gap-6 border-t border-white/[0.08] pt-10 md:mt-16 md:flex-row md:items-center md:justify-between md:gap-10 md:pt-12 ${sectionTitleInset}`}
         >

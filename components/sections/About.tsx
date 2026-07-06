@@ -8,7 +8,9 @@ import {
   mobilePopEase,
   revealLiftEnter,
   sectionTitleInset,
+  sectionViewport,
 } from "@/lib/motion";
+import { useFinePointer } from "@/lib/useFinePointer";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteCta } from "@/components/ui/SiteCta";
 import { SiteContainer } from "@/components/ui/SiteContainer";
@@ -71,6 +73,7 @@ function AboutCollageTile({
   imageClassName: string;
 }) {
   const reduce = useReducedMotion() ?? false;
+  const finePointer = useFinePointer();
 
   return (
     <motion.div
@@ -78,7 +81,7 @@ function AboutCollageTile({
       initial={false}
       variants={aboutTileVariants}
       animate="idle"
-      whileHover={reduce ? undefined : "hover"}
+      whileHover={reduce || !finePointer ? undefined : "hover"}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
       <motion.div
@@ -119,7 +122,7 @@ export function About() {
             <motion.div
               initial="hidden"
               whileInView="show"
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               className="mb-10 md:mb-12 lg:mb-14"
             >
               <SectionEyebrow text={a.eyebrow} />
@@ -135,7 +138,7 @@ export function About() {
               className="max-w-lg text-base leading-relaxed text-white/72 md:text-lg md:leading-relaxed"
               initial={lg ? { opacity: 0, y: 22, x: 0 } : { opacity: 0, y: 20, x: -12 }}
               whileInView={revealLiftEnter}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               transition={{ duration: 0.82, ease: lg ? cinematicEase : mobilePopEase }}
             >
               {a.subtitle}
@@ -146,7 +149,7 @@ export function About() {
               className="mt-12 flex flex-col gap-0 border-t border-white/[0.08] pt-12"
               initial="hidden"
               whileInView="show"
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               variants={pointsParentVariants}
             >
               {a.points.map((p) => (
@@ -177,7 +180,7 @@ export function About() {
             <motion.div
               initial={lg ? { opacity: 0, y: 16, x: 0 } : { opacity: 0, y: 22, x: -10 }}
               whileInView={revealLiftEnter}
-              viewport={{ once: false, amount: 0.2 }}
+              viewport={sectionViewport(lg)}
               transition={{ duration: 0.72, ease: lg ? cinematicEase : mobilePopEase, delay: 0.35 }}
               className="mt-12"
             >
@@ -206,9 +209,9 @@ export function About() {
 
             <motion.div
               className="relative z-[2] grid min-h-[min(78vh,820px)] w-full grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-[minmax(0,1.22fr)_minmax(0,0.46fr)] lg:grid-rows-[1fr_1fr_auto] lg:gap-4"
-              initial={lg ? { opacity: 0, y: 28, x: 0 } : { opacity: 0, y: 16, x: -18, scale: 0.986 }}
-              whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
-              viewport={{ once: false, amount: 0.2 }}
+              initial={lg ? { opacity: 0, y: 28, x: 0 } : { opacity: 0, y: 16, x: -18 }}
+              whileInView={{ opacity: 1, y: 0, x: 0 }}
+              viewport={sectionViewport(lg)}
               transition={{ duration: 0.95, ease: lg ? cinematicEase : mobilePopEase }}
             >
               <AboutCollageTile
@@ -218,7 +221,7 @@ export function About() {
                 src={ABOUT_IMAGE_MAIN}
                 alt={a.imageMainAlt}
                 sizes="(max-width:1024px) 100vw, 45vw"
-                imageClassName="object-cover object-[center_32%] brightness-[0.88] contrast-[1.08] group-hover:brightness-95"
+                imageClassName="object-cover object-[center_32%] brightness-[0.88] contrast-[1.08] fine-group-hover:brightness-95"
               />
 
               <AboutCollageTile
@@ -228,7 +231,7 @@ export function About() {
                 src={ABOUT_IMAGE_SMALL_TOP}
                 alt={a.imageSmallTopAlt}
                 sizes="(max-width:1024px) 100vw, 18vw"
-                imageClassName="object-cover object-[center_42%] brightness-[0.86] contrast-[1.1] group-hover:brightness-95"
+                imageClassName="object-cover object-[center_42%] brightness-[0.86] contrast-[1.1] fine-group-hover:brightness-95"
               />
 
               <AboutCollageTile
@@ -238,7 +241,7 @@ export function About() {
                 src={ABOUT_IMAGE_SMALL_BOTTOM}
                 alt={a.imageSmallBottomAlt}
                 sizes="(max-width:1024px) 100vw, 18vw"
-                imageClassName="object-cover object-[center_28%] brightness-[0.86] contrast-[1.06] group-hover:brightness-95"
+                imageClassName="object-cover object-[center_28%] brightness-[0.86] contrast-[1.06] fine-group-hover:brightness-95"
               />
 
               <AboutCollageTile
@@ -248,7 +251,7 @@ export function About() {
                 src={ABOUT_IMAGE_FEATURE}
                 alt={a.imageFeatureAlt}
                 sizes="(max-width:1024px) 100vw, 52vw"
-                imageClassName="object-cover object-[center_55%] brightness-[0.85] contrast-[1.05] group-hover:brightness-95"
+                imageClassName="object-cover object-[center_55%] brightness-[0.85] contrast-[1.05] fine-group-hover:brightness-95"
               />
             </motion.div>
 

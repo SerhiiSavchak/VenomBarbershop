@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { Expand } from "lucide-react";
 import { useI18n } from "@/components/providers/I18nProvider";
-import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset } from "@/lib/motion";
+import { cinematicEase, mobilePopEase, revealLiftEnter, sectionTitleInset, sectionViewport } from "@/lib/motion";
 import { SectionEyebrow, sectionHeadingVariants } from "@/components/ui/SectionEyebrow";
 import { SiteContainer } from "@/components/ui/SiteContainer";
 import { altegioBookingLink } from "@/lib/altegio";
@@ -34,7 +34,7 @@ function tileVariants(lg: boolean) {
   return {
     hidden: lg
       ? { opacity: 0, y: 32, scale: 0.98, x: 0 }
-      : { opacity: 0, y: 22, x: -12, scale: 0.96 },
+      : { opacity: 0, y: 22, x: -12 },
     show: {
       opacity: 1,
       y: 0,
@@ -60,7 +60,7 @@ export function Gallery() {
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           className={`mb-12 flex flex-col gap-4 md:mb-16 md:flex-row md:items-end md:justify-between ${sectionTitleInset}`}
         >
           <div>
@@ -82,7 +82,7 @@ export function Gallery() {
           className="columns-2 gap-3 md:columns-3 md:gap-4 lg:gap-5"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           variants={masonryVariants}
         >
           {galleryImages.map((src, index) => (
@@ -94,39 +94,33 @@ export function Gallery() {
               {/* Top glossy rim */}
               <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
               
-              {/* Image container with zoom effect */}
-              <motion.div
-                initial={lg ? { scale: 1.12 } : { scale: 1.06, y: 14 }}
-                whileInView={{ scale: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.2 }}
-                transition={{ duration: lg ? 1.2 : 0.95, ease: lg ? cinematicEase : mobilePopEase }}
-                className="relative h-full w-full"
-              >
+              {/* Image container */}
+              <div className="relative h-full w-full">
                 <Image
                   src={src}
                   alt={t.gallery.imageAlt(index + 1)}
                   fill
                   sizes="(max-width:768px) 50vw, 33vw"
-                  className="object-cover brightness-[0.92] contrast-[1.08] transition-all duration-700 group-hover:scale-[1.06] group-hover:brightness-100"
+                  className="object-cover brightness-[0.92] contrast-[1.08] transition-[transform,filter] duration-700 fine-group-hover:scale-[1.06] fine-group-hover:brightness-100"
                 />
                 
                 {/* Overlay gradients */}
-                <div className="absolute inset-0 bg-black/40 transition-colors duration-500 group-hover:bg-black/10" />
+                <div className="absolute inset-0 bg-black/40 transition-colors duration-500 fine-group-hover:bg-black/10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80" />
                 
                 {/* Red accent on hover */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,9,20,0.15)_0%,transparent_70%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-              </motion.div>
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(229,9,20,0.15)_0%,transparent_70%)] opacity-0 transition-opacity duration-500 fine-group-hover:opacity-100" />
+              </div>
 
               {/* Hover overlay with expand icon */}
-              <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+              <div className="pointer-events-none absolute inset-0 z-[2] flex items-center justify-center opacity-0 transition-opacity duration-500 fine-group-hover:opacity-100">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-black/60 backdrop-blur-sm">
                   <Expand className="h-5 w-5 text-white" strokeWidth={1.5} />
                 </div>
               </div>
 
               {/* Bottom accent line */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 group-hover:scale-x-100" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 bg-gradient-to-r from-transparent via-[#E50914] to-transparent transition-transform duration-500 fine-group-hover:scale-x-100" />
             </motion.div>
           ))}
         </motion.div>
@@ -135,7 +129,7 @@ export function Gallery() {
         <motion.div
           initial={lg ? { opacity: 0, y: 24 } : { opacity: 0, y: 20, x: -10 }}
           whileInView={revealLiftEnter}
-          viewport={{ once: false, amount: 0.2 }}
+          viewport={sectionViewport(lg)}
           transition={{ duration: 0.75, ease: lg ? cinematicEase : mobilePopEase, delay: 0.1 }}
           className="mt-12 flex flex-col items-center justify-center gap-3 border-t border-white/[0.06] pt-10 text-center md:mt-16 md:flex-row md:gap-4 md:pt-12"
         >

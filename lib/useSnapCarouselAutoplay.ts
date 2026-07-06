@@ -64,6 +64,7 @@ export function useSnapCarouselAutoplay(
     const pauseForInteraction = () => {
       pausedRef.current = true;
       clearResumeTimer();
+      el.scrollTo({ left: el.scrollLeft, behavior: "auto" });
     };
 
     const scheduleResumeAfterInteraction = () => {
